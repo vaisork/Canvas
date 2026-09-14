@@ -1,0 +1,63 @@
+name: Build test index manifesto
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-index-prueba-manifiesto.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-test-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create index test with manifesto hero
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          src = Path('index.html').read_text()
+
+          # Keep production index untouched; create an independent preview page.
+          t = src
+          t = t.replace(
+              'family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Inter:wght@400;500;600;700;800&family=Nothing+You+Could+Do',
+              'family=Caveat:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Inter:wght@400;500;600;700;800&family=Nothing+You+Could+Do',
+              1
+          )
+
+          extra_css = r'''
+/* TEST: manifesto hero */
+.manifestoHero{padding:64px 0 74px;background:#f5f2eb}
+.manifestoHero .manifestoWrap{width:min(920px,calc(100% - 34px));margin:auto}
+.manifestoKicker{font-size:.72rem;letter-spacing:.19em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:12px}
+.manifestoTitle{font:600 clamp(3.2rem,7vw,5.9rem)/.92 "Cormorant Garamond",serif;letter-spacing:-.04em;margin:0 0 26px;max-width:11ch}
+.manifestoNote{position:relative;background:#fffdf7;border:1px solid #e8e0d2;padding:clamp(30px,5vw,58px);box-shadow:0 20px 50px #00000012}
+.manifestoNote:before{content:"";position:absolute;left:0;top:0;width:8px;height:100%;background:var(--yellow)}
+.manifestoHand{font-family:"Caveat",cursive;font-size:clamp(1.7rem,2.8vw,2.1rem);line-height:1.28;letter-spacing:.005em}
+.manifestoHand p{margin:0 0 .9em}.manifestoEm{font-weight:600}
+.manifestoSignature{margin-top:1.2em;text-align:right;font:600 clamp(2.1rem,4vw,2.9rem)/1 "Caveat",cursive}
+.manifestoNext{margin-top:40px;text-align:center}.manifestoNext small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.17em;margin-bottom:7px}.manifestoNext strong{display:block;font:600 clamp(2.8rem,6vw,4.8rem)/.94 "Cormorant Garamond",serif}
+@media(max-width:620px){.manifestoHero{padding:42px 0 54px}.manifestoHero .manifestoWrap{width:calc(100% - 22px)}.manifestoNote{padding:28px 24px 30px 32px}}
+'''
+          t = t.replace('</style>', extra_css + '\n</style>', 1)
+
+          hero = '''<section class="manifestoHero" id="inicio"><div class="manifestoWrap"><div class="manifestoKicker">Por qué existe Canvas</div><h1 class="manifestoTitle">Creemos que toda idea merece un lugar donde empezar.</h1><article class="manifestoNote"><div class="manifestoHand"><p>Canvas nació de disfrutar un espacio y descubrir que se disfruta todavía más cuando se comparte.</p><p>Porque muchas veces la idea ya existe. Las ganas también.</p><p class="manifestoEm">Lo que falta es un lugar donde empezar.</p><p>Queremos que aquí una maestra pueda formar su primer grupo, alguien dé su primer taller, un fotógrafo haga una sesión o una persona pruebe ese proyecto que lleva tiempo imaginando.</p><p>Canvas sigue siendo también nuestro espacio. Aquí trabajamos, creamos y hacemos nuestros propios proyectos. Pero precisamente por eso queremos compartirlo.</p><p class="manifestoEm">Porque un espacio vacío es solo un espacio. Cuando alguien llega con una idea, cobra vida.</p><p>Si aquí alguien encuentra el impulso para empezar algo suyo, entonces Canvas está cumpliendo su propósito.</p><p class="manifestoEm">No necesitas tener tu propio local para empezar a construir algo propio.</p><div class="manifestoSignature">— J VSK</div></div></article><div class="manifestoNext"><small>De esa idea nace</small><strong>Canvas 90</strong></div></div></section>'''
+
+          pattern = re.compile(r'<section class="hero" id="inicio">.*?</section>', re.S)
+          t, n = pattern.subn(hero, t, count=1)
+          if n != 1:
+              raise SystemExit(f'Hero replacement failed: {n}')
+
+          Path('index-prueba.html').write_text(t)
+          PY
+      - name: Commit test page
+        run: |
+          git config user.name "Canvas Web Bot"
+          git config user.email "canvas-web-bot@users.noreply.github.com"
+          git add index-prueba.html
+          git commit -m "Crear index de prueba con manifiesto Canvas"
+          git push
