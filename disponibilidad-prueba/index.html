@@ -127,10 +127,10 @@ footer{padding:28px 0 45px;color:var(--muted);font-size:.72rem;letter-spacing:.1
   .mobileLegend .busyDot{background:#efc2bd}
   .timelineWrap{overflow:visible;padding:14px 18px 12px}
   .timelineInner{min-width:0!important;width:100%}
-  .hours{grid-template-columns:repeat(16,minmax(0,1fr));font-size:.46rem;letter-spacing:-.01em;margin-bottom:7px}
-  .hours span{overflow:visible;transform:translateX(-1px)}
+  .hours{grid-template-columns:repeat(16,minmax(0,1fr));font-size:.60rem;letter-spacing:0;margin-bottom:8px}
+  .hours span{overflow:visible;transform:none;text-align:center}
   .track{height:58px;border-radius:6px}
-  .busy{font-size:.58rem;padding:2px 4px}
+  .busy{font-size:0;padding:0}
   .mobileCta{display:block;margin:0 18px 16px;padding:14px 12px;border-radius:2px;font-size:.74rem}
   .summary{display:none}
   footer{padding:22px 0 34px}
@@ -249,7 +249,7 @@ function timeline(spaceKey,key){
           width=((x.end-x.start)/(CLOSE-OPEN))*100;
     return `<div class="busy ${spaceKey}" style="left:${left}%;width:${width}%">No disponible</div>`
   }).join('');
-  const hours=Array.from({length:16},(_,i)=>`<span>${String(7+i).padStart(2,'0')}:00</span>`).join('');
+  const hours=Array.from({length:16},(_,i)=>`<span>${7+i}</span>`).join('');
   return `<div class="timelineWrap"><div class="timelineInner"><div class="hours">${hours}</div><div class="track ${spaceKey}">${blocks}</div></div></div>`
 }
 
