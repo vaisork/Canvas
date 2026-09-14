@@ -11,8 +11,8 @@
 <style>
 :root{
   --paper:#fffefb;--ink:#171717;--muted:#77756e;--line:#e7e3da;
-  --canvas:#0f6373;--origen:#dfa61c;--pulso:#df4e3f;
-  --canvasSoft:#e5f1f3;--origenSoft:#fff5d8;--pulsoSoft:#fde8e4;--ok:#6f9b73
+  --canvas:#167E8C;--origen:#E0A51E;--pulso:#E8644F;
+  --canvasSoft:#eaf6f7;--origenSoft:#fff6da;--pulsoSoft:#fde9e5;--ok:#57935A
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -20,7 +20,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-
 .wrap{width:min(1220px,calc(100% - 30px));margin:auto}
 header{border-bottom:1px solid var(--line);padding:22px 0}
 .top{display:flex;justify-content:space-between;align-items:center}
-.brand{font-family:"Cormorant Garamond",serif;font-size:2.1rem;letter-spacing:.16em;color:var(--ink);text-decoration:none}
+.brand{font-family:"Cormorant Garamond",serif;font-size:2.1rem;letter-spacing:.16em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}.brand img{width:auto;height:30px;object-fit:contain}
 .tag{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .hero{padding:38px 0 18px}
 .kicker{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
@@ -29,9 +29,9 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(3rem,6vw,5.2rem);line-
 .modebar,.spacebar{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 12px}
 .btn,.small{border:1px solid var(--line);background:#fff;padding:11px 14px;font:inherit;cursor:pointer}
 .btn.active{background:#181818;color:#fff;border-color:#181818}
-.spacebtn.active.canvas90{background:#f4fafb;border-color:#9cc8d0}
-.spacebtn.active.origen{background:#fffdf5;border-color:#ead57d}
-.spacebtn.active.pulso{background:#fff8f6;border-color:#efb0a9}
+.spacebtn.active.canvas90{background:#eaf6f7;border-color:var(--canvas);color:#0f6672}
+.spacebtn.active.origen{background:#fff6da;border-color:var(--origen);color:#785600}
+.spacebtn.active.pulso{background:#fde9e5;border-color:var(--pulso);color:#9b3027}
 .controls{display:flex;justify-content:space-between;gap:14px;align-items:center;margin:16px 0}
 .center{display:flex;align-items:center;gap:12px}
 .weektitle{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;text-align:center}
@@ -49,10 +49,7 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(3rem,6vw,5.2rem);line-
 .rows{display:grid;gap:14px}
 .rowcard{border:1px solid var(--line);background:#fff;display:grid;grid-template-columns:180px minmax(0,1fr) 190px;align-items:stretch;min-height:132px}
 .identity{padding:20px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
-.mark{font-family:"Cormorant Garamond",serif;font-size:2.3rem;line-height:.9;font-weight:600}
-.mark.canvas90{color:var(--canvas)}
-.mark.origen{color:var(--origen)}
-.mark.pulso{color:var(--pulso)}
+.mark{height:50px;display:flex;align-items:center}.mark img{width:auto;height:50px;max-width:125px;object-fit:contain;object-position:left center}
 .identity strong{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;margin-top:10px}
 .identity span{font-size:.68rem;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.1em}
 .timelineWrap{padding:22px 18px;overflow:hidden}
@@ -64,9 +61,9 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(3rem,6vw,5.2rem);line-
 .track.origen{background-color:var(--origenSoft)}
 .track.pulso{background-color:var(--pulsoSoft)}
 .busy{position:absolute;top:0;bottom:0;border-radius:5px;display:flex;align-items:center;justify-content:center;padding:4px 8px;font-size:.66rem;font-weight:700;color:#fff;overflow:hidden;white-space:nowrap}
-.busy.canvas90{background:rgba(15,99,115,.76)}
-.busy.origen{background:rgba(223,166,28,.82);color:#594000}
-.busy.pulso{background:rgba(223,78,63,.78)}
+.busy.canvas90{background:rgba(22,126,140,.88)}
+.busy.origen{background:rgba(224,165,30,.9);color:#594000}
+.busy.pulso{background:rgba(232,100,79,.88)}
 .side{border-left:1px solid var(--line);padding:18px 16px;display:flex;flex-direction:column;justify-content:center}
 .state{display:flex;align-items:center;gap:9px;font-size:.82rem;font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--line)}
 .state i{width:18px;height:18px;border-radius:50%;background:#cfe4cf}
@@ -87,7 +84,7 @@ footer{padding:28px 0 45px;color:var(--muted);font-size:.72rem;letter-spacing:.1
 </style>
 </head>
 <body>
-<header><div class="wrap top"><a class="brand" href="../index.html">CANVAS</a><div class="tag">Espacios para lo que te mueve</div></div></header>
+<header><div class="wrap top"><a class="brand" href="../index.html"><img src="../assets/img/canvas-icon-mark.png" alt="">CANVAS</a><div class="tag">Espacios para lo que te mueve</div></div></header>
 <main class="wrap">
 <section class="hero"><div class="kicker">Disponibilidad</div><h1>Vista general de disponibilidad.</h1><p class="lead">La vista general muestra los tres espacios en grande, uno debajo del otro, para comparar un mismo día sin perder legibilidad. La vista por espacio conserva el detalle de toda la semana.</p><div class="modebar"><button class="btn active" data-mode="general">Vista general</button><button class="btn" data-mode="single">Vista por espacio</button></div><div class="spacebar hidden" id="spacebar"><button class="btn spacebtn canvas90 active" data-space="canvas90">Canvas 90</button><button class="btn spacebtn origen" data-space="origen">Canvas Origen</button><button class="btn spacebtn pulso" data-space="pulso">Canvas Pulso</button></div></section>
 <div class="controls"><div class="center"><button class="small" id="prev" aria-label="Semana anterior">←</button><div class="weektitle" id="weekTitle">—</div><button class="small" id="next" aria-label="Semana siguiente">→</button></div><label class="datejump">Ir a fecha <input type="date" id="datePicker"></label></div>
@@ -97,7 +94,7 @@ footer{padding:28px 0 45px;color:var(--muted);font-size:.72rem;letter-spacing:.1
 </main>
 <script>
 const API='https://script.google.com/macros/s/AKfycbzLNsOEKTft_CHu_caYYFRm9cICPK-cxPNM6jJUMf5phBoIuHhxUVkTvxkyoc7QC5IC/exec';
-const SPACES={canvas90:{name:'Canvas 90',sub:'Espacio principal + jardín',mark:'90',color:'#0f6373'},origen:{name:'Canvas Origen',sub:'Espacio privado',mark:'Origen',color:'#dfa61c'},pulso:{name:'Canvas Pulso',sub:'Espacio privado',mark:'Pulso',color:'#df4e3f'}};
+const SPACES={canvas90:{name:'Canvas 90',sub:'Espacio principal + jardín',icon:'../assets/img/icon-canvas90.png',color:'#167E8C'},origen:{name:'Canvas Origen',sub:'Espacio privado',icon:'../assets/img/icon-origen.png',color:'#E0A51E'},pulso:{name:'Canvas Pulso',sub:'Espacio privado',icon:'../assets/img/icon-pulso.png',color:'#E8644F'}};
 const OPEN=7*60,CLOSE=22*60;let mode='general',space='canvas90',weekStart=startOfWeek(new Date()),selected=formatKey(new Date()),data={canvas90:[],origen:[],pulso:[]};
 function startOfWeek(d){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()),n=(x.getDay()+6)%7;x.setDate(x.getDate()-n);return x}function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}function formatKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function parseKey(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)}function fmtLong(k){return new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(parseKey(k))}function fmtWeek(a,b){const f=new Intl.DateTimeFormat('es-MX',{day:'numeric',month:'long',year:'numeric'});return `${f.format(a)} — ${f.format(b)}`}function hhmm(m){return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`}function days(){return Array.from({length:7},(_,i)=>addDays(weekStart,i))}
 function dayBusy(spaceKey,key){return data[spaceKey].map(x=>{const s=new Date(x.desde),e=new Date(x.hasta),day=parseKey(key),day2=addDays(day,1),a=Math.max(s.getTime(),day.getTime()),b=Math.min(e.getTime(),day2.getTime());if(b<=a)return null;const aa=new Date(a),bb=new Date(b);return{start:Math.max(OPEN,aa.getHours()*60+aa.getMinutes()),end:Math.min(CLOSE,bb.getHours()*60+bb.getMinutes())}}).filter(x=>x&&x.end>x.start).sort((a,b)=>a.start-b.start)}
@@ -105,7 +102,7 @@ function merged(spaceKey,key){const out=[];dayBusy(spaceKey,key).forEach(x=>{con
 function renderDays(){const el=document.getElementById('days'),labs=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];el.innerHTML='';days().forEach((d,i)=>{const k=formatKey(d),b=document.createElement('button');b.className='day'+(k===selected?' active':'');b.innerHTML=`<span class="wd">${labs[i]}</span><span class="num">${d.getDate()}</span>`;b.onclick=()=>{selected=k;renderAll()};el.appendChild(b)})}
 function timeline(spaceKey,key){const blocks=merged(spaceKey,key).map(x=>{const left=((x.start-OPEN)/(CLOSE-OPEN))*100,width=((x.end-x.start)/(CLOSE-OPEN))*100;return `<div class="busy ${spaceKey}" style="left:${left}%;width:${width}%">No disponible</div>`}).join('');const hours=Array.from({length:16},(_,i)=>`<span>${7+i}</span>`).join('');return `<div class="timelineWrap"><div class="timelineInner"><div class="hours">${hours}</div><div class="track ${spaceKey}">${blocks}</div></div></div>`}
 function mobileLegend(){return `<div class="mobileLegend"><span><i class="free"></i>Disponible</span><span><i class="busyDot"></i>No disponible</span></div>`}
-function rowForSpace(spaceKey,key){const s=SPACES[spaceKey],wa=encodeURIComponent(`Hola, vi la disponibilidad de ${s.name} para ${fmtLong(key)} y quiero consultar un horario.`);return `<article class="rowcard"><div class="identity"><div class="mark ${spaceKey}">${s.mark}</div><strong>${s.name}</strong><span>${s.sub}</span></div>${mobileLegend()}${timeline(spaceKey,key)}<aside class="side"><div class="state"><i></i>Disponible</div><small>Horario de operación</small><b>07:00 — 22:00</b><a class="cta" target="_blank" rel="noopener" href="https://wa.me/527821402617?text=${wa}">CONSULTAR POR WHATSAPP →</a></aside><a class="mobileCta" target="_blank" rel="noopener" href="https://wa.me/527821402617?text=${wa}">CONSULTAR POR WHATSAPP →</a></article>`}
+function rowForSpace(spaceKey,key){const s=SPACES[spaceKey],wa=encodeURIComponent(`Hola, vi la disponibilidad de ${s.name} para ${fmtLong(key)} y quiero consultar un horario.`);return `<article class="rowcard"><div class="identity"><div class="mark ${spaceKey}"><img src="${s.icon}" alt=""></div><strong>${s.name}</strong><span>${s.sub}</span></div>${mobileLegend()}${timeline(spaceKey,key)}<aside class="side"><div class="state"><i></i>Disponible</div><small>Horario de operación</small><b>07:00 — 22:00</b><a class="cta" target="_blank" rel="noopener" href="https://wa.me/527821402617?text=${wa}">CONSULTAR POR WHATSAPP →</a></aside><a class="mobileCta" target="_blank" rel="noopener" href="https://wa.me/527821402617?text=${wa}">CONSULTAR POR WHATSAPP →</a></article>`}
 function rowForDay(dayKey){const d=parseKey(dayKey),label=new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'short'}).format(d),fr=free(space,dayKey),wa=encodeURIComponent(`Hola, vi la disponibilidad de ${SPACES[space].name} para ${fmtLong(dayKey)} y quiero consultar un horario.`);return `<article class="rowcard"><div class="identity"><div class="mark ${space}">${d.getDate()}</div><strong>${label}</strong><span>${SPACES[space].name}</span></div>${mobileLegend()}${timeline(space,dayKey)}<aside class="side"><div class="state"><i></i>${fr.length?'Disponible':'Sin disponibilidad'}</div><small>Horario de operación</small><b>07:00 — 22:00</b><a class="cta" target="_blank" rel="noopener" href="https://wa.me/527821402617?text=${wa}">CONSULTAR →</a></aside><a class="mobileCta" target="_blank" rel="noopener" href="https://wa.me/527821402617?text=${wa}">CONSULTAR POR WHATSAPP →</a></article>`}
 function renderRows(){const r=document.getElementById('rows');if(mode==='general'){document.getElementById('viewLabel').textContent=fmtLong(selected);r.innerHTML=['canvas90','origen','pulso'].map(k=>rowForSpace(k,selected)).join('')}else{document.getElementById('viewLabel').textContent=`${SPACES[space].name} · semana completa`;r.innerHTML=days().map(d=>rowForDay(formatKey(d))).join('')}}
 function renderSummary(){const el=document.getElementById('summary');if(mode==='general'){el.innerHTML=['canvas90','origen','pulso'].map(k=>`<div class="sum"><strong><i class="dot" style="background:${SPACES[k].color}"></i>${SPACES[k].name}</strong><div class="times">${free(k,selected).map(r=>`${hhmm(r[0])} — ${hhmm(r[1])}`).join(' · ')||'Sin horarios libres'}</div></div>`).join('')}else{el.innerHTML=`<div class="sum" style="grid-column:1/-1"><strong><i class="dot" style="background:${SPACES[space].color}"></i>${SPACES[space].name}</strong><div class="times">Selecciona cualquier día arriba para consultar sus horarios disponibles.</div></div>`}}
