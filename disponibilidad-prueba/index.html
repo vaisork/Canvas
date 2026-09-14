@@ -259,7 +259,7 @@ function mobileLegend(){
 
 function rowForSpace(spaceKey,key){
   const s=SPACES[spaceKey],
-        wa=encodeURIComponent(`Hola, vi la disponibilidad de ${s.name} y quiero consultar un horario.`);
+        wa=encodeURIComponent(`Hola, vi la disponibilidad de ${s.name} para ${fmtLong(key)} y quiero consultar un horario.`);
   return `<article class="rowcard">
     <div class="identity">
       <div class="mark ${spaceKey}">${s.mark}</div>
