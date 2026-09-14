@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canvas · Index de prueba</title>
+<style>body{margin:0;font-family:system-ui,sans-serif;background:#f5f2eb;color:#171717;display:grid;place-items:center;min-height:100vh}p{opacity:.65}</style>
+</head>
+<body>
+<p>Cargando versión de prueba de Canvas…</p>
+<script>
+(async()=>{
+  const html = await fetch('index.html?preview=' + Date.now(), {cache:'no-store'}).then(r=>r.text());
+  const extraCss = `
+.manifestoHero{padding:64px 0 74px;background:#f5f2eb}
+.manifestoHero .manifestoWrap{width:min(920px,calc(100% - 34px));margin:auto}
+.manifestoKicker{font-size:.72rem;letter-spacing:.19em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:12px}
+.manifestoTitle{font:600 clamp(3.2rem,7vw,5.9rem)/.92 "Cormorant Garamond",serif;letter-spacing:-.04em;margin:0 0 26px;max-width:11ch}
+.manifestoNote{position:relative;background:#fffdf7;border:1px solid #e8e0d2;padding:clamp(30px,5vw,58px);box-shadow:0 20px 50px #00000012}
+.manifestoNote:before{content:"";position:absolute;left:0;top:0;width:8px;height:100%;background:var(--yellow)}
+.manifestoHand{font-family:"Nothing You Could Do",cursive;font-size:clamp(1.25rem,2vw,1.55rem);line-height:1.6;letter-spacing:.01em}
+.manifestoHand p{margin:0 0 1em}.manifestoEm{font-weight:600}
+.manifestoSignature{margin-top:1.2em;text-align:right;font:600 clamp(1.9rem,3vw,2.6rem)/1 "Nothing You Could Do",cursive}
+.manifestoNext{margin-top:40px;text-align:center}.manifestoNext small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.17em;margin-bottom:7px}.manifestoNext strong{display:block;font:600 clamp(2.8rem,6vw,4.8rem)/.94 "Cormorant Garamond",serif}
+@media(max-width:620px){.manifestoHero{padding:42px 0 54px}.manifestoHero .manifestoWrap{width:calc(100% - 22px)}.manifestoNote{padding:28px 24px 30px 32px}.manifestoHand{font-size:1.2rem;line-height:1.55}}
+`;
+
+  const hero = `<section class="manifestoHero" id="inicio"><div class="manifestoWrap"><div class="manifestoKicker">Por qué existe Canvas</div><h1 class="manifestoTitle">Creemos que toda idea merece un lugar donde empezar.</h1><article class="manifestoNote"><div class="manifestoHand"><p>Canvas nació de disfrutar un espacio y descubrir que se disfruta todavía más cuando se comparte.</p><p>Porque muchas veces la idea ya existe. Las ganas también.</p><p class="manifestoEm">Lo que falta es un lugar donde empezar.</p><p>Queremos que aquí una maestra pueda formar su primer grupo, alguien dé su primer taller, un fotógrafo haga una sesión o una persona pruebe ese proyecto que lleva tiempo imaginando.</p><p>Canvas sigue siendo también nuestro espacio. Aquí trabajamos, creamos y hacemos nuestros propios proyectos. Pero precisamente por eso queremos compartirlo.</p><p class="manifestoEm">Porque un espacio vacío es solo un espacio. Cuando alguien llega con una idea, cobra vida.</p><p>Si aquí alguien encuentra el impulso para empezar algo suyo, entonces Canvas está cumpliendo su propósito.</p><p class="manifestoEm">No necesitas tener tu propio local para empezar a construir algo propio.</p><div class="manifestoSignature">— J VSK</div></div></article><div class="manifestoNext"><small>De esa idea nace</small><strong>Canvas 90</strong></div></div></section>`;
+
+  let out = html.replace('</style>', extraCss + '\n</style>');
+  out = out.replace(/<section class="hero" id="inicio">[\s\S]*?<\/section>/, hero);
+  out = out.replace('<title>Canvas | Un lugar para crear, compartir y ser</title>', '<title>Canvas | Prueba manifiesto</title>');
+  document.open();
+  document.write(out);
+  document.close();
+})().catch(err=>{document.body.innerHTML='<p>No se pudo cargar la prueba.</p>';console.error(err)});
+</script>
+</body>
+</html>
