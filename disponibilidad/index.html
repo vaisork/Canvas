@@ -32,7 +32,11 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(3rem,6vw,5.2rem);line-
 .space span{display:block;font-size:.72rem;color:var(--muted);margin-top:4px}
 .pill{display:inline-block;margin-top:7px;padding:3px 7px;border:1px solid var(--line);border-radius:999px;font-size:.62rem!important;letter-spacing:.08em;text-transform:uppercase}
 .controls{display:flex;justify-content:space-between;align-items:center;margin:26px 0 12px;gap:12px}
+.control-center{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0}
 .weektitle{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;text-align:center}
+.datejump{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.datejump input{border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;padding:7px 9px;border-radius:0;cursor:pointer}
+.datejump input:focus{outline:2px solid #c6e1e6;outline-offset:1px}
 .smallbtn{border:1px solid var(--line);background:#fff;padding:9px 12px;cursor:pointer;font-size:1rem}
 .smallbtn:hover{background:#f8f7f3}
 .layout{display:grid;grid-template-columns:1fr 330px;gap:22px;align-items:start}
@@ -81,7 +85,17 @@ footer{padding:32px 0 50px;color:var(--muted);font-size:.72rem;letter-spacing:.1
 </button>
 </div>
 </section>
-<div class="controls"><button class="smallbtn" id="prevWeek" aria-label="Semana anterior">←</button><div><div class="weektitle" id="weekTitle">Cargando semana…</div><div class="status" id="status">Consultando disponibilidad real…</div></div><button class="smallbtn" id="nextWeek" aria-label="Semana siguiente">→</button></div>
+<div class="controls">
+<button class="smallbtn" id="prevWeek" aria-label="Semana anterior">←</button>
+<div class="control-center">
+  <div class="weektitle" id="weekTitle">Cargando semana…</div>
+  <label class="datejump" for="datePicker">Ir a fecha
+    <input type="date" id="datePicker" aria-label="Elegir una fecha">
+  </label>
+  <div class="status" id="status">Consultando disponibilidad real…</div>
+</div>
+<button class="smallbtn" id="nextWeek" aria-label="Semana siguiente">→</button>
+</div>
 <div class="layout">
 <section class="calendar"><div class="grid" id="calendarGrid"></div></section>
 <aside class="panel">
@@ -101,6 +115,7 @@ const OPEN_MIN=7*60,CLOSE_MIN=22*60,ROW_H=42;
 let weekStart=startOfWeek(new Date());
 let selectedDate=formatKey(new Date());
 let busy=[];
+
 function startOfWeek(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d}
 function addDays(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d}
 function formatKey(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
@@ -113,10 +128,18 @@ function isoAt(key,time){return new Date(`${key}T${time}:00-06:00`).getTime()}
 function intervalForDay(item,key){const start=Math.max(new Date(item.desde).getTime(),isoAt(key,'07:00'));const end=Math.min(new Date(item.hasta).getTime(),isoAt(key,'22:00'));if(end<=start)return null;const base=isoAt(key,'00:00');return {start:Math.round((start-base)/60000),end:Math.round((end-base)/60000)}}
 function mergedForDay(key){const arr=busy.map(x=>intervalForDay(x,key)).filter(Boolean).sort((a,b)=>a.start-b.start);const out=[];arr.forEach(x=>{const last=out[out.length-1];if(last&&x.start<=last.end)last.end=Math.max(last.end,x.end);else out.push({...x})});return out}
 function renderGrid(){const grid=document.getElementById('calendarGrid');grid.innerHTML='';const blank=document.createElement('div');blank.className='head';grid.appendChild(blank);const days=[];for(let i=0;i<7;i++)days.push(addDays(weekStart,i));days.forEach(d=>{const h=document.createElement('div');h.className='head day'+(formatKey(d)===selectedDate?' selected':'');h.textContent=fmtDay(d);h.dataset.date=formatKey(d);h.addEventListener('click',()=>{selectedDate=h.dataset.date;renderGrid();renderPanel()});grid.appendChild(h)});for(let hr=7;hr<22;hr++){const t=document.createElement('div');t.className='cell time';t.textContent=`${String(hr).padStart(2,'0')}:00`;grid.appendChild(t);days.forEach(d=>{const key=formatKey(d);const c=document.createElement('div');c.className='cell slot';mergedForDay(key).filter(x=>Math.floor(x.start/60)===hr).forEach(x=>{const b=document.createElement('div');b.className='block';b.style.top=`${((x.start-hr*60)/60)*ROW_H}px`;b.style.height=`${Math.max(20,((x.end-x.start)/60)*ROW_H)}px`;b.textContent='No disponible';c.appendChild(b)});grid.appendChild(c)})}}
-function renderPanel(){document.getElementById('selectedDateLabel').textContent=fmtLong(selectedDate);document.getElementById('panelIcon').innerHTML=iconSVG()+`<div><strong>Canvas 90</strong><div style="font-size:.75rem;color:#77756e;margin-top:4px">Disponibilidad real</div></div>`;const intervals=mergedForDay(selectedDate);const segments=[];let cursor=OPEN_MIN;intervals.forEach(x=>{if(x.start>cursor)segments.push([cursor,x.start,true]);segments.push([Math.max(cursor,x.start),x.end,false]);cursor=Math.max(cursor,x.end)});if(cursor<CLOSE_MIN)segments.push([cursor,CLOSE_MIN,true]);const box=document.getElementById('ranges');box.innerHTML=segments.length?segments.map(s=>`<div class="range"><span>${hhmm(s[0])} — ${hhmm(s[1])}</span><span class="${s[2]?'ok':'no'}">${s[2]?'Disponible':'No disponible'}</span></div>`).join(''):'<div class="range"><span>07:00 — 22:00</span><span class="ok">Disponible</span></div>';const msg=`Hola, vi la disponibilidad de Canvas 90 para ${fmtLong(selectedDate)} y quiero consultar un horario.`;document.getElementById('whatsappCta').href=`https://wa.me/527821402617?text=${encodeURIComponent(msg)}`}
+function renderPanel(){document.getElementById('selectedDateLabel').textContent=fmtLong(selectedDate);document.getElementById('datePicker').value=selectedDate;document.getElementById('panelIcon').innerHTML=iconSVG()+`<div><strong>Canvas 90</strong><div style="font-size:.75rem;color:#77756e;margin-top:4px">Disponibilidad real</div></div>`;const intervals=mergedForDay(selectedDate);const segments=[];let cursor=OPEN_MIN;intervals.forEach(x=>{if(x.start>cursor)segments.push([cursor,x.start,true]);segments.push([Math.max(cursor,x.start),x.end,false]);cursor=Math.max(cursor,x.end)});if(cursor<CLOSE_MIN)segments.push([cursor,CLOSE_MIN,true]);const box=document.getElementById('ranges');box.innerHTML=segments.length?segments.map(s=>`<div class="range"><span>${hhmm(s[0])} — ${hhmm(s[1])}</span><span class="${s[2]?'ok':'no'}">${s[2]?'Disponible':'No disponible'}</span></div>`).join(''):'<div class="range"><span>07:00 — 22:00</span><span class="ok">Disponible</span></div>';const msg=`Hola, vi la disponibilidad de Canvas 90 para ${fmtLong(selectedDate)} y quiero consultar un horario.`;document.getElementById('whatsappCta').href=`https://wa.me/527821402617?text=${encodeURIComponent(msg)}`}
 async function loadWeek(){const status=document.getElementById('status');status.className='status';status.textContent='Consultando disponibilidad real…';const weekEnd=addDays(weekStart,6);document.getElementById('weekTitle').textContent=fmtMonthRange(weekStart,weekEnd);if(selectedDate<formatKey(weekStart)||selectedDate>formatKey(weekEnd))selectedDate=formatKey(weekStart);const queryStart=formatKey(addDays(weekStart,-1));const queryEnd=formatKey(addDays(weekEnd,1));try{const res=await fetch(`${API_URL}?desde=${queryStart}&hasta=${queryEnd}`,{cache:'no-store'});if(!res.ok)throw new Error(`HTTP ${res.status}`);const data=await res.json();if(!data.ok)throw new Error('Respuesta no válida');busy=Array.isArray(data.ocupados)?data.ocupados:[];status.textContent='Disponibilidad actualizada desde Google Calendar';renderGrid();renderPanel()}catch(err){console.error(err);busy=[];status.className='status error';status.textContent='No se pudo consultar el calendario. Intenta recargar la página.';renderGrid();document.getElementById('ranges').innerHTML='<div class="note">La disponibilidad no está disponible en este momento. Escríbenos por WhatsApp para confirmar un horario.</div>';document.getElementById('selectedDateLabel').textContent=fmtLong(selectedDate);document.getElementById('panelIcon').innerHTML=iconSVG()+`<div><strong>Canvas 90</strong><div style="font-size:.75rem;color:#77756e;margin-top:4px">Consulta manual</div></div>`}}
 document.getElementById('prevWeek').addEventListener('click',()=>{weekStart=addDays(weekStart,-7);selectedDate=formatKey(weekStart);loadWeek()});
 document.getElementById('nextWeek').addEventListener('click',()=>{weekStart=addDays(weekStart,7);selectedDate=formatKey(weekStart);loadWeek()});
+document.getElementById('datePicker').addEventListener('change',e=>{
+  if(!e.target.value)return;
+  const [y,m,d]=e.target.value.split('-').map(Number);
+  const chosen=new Date(y,m-1,d);
+  selectedDate=e.target.value;
+  weekStart=startOfWeek(chosen);
+  loadWeek();
+});
 loadWeek();
 </script>
 </body>
