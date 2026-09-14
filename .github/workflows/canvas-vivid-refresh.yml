@@ -1,0 +1,68 @@
+name: Canvas vivid branding refresh
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/canvas-vivid-refresh.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply vivid branding and final icon references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          # HOME / INDEX
+          p=Path('index.html')
+          t=p.read_text()
+          t=t.replace('--paper:#fffefb;--soft:#f6f4ee;--ink:#141414;--muted:#66655f;--line:#dddcd5;--blue:#2967df;--yellow:#efc62f;--green:#4f915f;--deck:#75695b;--coral:#df725f;--shadow:0 22px 55px #0002',
+                      '--paper:#fffefb;--soft:#f7f5ef;--ink:#141414;--muted:#66655f;--line:#dddcd5;--blue:#167E8C;--yellow:#E0A51E;--green:#57935A;--deck:#B27449;--coral:#E8644F;--blueSoft:#eaf6f7;--yellowSoft:#fff6da;--greenSoft:#edf6ec;--deckSoft:#f9eee7;--coralSoft:#fde9e5;--shadow:0 22px 55px #0002')
+          old='.head{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:42px}.head p{max-width:39rem;color:var(--muted);margin:0}.spaces{background:var(--soft)}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.card{background:white;border:1px solid var(--line);padding:24px;min-height:170px;display:flex;flex-direction:column;justify-content:space-between}.card strong{font:600 2rem/.95 "Cormorant Garamond",serif}.mark{width:58px;height:7px;margin-top:18px}.blue{background:var(--blue)}.green{background:var(--green)}.brown{background:var(--deck)}.yellow{background:var(--yellow)}.coral{background:var(--coral)}'
+          new='.head{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:42px}.head p{max-width:39rem;color:var(--muted);margin:0}.spaces{background:var(--soft)}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.card{background:white;border:1px solid var(--line);border-top:4px solid var(--line);padding:22px 24px 24px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .18s ease,box-shadow .18s ease}.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px #00000012}.card strong{font:600 2rem/.95 "Cormorant Garamond",serif}.cardIcon{width:82px;height:54px;object-fit:contain;object-position:left center;margin-top:18px}.card.canvas90{border-top-color:var(--blue);background:var(--blueSoft)}.card.jardin{border-top-color:var(--green);background:var(--greenSoft)}.card.deckcard{border-top-color:var(--deck);background:var(--deckSoft)}.card.origen{border-top-color:var(--yellow);background:var(--yellowSoft)}.card.pulso{border-top-color:var(--coral);background:var(--coralSoft)}'
+          t=t.replace(old,new)
+          t=t.replace('.map .canvas-halo{fill:#2967df;opacity:.13}.map .canvas-dot{fill:#2967df;stroke:#fff;stroke-width:5}', '.map .canvas-halo{fill:var(--blue);opacity:.15}.map .canvas-dot{fill:var(--blue);stroke:#fff;stroke-width:5}')
+          # Replace five space cards in a guarded, single section operation.
+          start=t.find('<div class="cards">')
+          if start!=-1:
+              end=t.find('</div></div></section>',start)
+              if end!=-1:
+                  cards='<div class="cards"><a class="card canvas90" href="espacios/canvas90.html"><span>Amplio · transformable</span><strong>Canvas 90</strong><img class="cardIcon" src="assets/img/icon-canvas90.png" alt="Icono Canvas 90"></a><a class="card jardin" href="espacios/jardin.html"><span>Exterior · abierto</span><strong>El Jardín de Canvas</strong><img class="cardIcon" src="assets/img/icon-jardin.png" alt="Icono El Jardín de Canvas"></a><a class="card deckcard" href="espacios/deck.html"><span>Exterior · urbano</span><strong>Canvas Deck</strong><img class="cardIcon" src="assets/img/icon-deck.png" alt="Icono Canvas Deck"></a><a class="card origen" href="espacios/origen.html"><span>Íntimo · comienzo</span><strong>Canvas Origen</strong><img class="cardIcon" src="assets/img/icon-origen.png" alt="Icono Canvas Origen"></a><a class="card pulso" href="espacios/pulso.html"><span>Íntimo · continuidad</span><strong>Canvas Pulso</strong><img class="cardIcon" src="assets/img/icon-pulso.png" alt="Icono Canvas Pulso"></a></div>'
+                  t=t[:start]+cards+t[end:]
+          p.write_text(t)
+
+          # AVAILABILITY
+          p=Path('disponibilidad/index.html')
+          t=p.read_text()
+          t=t.replace('--paper:#fffefb;--ink:#171717;--muted:#77756e;--line:#e7e3da;\n  --canvas:#0f6373;--origen:#dfa61c;--pulso:#df4e3f;\n  --canvasSoft:#e5f1f3;--origenSoft:#fff5d8;--pulsoSoft:#fde8e4;--ok:#6f9b73',
+                      '--paper:#fffefb;--ink:#171717;--muted:#77756e;--line:#e7e3da;\n  --canvas:#167E8C;--origen:#E0A51E;--pulso:#E8644F;\n  --canvasSoft:#eaf6f7;--origenSoft:#fff6da;--pulsoSoft:#fde9e5;--ok:#57935A')
+          t=t.replace('.brand{font-family:"Cormorant Garamond",serif;font-size:2.1rem;letter-spacing:.16em;color:var(--ink);text-decoration:none}', '.brand{font-family:"Cormorant Garamond",serif;font-size:2.1rem;letter-spacing:.16em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}.brand img{width:auto;height:30px;object-fit:contain}')
+          t=t.replace('.mark{font-family:"Cormorant Garamond",serif;font-size:2.3rem;line-height:.9;font-weight:600}', '.mark{height:50px;display:flex;align-items:center}.mark img{width:auto;height:50px;max-width:125px;object-fit:contain;object-position:left center}')
+          t=t.replace('.mark.canvas90{color:var(--canvas)}\n.mark.origen{color:var(--origen)}\n.mark.pulso{color:var(--pulso)}\n','')
+          t=t.replace('<a class="brand" href="../index.html">CANVAS</a>', '<a class="brand" href="../index.html"><img src="../assets/img/canvas-icon-mark.png" alt="">CANVAS</a>')
+          t=t.replace("const SPACES={canvas90:{name:'Canvas 90',sub:'Espacio principal + jardín',mark:'90',color:'#0f6373'},origen:{name:'Canvas Origen',sub:'Espacio privado',mark:'Origen',color:'#dfa61c'},pulso:{name:'Canvas Pulso',sub:'Espacio privado',mark:'Pulso',color:'#df4e3f'}};",
+                      "const SPACES={canvas90:{name:'Canvas 90',sub:'Espacio principal + jardín',icon:'../assets/img/icon-canvas90.png',color:'#167E8C'},origen:{name:'Canvas Origen',sub:'Espacio privado',icon:'../assets/img/icon-origen.png',color:'#E0A51E'},pulso:{name:'Canvas Pulso',sub:'Espacio privado',icon:'../assets/img/icon-pulso.png',color:'#E8644F'}};")
+          t=t.replace('${s.mark}</div>', '<img src="${s.icon}" alt=""></div>')
+          # Stronger active states without changing layout.
+          t=t.replace('.spacebtn.active.canvas90{background:#f4fafb;border-color:#9cc8d0}', '.spacebtn.active.canvas90{background:#eaf6f7;border-color:var(--canvas);color:#0f6672}')
+          t=t.replace('.spacebtn.active.origen{background:#fffdf5;border-color:#ead57d}', '.spacebtn.active.origen{background:#fff6da;border-color:var(--origen);color:#785600}')
+          t=t.replace('.spacebtn.active.pulso{background:#fff8f6;border-color:#efb0a9}', '.spacebtn.active.pulso{background:#fde9e5;border-color:var(--pulso);color:#9b3027}')
+          t=t.replace('background:rgba(15,99,115,.76)', 'background:rgba(22,126,140,.88)')
+          t=t.replace('background:rgba(223,166,28,.82)', 'background:rgba(224,165,30,.9)')
+          t=t.replace('background:rgba(223,78,63,.78)', 'background:rgba(232,100,79,.88)')
+          p.write_text(t)
+          PY
+      - name: Commit refreshed pages
+        run: |
+          git config user.name "Canvas Web Bot"
+          git config user.email "canvas-web-bot@users.noreply.github.com"
+          git add index.html disponibilidad/index.html
+          git diff --cached --quiet || git commit -m "Refresh Canvas icons and vivid color system"
+          git push
