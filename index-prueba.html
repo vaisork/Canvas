@@ -12,29 +12,53 @@
 (async()=>{
   const html = await fetch('index.html?preview=' + Date.now(), {cache:'no-store'}).then(r=>r.text());
   const extraCss = `
-.manifestoHero{padding:64px 0 74px;background:#f5f2eb}
-.manifestoHero .manifestoWrap{width:min(920px,calc(100% - 34px));margin:auto}
+.manifestoHero{padding:58px 0 76px;background:#f5f2eb;overflow:hidden}
+.manifestoHero .manifestoWrap{width:min(1280px,calc(100% - 34px));margin:auto}
 .manifestoKicker{font-size:.72rem;letter-spacing:.19em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:12px}
-.manifestoTitle{font:600 clamp(3.2rem,7vw,5.9rem)/.92 "Cormorant Garamond",serif;letter-spacing:-.04em;margin:0 0 26px;max-width:11ch}
+.manifestoTitle{font:600 clamp(3.2rem,6vw,5.9rem)/.92 "Cormorant Garamond",serif;letter-spacing:-.04em;margin:0 0 32px;max-width:11ch}
 .manifestoTitle em{color:var(--yellow);font-style:italic}
-.manifestoNote{position:relative;background:#fffdf7;border:1px solid #e8e0d2;padding:clamp(30px,5vw,58px);box-shadow:0 20px 50px #00000012}
-.manifestoNote:before{content:"";position:absolute;left:0;top:0;width:8px;height:100%;background:var(--yellow)}
-.manifestoHand{font-family:"Nothing You Could Do",cursive;font-size:clamp(1.25rem,2vw,1.55rem);line-height:1.6;letter-spacing:.01em}
-.manifestoHand p{margin:0 0 1em}.manifestoEm{font-weight:600}
-.manifestoSignature{margin-top:1.2em;text-align:right;font:600 clamp(1.9rem,3vw,2.6rem)/1 "Nothing You Could Do",cursive}
-.manifestoNext{margin-top:40px;text-align:center}.manifestoNext small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.17em;margin-bottom:7px}.manifestoNext strong{display:block;font:600 clamp(2.8rem,6vw,4.8rem)/.94 "Cormorant Garamond",serif}
-@media(max-width:620px){.manifestoHero{padding:42px 0 54px}.manifestoHero .manifestoWrap{width:calc(100% - 22px)}.manifestoNote{padding:28px 24px 30px 32px}.manifestoHand{font-size:1.2rem;line-height:1.55}}
+.manifestoGrid{display:grid;grid-template-columns:minmax(0,.88fr) minmax(470px,1.12fr);gap:54px;align-items:center}
+.manifestoNote{position:relative;background:#fffdf7;border:1px solid #e8e0d2;padding:clamp(30px,4vw,54px);box-shadow:0 20px 50px #00000012;transform:rotate(-.35deg)}
+.manifestoNote:before{content:"";position:absolute;left:0;top:0;width:7px;height:100%;background:var(--yellow)}
+.manifestoHand{font-family:"Nothing You Could Do",cursive;font-size:clamp(1.05rem,1.55vw,1.34rem);line-height:1.55;letter-spacing:.005em;color:#191919}
+.manifestoHand p{margin:0 0 .9em}.manifestoEm{font-weight:600}
+.manifestoSignature{margin-top:1.2em;text-align:right;font:600 clamp(1.9rem,3vw,2.7rem)/1 "Nothing You Could Do",cursive;transform:rotate(-3deg)}
+.memoryCollage{position:relative;min-height:720px}
+.memoryShot{position:absolute;background:#fff;padding:9px 9px 38px;box-shadow:0 18px 42px #00000024;border:1px solid #e4ded2}
+.memoryShot img{width:100%;height:100%;display:block;object-fit:cover}
+.memoryShot.main{width:78%;height:405px;left:3%;top:8px;transform:rotate(2deg);z-index:2}
+.memoryShot.garden{width:54%;height:340px;left:0;top:390px;transform:rotate(-4deg);z-index:3}
+.memoryShot.deck{width:52%;height:315px;right:0;top:410px;transform:rotate(4deg);z-index:4}
+.memoryLabel{position:absolute;left:18px;bottom:8px;font:600 1.45rem/1 "Nothing You Could Do",cursive;color:#25231f}
+.memoryTape{position:absolute;width:88px;height:25px;background:#d9c9a7aa;top:-12px;left:50%;transform:translateX(-50%) rotate(-3deg);z-index:5}
+.collageWhisper{position:absolute;right:1%;top:56px;width:120px;font:600 1rem/1.45 "Nothing You Could Do",cursive;transform:rotate(4deg);color:#4a4741}
+.collageWhisper.bottom{top:auto;bottom:12px;right:8%;width:150px;transform:rotate(-5deg)}
+.manifestoNext{margin-top:54px;text-align:center}.manifestoNext small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.17em;margin-bottom:7px}.manifestoNext strong{display:block;font:600 clamp(2.8rem,6vw,4.8rem)/.94 "Cormorant Garamond",serif}
+@media(max-width:980px){.manifestoGrid{grid-template-columns:1fr}.memoryCollage{min-height:650px;max-width:760px;width:100%;margin:auto}.manifestoNote{transform:none}}
+@media(max-width:620px){.manifestoHero{padding:42px 0 54px}.manifestoHero .manifestoWrap{width:calc(100% - 22px)}.manifestoNote{padding:28px 24px 30px 32px}.manifestoHand{font-size:1.08rem;line-height:1.52}.memoryCollage{min-height:520px;margin-top:8px}.memoryShot.main{width:88%;height:285px;left:6%}.memoryShot.garden{width:58%;height:245px;top:270px}.memoryShot.deck{width:56%;height:235px;top:290px}.collageWhisper{display:none}.memoryLabel{font-size:1.12rem}}
 `;
 
-  const hero = `<section class="manifestoHero" id="inicio"><div class="manifestoWrap"><div class="manifestoKicker">Por qué existe Canvas</div><h1 class="manifestoTitle">Un lugar para <em>crear,</em> y ser.</h1><article class="manifestoNote"><div class="manifestoHand"><p>Canvas nació de disfrutar un espacio y descubrir que se disfruta todavía más cuando se comparte.</p><p>Porque muchas veces la idea ya existe. Las ganas también.</p><p class="manifestoEm">Lo que falta es un lugar donde empezar.</p><p>Queremos que aquí una maestra pueda formar su primer grupo, alguien dé su primer taller, un fotógrafo haga una sesión o una persona pruebe ese proyecto que lleva tiempo imaginando.</p><p>Canvas sigue siendo también nuestro espacio. Aquí trabajamos, creamos y hacemos nuestros propios proyectos. Pero precisamente por eso queremos compartirlo.</p><p class="manifestoEm">Porque un espacio vacío es solo un espacio. Cuando alguien llega con una idea, cobra vida.</p><p>Si aquí alguien encuentra el impulso para empezar algo suyo, entonces Canvas está cumpliendo su propósito.</p><p class="manifestoEm">No necesitas tener tu propio local para empezar a construir algo propio.</p><div class="manifestoSignature">— J VSK</div></div></article><div class="manifestoNext"><small>De esa idea nace</small><strong>Canvas 90</strong></div></div></section>`;
+  const hero = `<section class="manifestoHero" id="inicio"><div class="manifestoWrap"><div class="manifestoKicker">Por qué existe Canvas</div><h1 class="manifestoTitle">Un lugar para <em>crear,</em> compartir y ser.</h1><div class="manifestoGrid"><article class="manifestoNote"><div class="manifestoHand"><p>Canvas nació de algo muy sencillo: de disfrutar un espacio y descubrir que se disfruta todavía más cuando se comparte.</p><p>Aquí hemos trabajado, pensado, celebrado, mirado la ciudad, visto crecer proyectos y vivido momentos que se quedan con nosotros. Y un día entendimos que estos lugares podían significar algo más.</p><p>Porque sabemos lo difícil que puede ser empezar.</p><p>A veces tienes la idea. Tienes las ganas. Tienes algo que enseñar, algo que crear, algo que probar… pero todavía no tienes dónde hacerlo.</p><p class="manifestoEm">Y muchas ideas se quedan ahí. Esperando.</p><p class="manifestoEm">Nosotros queremos que aquí encuentren un lugar.</p><p>Un lugar para esa maestra que quiere formar su primer grupo. Para quien quiere dar su primer taller. Para quien necesita una mesa para reunirse, un salón para moverse, una pared para fotografiar, un rincón para trabajar o simplemente unas horas para descubrir si eso que imagina puede convertirse en algo más grande.</p><p>Canvas también sigue siendo nuestro espacio. Aquí seguimos trabajando, creando y haciendo nuestros propios proyectos. Pero precisamente por eso nos gusta compartirlo.</p><p class="manifestoEm">Porque un espacio vacío solamente es un espacio. Cuando alguien hace algo suyo dentro de él, empieza a tener vida.</p><p>Y si algún proyecto puede comenzar aquí, crecer aquí o simplemente encontrar aquí el impulso que necesitaba, entonces Canvas está haciendo exactamente aquello para lo que lo imaginamos.</p><p class="manifestoEm">No necesitas tener tu propio local para empezar a construir algo propio.</p><div class="manifestoSignature">J VSK</div></div></article><aside class="memoryCollage" aria-label="Collage de Canvas 90, el jardín y el deck"><figure class="memoryShot main"><span class="memoryTape"></span><img id="collageCanvas90" alt="Canvas 90"><figcaption class="memoryLabel">Canvas 90</figcaption></figure><figure class="memoryShot garden"><span class="memoryTape"></span><img id="collageGarden" alt="El Jardín de Canvas"><figcaption class="memoryLabel">Jardín</figcaption></figure><figure class="memoryShot deck"><span class="memoryTape"></span><img id="collageDeck" alt="Canvas Deck"><figcaption class="memoryLabel">Deck</figcaption></figure><div class="collageWhisper">espacios para grandes comienzos ♡</div><div class="collageWhisper bottom">mismas raíces,<br>más posibilidades</div></aside></div><div class="manifestoNext"><small>De esa idea nace</small><strong>Canvas 90</strong></div></div></section>`;
 
   let out = html.replace('</style>', extraCss + '\n</style>');
   out = out.replace(/<section class="hero" id="inicio">[\s\S]*?<\/section>/, hero);
   out = out.replace(/<section class="intro">[\s\S]*?<\/section>/, '');
-  out = out.replace('<title>Canvas | Un lugar para crear, compartir y ser</title>', '<title>Canvas | Prueba manifiesto</title>');
+  out = out.replace('<title>Canvas | Un lugar para crear, compartir y ser</title>', '<title>Canvas | Prueba carta y collage</title>');
   document.open();
   document.write(out);
   document.close();
+
+  requestAnimationFrame(()=>{
+    const spacePhotos = [...document.querySelectorAll('.photoMain img')];
+    const heroPhoto = document.querySelector('.heroPhoto img');
+    const canvas90 = spacePhotos[0] || heroPhoto;
+    const garden = spacePhotos[1] || spacePhotos[0] || heroPhoto;
+    const deck = spacePhotos[2] || spacePhotos[1] || spacePhotos[0] || heroPhoto;
+    const set=(id,img)=>{const el=document.getElementById(id);if(el&&img)el.src=img.src};
+    set('collageCanvas90',canvas90);
+    set('collageGarden',garden);
+    set('collageDeck',deck);
+  });
 })().catch(err=>{document.body.innerHTML='<p>No se pudo cargar la prueba.</p>';console.error(err)});
 </script>
 </body>
