@@ -4,158 +4,43 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Disponibilidad | Canvas</title>
-<meta name="description" content="Consulta la disponibilidad de Canvas 90. Horario normal de operación de 7:00 AM a 10:00 PM.">
+<meta name="description" content="Consulta la disponibilidad de Canvas 90, Canvas Origen y Canvas Pulso.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#fffefb;--ink:#171717;--muted:#77756e;--line:#e7e3da;--blue:#0f6373;--coral:#df4e3f;--yellow:#dfa61c;--green:#647e4c}
-*{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif}
-.wrap{width:min(1180px,calc(100% - 30px));margin:auto}
-header{border-bottom:1px solid var(--line);padding:22px 0}
-.top{display:flex;justify-content:space-between;align-items:center;gap:20px}
-.brand{font-family:"Cormorant Garamond",serif;font-size:2.1rem;letter-spacing:.16em;color:var(--ink);text-decoration:none}
-.tag{font-size:.72rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
-.hero{padding:44px 0 20px}
-.kicker{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
-h1{font-family:"Cormorant Garamond",serif;font-size:clamp(3rem,6vw,5.2rem);line-height:.92;margin:8px 0 12px;max-width:11ch}
-.lead{max-width:760px;color:#4f4e49;line-height:1.6}
-.spacebar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0}
-.space{border:1px solid var(--line);background:#fff;padding:18px 16px;display:flex;align-items:center;gap:14px;transition:.2s;text-align:left;font:inherit;color:inherit}
-.space.canvas90{cursor:pointer}.space.canvas90:hover{transform:translateY(-1px)}
-.space.active{box-shadow:0 8px 25px rgba(0,0,0,.06)}
-.space.active.canvas90{border-color:#9cc8d0;background:#f5fbfc}
-.space.pending{opacity:.52;cursor:not-allowed}
-.icon{width:68px;height:48px;flex:0 0 auto}
-.space strong{display:block;font-size:.84rem;letter-spacing:.12em;text-transform:uppercase}
-.space span{display:block;font-size:.72rem;color:var(--muted);margin-top:4px}
-.pill{display:inline-block;margin-top:7px;padding:3px 7px;border:1px solid var(--line);border-radius:999px;font-size:.62rem!important;letter-spacing:.08em;text-transform:uppercase}
-.controls{display:flex;justify-content:space-between;align-items:center;margin:26px 0 12px;gap:12px}
-.control-center{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0}
-.weektitle{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;text-align:center}
-.datejump{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.datejump input{border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;padding:7px 9px;border-radius:0;cursor:pointer}
-.datejump input:focus{outline:2px solid #c6e1e6;outline-offset:1px}
-.smallbtn{border:1px solid var(--line);background:#fff;padding:9px 12px;cursor:pointer;font-size:1rem}
-.smallbtn:hover{background:#f8f7f3}
-.layout{display:grid;grid-template-columns:1fr 330px;gap:22px;align-items:start}
-.calendar{border:1px solid var(--line);background:#fff;overflow:auto}
-.grid{display:grid;grid-template-columns:64px repeat(7,1fr);min-width:900px}
-.cell,.head{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-.head{padding:12px 6px;text-align:center;background:#fcfbf7;font-size:.76rem;font-weight:700}
-.head.day{cursor:pointer}.head.day:hover,.head.day.selected{background:#eef7f8;color:var(--blue)}
-.time{font-size:.72rem;color:var(--muted);padding:8px 8px;text-align:right;min-height:42px}
-.slot{min-height:42px;position:relative}
-.block{position:absolute;left:5px;right:5px;border-radius:7px;padding:6px 7px;font-size:.68rem;font-weight:700;z-index:2;background:#dceef2;color:#0e5967;border:1px solid #acd1d8;overflow:hidden}
-.panel{border:1px solid var(--line);background:#fff;padding:22px;position:sticky;top:18px}
-.panel h2{font-family:"Cormorant Garamond",serif;font-size:2.2rem;line-height:1;margin:0 0 6px}
-.panel .date{font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);margin-bottom:18px}
-.panel-icon{display:flex;align-items:center;gap:12px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:8px}
-.panel-icon .icon{width:58px}
-.panel-icon strong{font-size:.82rem;letter-spacing:.12em}
-.range{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.85rem}
-.ok{color:#5a8c63;font-weight:700}.no{color:#b55145;font-weight:700}
-.cta{display:block;text-align:center;margin-top:18px;padding:13px 14px;background:#181818;color:#fff;text-decoration:none;font-size:.78rem;font-weight:700;letter-spacing:.06em}
-.note{font-size:.74rem;color:var(--muted);line-height:1.5;margin-top:10px}
-.status{font-size:.78rem;color:var(--muted);margin:7px 0 0}.status.error{color:#a64439}
-.mobile-days{display:none}
-footer{padding:32px 0 50px;color:var(--muted);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr}.spacebar{grid-template-columns:1fr}.tag{display:none}
-  .controls{margin-top:20px}.weektitle{font-size:.75rem;line-height:1.35}.datejump{flex-wrap:wrap;justify-content:center}
-  .mobile-days{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line);border-bottom:0;background:#fff}
-  .mobile-day{appearance:none;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 2px 8px;font:inherit;color:var(--ink);text-align:center;cursor:pointer}
-  .mobile-day:last-child{border-right:0}.mobile-day span{display:block}.mobile-day .num{font-size:.86rem;font-weight:700;margin-bottom:3px}.mobile-day .wd{font-size:.62rem;text-transform:uppercase;color:var(--muted);letter-spacing:.06em}
-  .mobile-day.selected{background:#eef7f8;color:var(--blue)}.mobile-day.selected .wd{color:var(--blue)}
-  .panel{order:-1;position:static;margin:0 0 14px;padding:18px}
-  .panel .date{margin-bottom:12px}.panel-icon{padding-bottom:12px;margin-bottom:8px}.panel h2{font-size:2rem}
-  .calendar{overflow:visible}.grid{grid-template-columns:64px 1fr;min-width:0}.head{padding:10px 6px}.head.day{background:#eef7f8;color:var(--blue)}
-}
+:root{--paper:#fffefb;--ink:#171717;--muted:#77756e;--line:#e7e3da;--blue:#0f6373;--coral:#df4e3f;--yellow:#dfa61c}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif}.wrap{width:min(1180px,calc(100% - 30px));margin:auto}header{border-bottom:1px solid var(--line);padding:22px 0}.top{display:flex;justify-content:space-between;align-items:center;gap:20px}.brand{font-family:"Cormorant Garamond",serif;font-size:2.1rem;letter-spacing:.16em;color:var(--ink);text-decoration:none}.tag{font-size:.72rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}.hero{padding:44px 0 20px}.kicker{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}h1{font-family:"Cormorant Garamond",serif;font-size:clamp(3rem,6vw,5.2rem);line-height:.92;margin:8px 0 12px;max-width:11ch}.lead{max-width:760px;color:#4f4e49;line-height:1.6}.spacebar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0}.space{border:1px solid var(--line);background:#fff;padding:18px 16px;display:flex;align-items:center;gap:14px;transition:.2s;text-align:left;font:inherit;color:inherit;cursor:pointer}.space:hover{transform:translateY(-1px)}.space.active{box-shadow:0 8px 25px rgba(0,0,0,.06)}.space.canvas90.active{border-color:#9cc8d0;background:#f5fbfc}.space.origen.active{border-color:#e8c866;background:#fffaf0}.space.pulso.active{border-color:#e7a39a;background:#fff6f4}.icon{width:68px;height:48px;flex:0 0 auto}.space strong{display:block;font-size:.84rem;letter-spacing:.12em;text-transform:uppercase}.space span{display:block;font-size:.72rem;color:var(--muted);margin-top:4px}.pill{display:inline-block;margin-top:7px;padding:3px 7px;border:1px solid var(--line);border-radius:999px;font-size:.62rem!important;letter-spacing:.08em;text-transform:uppercase}.controls{display:flex;justify-content:space-between;align-items:center;margin:26px 0 12px;gap:12px}.control-center{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0}.weektitle{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;text-align:center}.datejump{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}.datejump input{border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;padding:7px 9px}.smallbtn{border:1px solid var(--line);background:#fff;padding:9px 12px;cursor:pointer;font-size:1rem}.layout{display:grid;grid-template-columns:1fr 330px;gap:22px;align-items:start}.calendar{border:1px solid var(--line);background:#fff;overflow:auto}.grid{display:grid;grid-template-columns:64px repeat(7,1fr);min-width:900px}.cell,.head{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.head{padding:12px 6px;text-align:center;background:#fcfbf7;font-size:.76rem;font-weight:700}.head.day{cursor:pointer}.head.day.selected{background:#eef7f8;color:var(--blue)}.time{font-size:.72rem;color:var(--muted);padding:8px 8px;text-align:right;min-height:42px}.slot{min-height:42px;position:relative}.block{position:absolute;left:5px;right:5px;border-radius:7px;padding:6px 7px;font-size:.68rem;font-weight:700;z-index:2;overflow:hidden}.panel{border:1px solid var(--line);background:#fff;padding:22px;position:sticky;top:18px}.panel h2{font-family:"Cormorant Garamond",serif;font-size:2.2rem;line-height:1;margin:0 0 6px}.panel .date{font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);margin-bottom:18px}.panel-icon{display:flex;align-items:center;gap:12px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:8px}.panel-icon .icon{width:58px}.panel-icon strong{font-size:.82rem;letter-spacing:.12em}.range{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.85rem}.ok{color:#5a8c63;font-weight:700}.no{color:#b55145;font-weight:700}.cta{display:block;text-align:center;margin-top:18px;padding:13px 14px;background:#181818;color:#fff;text-decoration:none;font-size:.78rem;font-weight:700;letter-spacing:.06em}.note{font-size:.74rem;color:var(--muted);line-height:1.5;margin-top:10px}.status{font-size:.78rem;color:var(--muted);margin:7px 0 0}.status.error{color:#a64439}.mobile-days{display:none}footer{padding:32px 0 50px;color:var(--muted);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.spacebar{grid-template-columns:1fr}.tag{display:none}.controls{margin-top:20px}.weektitle{font-size:.75rem;line-height:1.35}.datejump{flex-wrap:wrap;justify-content:center}.mobile-days{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line);border-bottom:0;background:#fff}.mobile-day{appearance:none;border:0;border-right:1px solid var(--line);background:#fff;padding:9px 2px 8px;font:inherit;color:var(--ink);text-align:center;cursor:pointer}.mobile-day:last-child{border-right:0}.mobile-day span{display:block}.mobile-day .num{font-size:.86rem;font-weight:700;margin-bottom:3px}.mobile-day .wd{font-size:.62rem;text-transform:uppercase;color:var(--muted);letter-spacing:.06em}.mobile-day.selected{background:#eef7f8;color:var(--blue)}.panel{order:-1;position:static;margin:0 0 14px;padding:18px}.panel .date{margin-bottom:12px}.panel-icon{padding-bottom:12px;margin-bottom:8px}.panel h2{font-size:2rem}.calendar{overflow:visible}.grid{grid-template-columns:64px 1fr;min-width:0}.head{padding:10px 6px}.head.day{background:#eef7f8}}
 </style>
 </head>
 <body>
 <header><div class="wrap top"><a class="brand" href="../index.html">CANVAS</a><div class="tag">Espacios para lo que te mueve</div></div></header>
 <main class="wrap">
-<section class="hero">
-<div class="kicker">Disponibilidad</div>
-<h1>Encuentra tu espacio.</h1>
-<p class="lead">Consulta la disponibilidad real de Canvas 90. El horario normal de operación es de 7:00 AM a 10:00 PM. Canvas Origen y Canvas Pulso se integrarán después.</p>
-<div class="spacebar">
-<button class="space canvas90 active" type="button" data-space="canvas90">
-<svg class="icon" viewBox="0 0 120 80" aria-hidden="true"><path d="M16 52C16 28 32 12 53 12c13 0 23 6 30 16" fill="none" stroke="#0f6373" stroke-width="7" stroke-linecap="round"/><path d="M49 61 63 21" stroke="#0f6373" stroke-width="7" stroke-linecap="round"/><path d="M75 24c21 0 31 10 31 24 0 13-9 22-23 22-14 0-24-9-24-22 0-14 9-24 25-24z" fill="none" stroke="#0f6373" stroke-width="6"/><circle cx="84" cy="47" r="11" fill="none" stroke="#0f6373" stroke-width="3"/><path d="M84 36l5 9-10 0zM95 42l-3 10-8-6zM94 55l-10-1 5-9zM83 58l-5-9 10 0zM73 53l3-10 8 6zM74 40l10 1-5 9z" fill="#0f6373"/><path d="M105 39l7 6-8 4" fill="#0f6373"/></svg>
-<div><strong>Canvas 90</strong><span>Espacio principal · jardín complementario</span><span class="pill">Disponibilidad en vivo</span></div>
-</button>
-<button class="space origen pending" type="button" aria-disabled="true" tabindex="-1">
-<svg class="icon" viewBox="0 0 120 80" aria-hidden="true"><path d="M16 52C16 28 32 12 53 12c13 0 23 6 30 16" fill="none" stroke="#dfa61c" stroke-width="7" stroke-linecap="round"/><path d="M49 61 63 21" stroke="#dfa61c" stroke-width="7" stroke-linecap="round"/><circle cx="84" cy="47" r="24" fill="none" stroke="#dfa61c" stroke-width="6"/><path d="M84 31v18M84 45l-10 8M84 46l10 7M74 53l-5 8M79 50v12M94 53l5 8M90 50v12" stroke="#dfa61c" stroke-width="4" stroke-linecap="round"/><path d="M105 39l7 6-8 4" fill="#dfa61c"/></svg>
-<div><strong>Canvas Origen</strong><span>Espacio privado</span><span class="pill">Próximamente</span></div>
-</button>
-<button class="space pulso pending" type="button" aria-disabled="true" tabindex="-1">
-<svg class="icon" viewBox="0 0 120 80" aria-hidden="true"><path d="M16 52C16 28 32 12 53 12c13 0 23 6 30 16" fill="none" stroke="#df4e3f" stroke-width="7" stroke-linecap="round"/><path d="M49 61 63 21" stroke="#df4e3f" stroke-width="7" stroke-linecap="round"/><circle cx="84" cy="47" r="24" fill="none" stroke="#df4e3f" stroke-width="6"/><path d="M65 48h8l4-13 7 27 7-21 5 7h8" fill="none" stroke="#df4e3f" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path d="M105 39l7 6-8 4" fill="#df4e3f"/></svg>
-<div><strong>Canvas Pulso</strong><span>Espacio privado</span><span class="pill">Próximamente</span></div>
-</button>
-</div>
-</section>
-<div class="controls">
-<button class="smallbtn" id="prevWeek" aria-label="Semana anterior">←</button>
-<div class="control-center">
-  <div class="weektitle" id="weekTitle">Cargando semana…</div>
-  <label class="datejump" for="datePicker">Ir a fecha
-    <input type="date" id="datePicker" aria-label="Elegir una fecha">
-  </label>
-  <div class="status" id="status">Consultando disponibilidad real…</div>
-</div>
-<button class="smallbtn" id="nextWeek" aria-label="Semana siguiente">→</button>
-</div>
-<div class="mobile-days" id="mobileDays" aria-label="Días de la semana"></div>
-<div class="layout">
-<section class="calendar"><div class="grid" id="calendarGrid"></div></section>
-<aside class="panel">
-<div class="date" id="selectedDateLabel">—</div>
-<div class="panel-icon" id="panelIcon"></div>
-<h2>Disponibilidad</h2>
-<div id="ranges"><div class="note">Consultando calendario…</div></div>
-<a class="cta" id="whatsappCta" href="https://wa.me/527821402617?text=Hola%2C%20vi%20la%20disponibilidad%20de%20Canvas%2090%20y%20quiero%20consultar%20un%20horario." target="_blank" rel="noopener">CONSULTAR POR WHATSAPP →</a>
-<div class="note">La disponibilidad es informativa y no representa una reservación automática. Los periodos no disponibles ya consideran el buffer de preparación y cierre definido para cada evento.</div>
-</aside>
-</div>
+<section class="hero"><div class="kicker">Disponibilidad</div><h1>Encuentra tu espacio.</h1><p class="lead">Consulta la disponibilidad real de Canvas 90, Canvas Origen y Canvas Pulso. Horario normal de operación: 7:00 AM a 10:00 PM.</p><div class="spacebar" id="spacebar"></div></section>
+<div class="controls"><button class="smallbtn" id="prevWeek">←</button><div class="control-center"><div class="weektitle" id="weekTitle">Cargando semana…</div><label class="datejump">Ir a fecha <input type="date" id="datePicker"></label><div class="status" id="status">Consultando disponibilidad real…</div></div><button class="smallbtn" id="nextWeek">→</button></div>
+<div class="mobile-days" id="mobileDays"></div>
+<div class="layout"><section class="calendar"><div class="grid" id="calendarGrid"></div></section><aside class="panel"><div class="date" id="selectedDateLabel">—</div><div class="panel-icon" id="panelIcon"></div><h2>Disponibilidad</h2><div id="ranges"><div class="note">Consultando calendario…</div></div><a class="cta" id="whatsappCta" href="#" target="_blank" rel="noopener">CONSULTAR POR WHATSAPP →</a><div class="note">La disponibilidad es informativa y no representa una reservación automática. Los periodos no disponibles ya consideran el buffer definido para cada evento.</div></aside></div>
 <footer>Canvas · Toluca — Metepec</footer>
 </main>
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbzxDcQjLLsFi4O2oFeY-qHUxLKWpQTliCEtaP0f4HSoV6nfZoraSufLOtedrgXqrxu4/exec';
-const OPEN_MIN=7*60,CLOSE_MIN=22*60,ROW_H=42;
-let weekStart=startOfWeek(new Date());
-let selectedDate=formatKey(new Date());
-let busy=[];
-
-function startOfWeek(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d}
-function addDays(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d}
-function formatKey(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
-function fmtDay(date){return new Intl.DateTimeFormat('es-MX',{weekday:'short',day:'numeric'}).format(date).replace('.','')}
-function fmtLong(key){const [y,m,d]=key.split('-').map(Number);return new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long'}).format(new Date(y,m-1,d))}
-function fmtMonthRange(a,b){const f=new Intl.DateTimeFormat('es-MX',{day:'numeric',month:'long',year:'numeric'});return `${f.format(a)} — ${f.format(b)}`}
-function hhmm(min){const h=Math.floor(min/60),m=min%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
-function iconSVG(){return `<svg class="icon" viewBox="0 0 120 80" aria-hidden="true"><path d="M16 52C16 28 32 12 53 12c13 0 23 6 30 16" fill="none" stroke="#0f6373" stroke-width="7" stroke-linecap="round"/><path d="M49 61 63 21" stroke="#0f6373" stroke-width="7" stroke-linecap="round"/><circle cx="84" cy="47" r="23" fill="none" stroke="#0f6373" stroke-width="6"/><circle cx="84" cy="47" r="10" fill="none" stroke="#0f6373" stroke-width="3"/></svg>`}
-function isoAt(key,time){return new Date(`${key}T${time}:00-06:00`).getTime()}
-function intervalForDay(item,key){const start=Math.max(new Date(item.desde).getTime(),isoAt(key,'07:00'));const end=Math.min(new Date(item.hasta).getTime(),isoAt(key,'22:00'));if(end<=start)return null;const base=isoAt(key,'00:00');return {start:Math.round((start-base)/60000),end:Math.round((end-base)/60000)}}
-function mergedForDay(key){const arr=busy.map(x=>intervalForDay(x,key)).filter(Boolean).sort((a,b)=>a.start-b.start);const out=[];arr.forEach(x=>{const last=out[out.length-1];if(last&&x.start<=last.end)last.end=Math.max(last.end,x.end);else out.push({...x})});return out}
-function renderMobileDays(){const el=document.getElementById('mobileDays');if(!el)return;const labels=['L','M','M','J','V','S','D'];el.innerHTML='';for(let i=0;i<7;i++){const d=addDays(weekStart,i);const key=formatKey(d);const b=document.createElement('button');b.type='button';b.className='mobile-day'+(key===selectedDate?' selected':'');b.innerHTML=`<span class="num">${d.getDate()}</span><span class="wd">${labels[i]}</span>`;b.setAttribute('aria-label',fmtLong(key));b.addEventListener('click',()=>{selectedDate=key;renderMobileDays();renderGrid();renderPanel()});el.appendChild(b)}}
-function renderGrid(){const grid=document.getElementById('calendarGrid');grid.innerHTML='';const mobile=window.matchMedia('(max-width:900px)').matches;const blank=document.createElement('div');blank.className='head';grid.appendChild(blank);let days=[];if(mobile){const [y,m,d]=selectedDate.split('-').map(Number);days=[new Date(y,m-1,d)]}else{for(let i=0;i<7;i++)days.push(addDays(weekStart,i))}days.forEach(d=>{const h=document.createElement('div');h.className='head day'+(formatKey(d)===selectedDate?' selected':'');h.textContent=mobile?fmtLong(formatKey(d)):fmtDay(d);h.dataset.date=formatKey(d);h.addEventListener('click',()=>{selectedDate=h.dataset.date;renderMobileDays();renderGrid();renderPanel()});grid.appendChild(h)});for(let hr=7;hr<22;hr++){const t=document.createElement('div');t.className='cell time';t.textContent=`${String(hr).padStart(2,'0')}:00`;grid.appendChild(t);days.forEach(d=>{const key=formatKey(d);const c=document.createElement('div');c.className='cell slot';mergedForDay(key).filter(x=>Math.floor(x.start/60)===hr).forEach(x=>{const b=document.createElement('div');b.className='block';b.style.top=`${((x.start-hr*60)/60)*ROW_H}px`;b.style.height=`${Math.max(20,((x.end-x.start)/60)*ROW_H)}px`;b.textContent='No disponible';c.appendChild(b)});grid.appendChild(c)})}}
-function renderPanel(){document.getElementById('selectedDateLabel').textContent=fmtLong(selectedDate);document.getElementById('datePicker').value=selectedDate;document.getElementById('panelIcon').innerHTML=iconSVG()+`<div><strong>Canvas 90</strong><div style="font-size:.75rem;color:#77756e;margin-top:4px">Disponibilidad real</div></div>`;const intervals=mergedForDay(selectedDate);const segments=[];let cursor=OPEN_MIN;intervals.forEach(x=>{if(x.start>cursor)segments.push([cursor,x.start,true]);segments.push([Math.max(cursor,x.start),x.end,false]);cursor=Math.max(cursor,x.end)});if(cursor<CLOSE_MIN)segments.push([cursor,CLOSE_MIN,true]);const mobile=window.matchMedia('(max-width:900px)').matches;const visibles=mobile?segments.filter(s=>s[2]):segments;const box=document.getElementById('ranges');if(!segments.length){box.innerHTML='<div class="range"><span>07:00 — 22:00</span><span class="ok">Disponible</span></div>'}else if(mobile&&!visibles.length){box.innerHTML='<div class="range"><span>07:00 — 22:00</span><span class="no">Sin horarios libres</span></div>'}else{box.innerHTML=visibles.map(s=>`<div class="range"><span>${hhmm(s[0])} — ${hhmm(s[1])}</span><span class="${s[2]?'ok':'no'}">${s[2]?'Disponible':'No disponible'}</span></div>`).join('')}const msg=`Hola, vi la disponibilidad de Canvas 90 para ${fmtLong(selectedDate)} y quiero consultar un horario.`;document.getElementById('whatsappCta').href=`https://wa.me/527821402617?text=${encodeURIComponent(msg)}`}
-async function loadWeek(){const status=document.getElementById('status');status.className='status';status.textContent='Consultando disponibilidad real…';const weekEnd=addDays(weekStart,6);document.getElementById('weekTitle').textContent=fmtMonthRange(weekStart,weekEnd);if(selectedDate<formatKey(weekStart)||selectedDate>formatKey(weekEnd))selectedDate=formatKey(weekStart);const queryStart=formatKey(addDays(weekStart,-1));const queryEnd=formatKey(addDays(weekEnd,1));try{const res=await fetch(`${API_URL}?desde=${queryStart}&hasta=${queryEnd}`,{cache:'no-store'});if(!res.ok)throw new Error(`HTTP ${res.status}`);const data=await res.json();if(!data.ok)throw new Error('Respuesta no válida');busy=Array.isArray(data.ocupados)?data.ocupados:[];status.textContent='Disponibilidad actualizada desde Google Calendar';renderMobileDays();renderGrid();renderPanel()}catch(err){console.error(err);busy=[];status.className='status error';status.textContent='No se pudo consultar el calendario. Intenta recargar la página.';renderMobileDays();renderGrid();document.getElementById('ranges').innerHTML='<div class="note">La disponibilidad no está disponible en este momento. Escríbenos por WhatsApp para confirmar un horario.</div>';document.getElementById('selectedDateLabel').textContent=fmtLong(selectedDate);document.getElementById('panelIcon').innerHTML=iconSVG()+`<div><strong>Canvas 90</strong><div style="font-size:.75rem;color:#77756e;margin-top:4px">Consulta manual</div></div>`}}
-document.getElementById('prevWeek').addEventListener('click',()=>{weekStart=addDays(weekStart,-7);selectedDate=formatKey(weekStart);loadWeek()});
-document.getElementById('nextWeek').addEventListener('click',()=>{weekStart=addDays(weekStart,7);selectedDate=formatKey(weekStart);loadWeek()});
-document.getElementById('datePicker').addEventListener('change',e=>{
-  if(!e.target.value)return;
-  const [y,m,d]=e.target.value.split('-').map(Number);
-  const chosen=new Date(y,m-1,d);
-  selectedDate=e.target.value;
-  weekStart=startOfWeek(chosen);
-  loadWeek();
-});
-let lastMobile=window.matchMedia('(max-width:900px)').matches;
-window.addEventListener('resize',()=>{const now=window.matchMedia('(max-width:900px)').matches;if(now!==lastMobile){lastMobile=now;renderMobileDays();renderGrid();renderPanel()}});
-loadWeek();
+const API_URL='https://script.google.com/macros/s/AKfycbzLNsOEKTft_CHu_caYYFRm9cICPK-cxPNM6jJUMf5phBoIuHhxUVkTvxkyoc7QC5IC/exec';
+const OPEN_MIN=420,CLOSE_MIN=1320,ROW_H=42;
+const SPACES={
+ canvas90:{name:'Canvas 90',sub:'Espacio principal · jardín complementario',color:'#0f6373',bg:'#dceef2',border:'#acd1d8',icon:'camera'},
+ origen:{name:'Canvas Origen',sub:'Espacio privado',color:'#dfa61c',bg:'#fff0bd',border:'#e5c563',icon:'root'},
+ pulso:{name:'Canvas Pulso',sub:'Espacio privado',color:'#df4e3f',bg:'#fde1dd',border:'#e6aaa2',icon:'pulse'}
+};
+let activeSpace='canvas90',weekStart=startOfWeek(new Date()),selectedDate=formatKey(new Date()),busy=[];
+function startOfWeek(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());d.setDate(d.getDate()-((d.getDay()+6)%7));return d}function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}function formatKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function fmtDay(d){return new Intl.DateTimeFormat('es-MX',{weekday:'short',day:'numeric'}).format(d).replace('.','')}function fmtLong(k){const[y,m,d]=k.split('-').map(Number);return new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long'}).format(new Date(y,m-1,d))}function fmtRange(a,b){const f=new Intl.DateTimeFormat('es-MX',{day:'numeric',month:'long',year:'numeric'});return `${f.format(a)} — ${f.format(b)}`}function hhmm(min){return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`}function isoAt(k,t){return new Date(`${k}T${t}:00-06:00`).getTime()}
+function iconSVG(type,color){const common=`<path d="M16 52C16 28 32 12 53 12c13 0 23 6 30 16" fill="none" stroke="${color}" stroke-width="7" stroke-linecap="round"/><path d="M49 61 63 21" stroke="${color}" stroke-width="7" stroke-linecap="round"/>`;if(type==='root')return `<svg class="icon" viewBox="0 0 120 80">${common}<circle cx="84" cy="47" r="24" fill="none" stroke="${color}" stroke-width="6"/><path d="M84 31v18M84 45l-10 8M84 46l10 7M74 53l-5 8M79 50v12M94 53l5 8M90 50v12" stroke="${color}" stroke-width="4" stroke-linecap="round"/></svg>`;if(type==='pulse')return `<svg class="icon" viewBox="0 0 120 80">${common}<circle cx="84" cy="47" r="24" fill="none" stroke="${color}" stroke-width="6"/><path d="M65 48h8l4-13 7 27 7-21 5 7h8" fill="none" stroke="${color}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>`;return `<svg class="icon" viewBox="0 0 120 80">${common}<circle cx="84" cy="47" r="23" fill="none" stroke="${color}" stroke-width="6"/><circle cx="84" cy="47" r="10" fill="none" stroke="${color}" stroke-width="3"/></svg>`}
+function renderSpaces(){const bar=document.getElementById('spacebar');bar.innerHTML='';Object.entries(SPACES).forEach(([key,s])=>{const b=document.createElement('button');b.className=`space ${key}${key===activeSpace?' active':''}`;b.innerHTML=`${iconSVG(s.icon,s.color)}<div><strong>${s.name}</strong><span>${s.sub}</span><span class="pill">Disponibilidad en vivo</span></div>`;b.onclick=()=>{if(key===activeSpace)return;activeSpace=key;renderSpaces();loadWeek()};bar.appendChild(b)})}
+function intervalForDay(item,key){const start=Math.max(new Date(item.desde).getTime(),isoAt(key,'07:00'));const end=Math.min(new Date(item.hasta).getTime(),isoAt(key,'22:00'));if(end<=start)return null;const base=isoAt(key,'00:00');return{start:Math.round((start-base)/60000),end:Math.round((end-base)/60000)}}function mergedForDay(key){const arr=busy.map(x=>intervalForDay(x,key)).filter(Boolean).sort((a,b)=>a.start-b.start),out=[];arr.forEach(x=>{const l=out[out.length-1];if(l&&x.start<=l.end)l.end=Math.max(l.end,x.end);else out.push({...x})});return out}
+function renderMobileDays(){const el=document.getElementById('mobileDays'),labels=['L','M','M','J','V','S','D'];el.innerHTML='';for(let i=0;i<7;i++){const d=addDays(weekStart,i),key=formatKey(d),b=document.createElement('button');b.className='mobile-day'+(key===selectedDate?' selected':'');b.innerHTML=`<span class="num">${d.getDate()}</span><span class="wd">${labels[i]}</span>`;b.onclick=()=>{selectedDate=key;renderMobileDays();renderGrid();renderPanel()};el.appendChild(b)}}
+function renderGrid(){const grid=document.getElementById('calendarGrid');grid.innerHTML='';const mobile=matchMedia('(max-width:900px)').matches,blank=document.createElement('div');blank.className='head';grid.appendChild(blank);let days=[];if(mobile){const[y,m,d]=selectedDate.split('-').map(Number);days=[new Date(y,m-1,d)]}else for(let i=0;i<7;i++)days.push(addDays(weekStart,i));days.forEach(d=>{const h=document.createElement('div');h.className='head day'+(formatKey(d)===selectedDate?' selected':'');h.textContent=mobile?fmtLong(formatKey(d)):fmtDay(d);h.onclick=()=>{selectedDate=formatKey(d);renderMobileDays();renderGrid();renderPanel()};grid.appendChild(h)});const s=SPACES[activeSpace];for(let hr=7;hr<22;hr++){const t=document.createElement('div');t.className='cell time';t.textContent=`${String(hr).padStart(2,'0')}:00`;grid.appendChild(t);days.forEach(d=>{const key=formatKey(d),c=document.createElement('div');c.className='cell slot';mergedForDay(key).filter(x=>Math.floor(x.start/60)===hr).forEach(x=>{const b=document.createElement('div');b.className='block';b.style.top=`${((x.start-hr*60)/60)*ROW_H}px`;b.style.height=`${Math.max(20,((x.end-x.start)/60)*ROW_H)}px`;b.style.background=s.bg;b.style.border=`1px solid ${s.border}`;b.style.color=s.color;b.textContent='No disponible';c.appendChild(b)});grid.appendChild(c)})}}
+function renderPanel(){const s=SPACES[activeSpace];document.getElementById('selectedDateLabel').textContent=fmtLong(selectedDate);document.getElementById('datePicker').value=selectedDate;document.getElementById('panelIcon').innerHTML=iconSVG(s.icon,s.color)+`<div><strong>${s.name}</strong><div style="font-size:.75rem;color:#77756e;margin-top:4px">Disponibilidad real</div></div>`;const intervals=mergedForDay(selectedDate),segments=[];let cursor=OPEN_MIN;intervals.forEach(x=>{if(x.start>cursor)segments.push([cursor,x.start,true]);segments.push([Math.max(cursor,x.start),x.end,false]);cursor=Math.max(cursor,x.end)});if(cursor<CLOSE_MIN)segments.push([cursor,CLOSE_MIN,true]);const mobile=matchMedia('(max-width:900px)').matches,visible=mobile?segments.filter(s=>s[2]):segments,box=document.getElementById('ranges');if(!segments.length)box.innerHTML='<div class="range"><span>07:00 — 22:00</span><span class="ok">Disponible</span></div>';else if(mobile&&!visible.length)box.innerHTML='<div class="range"><span>07:00 — 22:00</span><span class="no">Sin horarios libres</span></div>';else box.innerHTML=visible.map(x=>`<div class="range"><span>${hhmm(x[0])} — ${hhmm(x[1])}</span><span class="${x[2]?'ok':'no'}">${x[2]?'Disponible':'No disponible'}</span></div>`).join('');const msg=`Hola, vi la disponibilidad de ${s.name} para ${fmtLong(selectedDate)} y quiero consultar un horario.`;document.getElementById('whatsappCta').href=`https://wa.me/527821402617?text=${encodeURIComponent(msg)}`}
+async function loadWeek(){const st=document.getElementById('status');st.className='status';st.textContent='Consultando disponibilidad real…';const weekEnd=addDays(weekStart,6);document.getElementById('weekTitle').textContent=fmtRange(weekStart,weekEnd);if(selectedDate<formatKey(weekStart)||selectedDate>formatKey(weekEnd))selectedDate=formatKey(weekStart);try{const a=formatKey(addDays(weekStart,-1)),b=formatKey(addDays(weekEnd,1)),res=await fetch(`${API_URL}?espacio=${activeSpace}&desde=${a}&hasta=${b}`,{cache:'no-store'});if(!res.ok)throw new Error(res.status);const data=await res.json();if(!data.ok)throw new Error('api');busy=Array.isArray(data.ocupados)?data.ocupados:[];st.textContent=`Disponibilidad actualizada · ${SPACES[activeSpace].name}`;renderMobileDays();renderGrid();renderPanel()}catch(e){busy=[];st.className='status error';st.textContent='No se pudo consultar el calendario. Intenta recargar.';renderMobileDays();renderGrid();renderPanel()}}
+document.getElementById('prevWeek').onclick=()=>{weekStart=addDays(weekStart,-7);selectedDate=formatKey(weekStart);loadWeek()};document.getElementById('nextWeek').onclick=()=>{weekStart=addDays(weekStart,7);selectedDate=formatKey(weekStart);loadWeek()};document.getElementById('datePicker').onchange=e=>{if(!e.target.value)return;const[y,m,d]=e.target.value.split('-').map(Number);selectedDate=e.target.value;weekStart=startOfWeek(new Date(y,m-1,d));loadWeek()};let last=matchMedia('(max-width:900px)').matches;addEventListener('resize',()=>{const now=matchMedia('(max-width:900px)').matches;if(now!==last){last=now;renderMobileDays();renderGrid();renderPanel()}});renderSpaces();loadWeek();
 </script>
 </body>
 </html>
