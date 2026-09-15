@@ -53,9 +53,11 @@
       .spaces{padding:40px 0 34px;border-bottom:0}
       .spacesIntro{margin-bottom:18px}
       .cards{gap:8px}
-      .card{border-top:0;min-height:118px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr) 54px 92px;align-items:center;gap:10px}
-      .card small{font-size:.68rem}
-      .card strong{font-size:1.5rem;margin:6px 0 0}
+      .card{border-top:0;min-height:150px;padding:16px 14px;display:grid;grid-template-columns:minmax(0,1fr) 54px 92px;align-items:center;gap:10px}
+      .card>div{min-width:0;align-self:center}
+      .card small{display:block;font-size:.72rem;line-height:1.25}
+      .card strong{display:block;font-size:1.5rem;line-height:1.02;margin:8px 0 0}
+      .card .cardDesc{display:block!important;margin:10px 0 0!important;font-size:.82rem!important;line-height:1.3!important;max-width:23ch!important;color:#4d4943!important}
       .card>img:not(.cardThumb){width:50px;height:42px;object-fit:contain;object-position:center;margin:0}
       .cardThumb{display:block!important;width:92px!important;height:76px!important;object-fit:cover!important;object-position:center!important;border:4px solid rgba(255,255,255,.82);box-shadow:0 5px 14px #00000014}
       .spot{display:none!important}
@@ -89,7 +91,8 @@
     @media(max-width:380px){
       .brand img{width:21px;height:21px;flex-basis:21px}
       .brand span{font-size:1.28rem;letter-spacing:.08em}
-      .card{grid-template-columns:minmax(0,1fr) 46px 78px;padding:12px;gap:8px}
+      .card{grid-template-columns:minmax(0,1fr) 46px 78px;min-height:146px;padding:14px 12px;gap:8px}
+      .card .cardDesc{font-size:.77rem!important;line-height:1.28!important;margin-top:9px!important}
       .card>img:not(.cardThumb){width:44px;height:38px}
       .cardThumb{width:78px!important;height:66px!important}
       .possibilities h2{font-size:2.2rem}
