@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#fffefb">
-<title>Canvas · Index de prueba</title>
+<title>Canvas | Un lugar para crear, compartir y ser</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
 </style>
 </head>
 <body>
-<header class="siteHeader"><div class="headerInner"><a class="brand" href="index-prueba.html"><img src="assets/img/canvas-icon-mark.png" alt=""><span>CANVAS</span></a><nav class="nav"><a href="#espacios">Espacios</a><a href="ubicacion/">Ubicación</a><a href="disponibilidad/">Disponibilidad</a><a href="contacto/">Contacto</a></nav><a class="visit" href="contacto/">Ven a conocer Canvas</a></div></header>
+<header class="siteHeader"><div class="headerInner"><a class="brand" href="index.html"><img src="assets/img/canvas-icon-mark.png" alt=""><span>CANVAS</span></a><nav class="nav"><a href="#espacios">Espacios</a><a href="ubicacion/">Ubicación</a><a href="disponibilidad/">Disponibilidad</a><a href="contacto/">Contacto</a></nav><a class="visit" href="contacto/">Ven a conocer Canvas</a></div></header>
 <main>
 <section class="manifestoHero"><div class="wrap"><div class="kicker">Por qué existe Canvas</div><h1 class="heroTitle">Un lugar para <em>crear,</em> compartir y ser.</h1><div class="manifestoGrid"><article class="note"><div class="hand"><p>Canvas nació de algo simple: disfrutar un espacio y darnos cuenta de que se disfruta el doble cuando se comparte. Aquí hemos trabajado, soñado y visto crecer proyectos que se nos quedaron grabados.</p><p>Sabemos lo que se siente tener una idea y no tener dónde hacerla realidad. No queremos que se quede esperando.</p><p>Queremos que esa maestra forme su primer grupo. Que ese taller por fin tenga salón. Que esa idea encuentre su mesa, su pared, sus primeras horas de vida.</p><p>Canvas sigue siendo nuestro espacio, y por eso lo compartimos: un espacio vacío es solo paredes. Cuando alguien hace algo suyo ahí dentro, cobra vida.</p><p class="em">No necesitas tener tu propio local para empezar a construir algo propio.</p><div class="signature">J VSK</div></div></article><aside class="collage"><figure class="shot main"><span class="tape"></span><img id="collageCanvas90" loading="eager" decoding="async" alt="Canvas 90"><figcaption class="label">Canvas 90</figcaption></figure><figure class="shot garden"><span class="tape"></span><img id="collageGarden" loading="eager" decoding="async" alt="El Jardín de Canvas"><figcaption class="label">Jardín</figcaption></figure><figure class="shot deck"><span class="tape"></span><img id="collageDeck" loading="eager" decoding="async" alt="Canvas Deck"><figcaption class="label">Deck</figcaption></figure></aside></div><div class="next"><small>De esa idea nace</small><strong>Canvas 90</strong></div></div></section>
 <section class="spaces" id="espacios"><div class="spacesInner"><div class="spacesIntro"><h2>Cada idea tiene su lugar.</h2><p>Canvas reúne espacios de distintas escalas para proyectos que necesitan amplitud, exterior o un entorno más íntimo. Cada uno tiene su propio carácter, pero todos comparten la misma intención: darte un lugar para hacer que tu proyecto suceda.</p></div><div class="cards"><a class="card c90" href="espacios/canvas90.html"><div><small>Amplio · transformable</small><strong>Canvas 90</strong></div><img src="assets/img/icon-canvas90.png" loading="lazy" alt=""></a><a class="card pulse" href="espacios/pulso.html"><div><small>Íntimo · continuidad</small><strong>Canvas Pulso</strong></div><img src="assets/img/icon-pulso.png" loading="lazy" alt=""></a><a class="card origin" href="espacios/origen.html"><div><small>Íntimo · comienzo</small><strong>Canvas Origen</strong></div><img src="assets/img/icon-origen.png" loading="lazy" alt=""></a><a class="card gardenCard" href="espacios/jardin.html"><div><small>Exterior · abierto</small><strong>El Jardín de Canvas</strong></div><img src="assets/img/icon-jardin.png" loading="lazy" alt=""></a><a class="card deckCard" href="espacios/deck.html"><div><small>Exterior · urbano</small><strong>Canvas Deck</strong></div><img src="assets/img/icon-deck.png" loading="lazy" alt=""></a></div></div></section>
@@ -80,7 +80,7 @@
   };
 
   try{
-    const html=await fetch('index.html?v=photos',{cache:'no-store'}).then(r=>{
+    const html=await fetch('assets/photo-source.html?v=photos',{cache:'no-store'}).then(r=>{
       if(!r.ok)throw new Error('No se pudo leer index.html');
       return r.text();
     });
