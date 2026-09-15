@@ -1,0 +1,166 @@
+name: Add photo studio feature
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-photo-studio-feature.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install image tools
+        run: pip install pillow requests
+      - name: Download and optimize studio photos
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import requests, io
+
+          photos = {
+            'assets/img/studio-main.jpg':'1C_6shG2cvcP8badPdud4FUdrNCvi1Ngd',
+            'assets/img/studio-detail.jpg':'13JnNRe6JxNljlNXZ3Ppsqlq3JnXr2KG-',
+            'assets/img/studio-wide.jpg':'1EPgs6SJUE_aJL5ReAgOk_Q64JtrIETTp',
+          }
+          Path('assets/img').mkdir(parents=True, exist_ok=True)
+          for path, file_id in photos.items():
+              url=f'https://drive.google.com/uc?export=download&id={file_id}'
+              r=requests.get(url, timeout=60)
+              r.raise_for_status()
+              img=Image.open(io.BytesIO(r.content)).convert('RGB')
+              maxw=1400 if 'main' in path else 1000
+              if img.width > maxw:
+                  h=round(img.height*maxw/img.width)
+                  img=img.resize((maxw,h), Image.Resampling.LANCZOS)
+              img.save(path, 'JPEG', quality=76, optimize=True, progressive=True)
+              print(path, img.size)
+          PY
+      - name: Add studio block to index and menus
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+
+          css='''
+<style id="studio-feature-css">
+.studioFeature{background:#f1eee7;padding:76px 0;border-top:1px solid #ded9cf;border-bottom:1px solid #ded9cf}
+.studioFeatureInner{width:min(1220px,calc(100% - 34px));margin:auto;display:grid;grid-template-columns:.92fr 1.08fr;gap:54px;align-items:center}
+.studioFeatureCopy .studioTag{font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;font-weight:800;color:#55514a;margin-bottom:14px}
+.studioFeatureCopy h2{font:600 clamp(3.2rem,5.4vw,5.25rem)/.9 "Cormorant Garamond",serif;letter-spacing:-.04em;margin:0 0 22px;max-width:9ch}
+.studioFeatureCopy p{font-size:1.04rem;line-height:1.7;color:#4a4741;max-width:34rem;margin:0 0 22px}
+.studioFacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:24px 0}
+.studioFact{border-top:1px solid #bbb5aa;padding:12px 0 4px;font-size:.78rem;font-weight:700;letter-spacing:.04em}
+.studioFeatureCopy .studioCta{display:inline-flex;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:12px 17px;font-weight:700;margin-top:5px}
+.studioVisual{display:grid;grid-template-columns:1fr 1fr;gap:9px;position:relative}
+.studioVisual .studioMain{grid-column:1/-1;display:block;width:100%;aspect-ratio:16/9;object-fit:cover;object-position:center;border:9px solid #fff;box-shadow:0 16px 36px #00000018}
+.studioVisual .studioSmall{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border:6px solid #fff;box-shadow:0 10px 24px #00000012}
+.studioVisual:after{content:'CANVAS 90 · ESTUDIO';position:absolute;right:16px;top:16px;background:#fffefb;padding:8px 10px;font-size:.62rem;font-weight:800;letter-spacing:.15em}
+@media(max-width:900px){.studioFeatureInner{grid-template-columns:1fr;gap:34px}.studioFeatureCopy h2{max-width:none}}
+@media(max-width:620px){.studioFeature{padding:44px 0}.studioFeatureInner{width:calc(100% - 22px);gap:25px}.studioFeatureCopy h2{font-size:3.05rem}.studioFeatureCopy p{font-size:.95rem;line-height:1.6}.studioFacts{margin:18px 0}.studioFact{font-size:.68rem}.studioVisual{gap:6px}.studioVisual .studioMain{border-width:6px}.studioVisual .studioSmall{border-width:4px}.studioVisual:after{right:10px;top:10px;font-size:.54rem;padding:6px 8px}}
+</style>
+'''
+          if 'id="studio-feature-css"' not in s:
+              s=s.replace('</head>',css+'</head>')
+
+          section='''
+<section class="studioFeature" id="estudio-fotografico">
+  <div class="studioFeatureInner">
+    <div class="studioFeatureCopy">
+      <div class="studioTag">Canvas 90 · Estudio fotográfico</div>
+      <h2>El mismo espacio. Otra forma de crear.</h2>
+      <p>Canvas 90 también puede convertirse en tu estudio fotográfico. Un espacio amplio y transformable, preparado para montar sesiones con equipo profesional y darte libertad para construir cada toma.</p>
+      <div class="studioFacts">
+        <div class="studioFact">ESPACIO AMPLIO</div>
+        <div class="studioFact">EQUIPO PROFESIONAL</div>
+        <div class="studioFact">FONDOS Y SOPORTES</div>
+        <div class="studioFact">RETRATO · PRODUCTO · CONTENIDO</div>
+      </div>
+      <a class="studioCta" href="estudio-fotografico/">Conoce el estudio →</a>
+    </div>
+    <div class="studioVisual" aria-label="Canvas 90 configurado como estudio fotográfico">
+      <img class="studioMain" src="assets/img/studio-main.jpg?v=1" loading="lazy" alt="Canvas 90 montado como estudio fotográfico con fondo, softbox y equipo de iluminación">
+      <img class="studioSmall" src="assets/img/studio-detail.jpg?v=1" loading="lazy" alt="Equipo profesional de iluminación y fondo dentro de Canvas 90">
+      <img class="studioSmall" src="assets/img/studio-wide.jpg?v=1" loading="lazy" alt="Vista amplia de Canvas 90 durante un montaje fotográfico">
+    </div>
+  </div>
+</section>
+'''
+          if 'class="studioFeature"' not in s:
+              s=s.replace('<section class="possibilities"',section+'<section class="possibilities"')
+
+          s=re.sub(r'assets/js/mobile-index\.js\?v=\d+', 'assets/js/mobile-index.js?v=4', s)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('assets/js/mobile-index.js')
+          s=p.read_text(encoding='utf-8')
+          if 'estudio-fotografico/' not in s:
+              s=s.replace('      <a href="#espacios">Espacios</a>\n', '      <a href="#espacios">Espacios</a>\n      <a href="estudio-fotografico/">Estudio fotográfico</a>\n')
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('assets/js/site-shell.js')
+          s=p.read_text(encoding='utf-8')
+          if '${root}estudio-fotografico/' not in s:
+              s=s.replace('        <a href="${root}index.html#espacios">Espacios</a>\n', '        <a href="${root}index.html#espacios">Espacios</a>\n        <a href="${root}estudio-fotografico/">Estudio fotográfico</a>\n')
+          p.write_text(s,encoding='utf-8')
+
+          for hp in Path('.').rglob('*.html'):
+              txt=hp.read_text(encoding='utf-8')
+              new=re.sub(r'assets/js/site-shell\.js\?v=\d+', 'assets/js/site-shell.js?v=6', txt)
+              if new!=txt:
+                  hp.write_text(new,encoding='utf-8')
+          PY
+      - name: Redesign studio page with real photos
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('estudio-fotografico/index.html')
+          p.write_text('''<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Canvas 90 Estudio Fotográfico: un espacio amplio y transformable con equipo profesional para retrato, producto, contenido y proyectos creativos entre Toluca y Metepec.">
+<title>Canvas 90 · Estudio Fotográfico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/site.css?v=studio2">
+<style>
+:root{--studio:#465F78;--paper:#fffefb;--ink:#171717}
+.studioHero{padding:68px 0 64px;background:#f3f0e9}.heroGrid{display:grid;grid-template-columns:.9fr 1.1fr;gap:52px;align-items:center}.studioTag{font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;font-weight:800;color:#5e5a53;margin-bottom:14px}.studioHero h1{font:600 clamp(3.8rem,7vw,6.7rem)/.84 "Cormorant Garamond",serif;letter-spacing:-.045em;margin:0 0 24px;max-width:8ch}.studioHero p{font-size:1.05rem;line-height:1.7;color:#494640;max-width:34rem}.heroPhoto{background:#fff;padding:9px;box-shadow:0 18px 42px #00000018}.heroPhoto img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.studioActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}.studioBtn{display:inline-flex;padding:12px 17px;border:1px solid #171717;text-decoration:none;font-weight:700}.studioBtn.primary{background:#171717;color:#fff}
+.studioSection{padding:72px 0;border-top:1px solid #ddd8ce}.studioGrid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start}.studioSection h2{font:600 clamp(3rem,5vw,4.8rem)/.9 "Cormorant Garamond",serif;letter-spacing:-.035em;margin:0 0 18px}.studioSection p{color:#4b4842;line-height:1.7}.uses{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.uses span{border:1px solid #c9c3b8;background:#fff;padding:10px 13px;font-size:.82rem;font-weight:600}.photoPair{display:grid;grid-template-columns:1fr 1fr;gap:10px}.photoPair img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#eee}.equipmentNote{background:#111;color:#fff;padding:58px 0}.equipmentNote h2{color:#fff}.equipmentNote p{color:#d3d3ce;max-width:720px}.equipmentLine{margin-top:22px;border-top:1px solid #4c4c48;padding-top:18px;font-weight:700}.finalStudio{background:var(--studio);color:#fff;padding:54px 0}.finalStudio h2{font:600 clamp(3rem,5vw,4.5rem)/.92 "Cormorant Garamond",serif;margin:0 0 14px}.finalStudio p{max-width:620px;color:#edf2f6}.finalStudio .studioBtn{background:#fff;color:#111;border-color:#fff}
+@media(max-width:820px){.heroGrid,.studioGrid{grid-template-columns:1fr}.studioHero{padding:46px 0}.studioSection{padding:48px 0}}
+@media(max-width:620px){.studioHero h1{font-size:3.65rem}.photoPair{gap:6px}.studioSection h2{font-size:3rem}.equipmentNote,.finalStudio{padding:40px 0}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="../index.html">CANVAS</a></div></header>
+<main>
+<section class="studioHero"><div class="wrap heroGrid"><div><div class="studioTag">Canvas 90 · Estudio fotográfico</div><h1>Tu próximo set puede estar aquí.</h1><p>Canvas 90 está pensado para transformarse. Cuando tu proyecto es fotografía, el espacio se convierte en un estudio amplio donde puedes montar iluminación, fondos y construir la sesión que tienes en mente.</p><div class="studioActions"><a class="studioBtn primary" href="../contacto/">Conoce el estudio</a><a class="studioBtn" href="../espacios/canvas90.html">Ver Canvas 90</a></div></div><figure class="heroPhoto"><img src="../assets/img/studio-main.jpg?v=1" alt="Canvas 90 configurado como estudio fotográfico con equipo profesional"></figure></div></section>
+<section class="studioSection"><div class="wrap studioGrid"><div><div class="studioTag">Una configuración de Canvas 90</div><h2>Espacio para construir la toma.</h2><p>No es otro salón: es Canvas 90 preparado para fotografía. Su amplitud permite trabajar con distancia, mover el equipo, cambiar fondos y adaptar el montaje según el proyecto.</p><div class="uses"><span>Retrato</span><span>Producto</span><span>Moda</span><span>Contenido</span><span>Marca personal</span><span>Sesiones creativas</span></div></div><div class="photoPair"><img src="../assets/img/studio-detail.jpg?v=1" loading="lazy" alt="Fondo e iluminación fotográfica en Canvas 90"><img src="../assets/img/studio-wide.jpg?v=1" loading="lazy" alt="Vista amplia del montaje de estudio en Canvas 90"></div></div></section>
+<section class="equipmentNote"><div class="wrap"><div class="studioTag" style="color:#b9c4cf">Equipo profesional</div><h2>El estudio se arma alrededor de tu proyecto.</h2><p>Contamos con equipo profesional para preparar sesiones dentro de Canvas 90. Estamos terminando de documentar el inventario completo para publicar aquí exactamente qué flashes, modificadores, fondos y accesorios están disponibles.</p><div class="equipmentLine">Inventario técnico detallado · próximamente</div></div></section>
+<section class="finalStudio"><div class="wrap"><div class="studioTag" style="color:#dbe4ec">Canvas 90 · Estudio fotográfico</div><h2>Cuéntanos qué quieres fotografiar.</h2><p>Platícanos el tipo de sesión, cuántas personas participarán y qué necesitas montar. Así podemos orientarte antes de reservar.</p><a class="studioBtn" target="_blank" rel="noopener" href="https://wa.me/527821402617?text=Hola%2C%20vi%20Canvas%2090%20Estudio%20Fotogr%C3%A1fico%20y%20quiero%20platicarles%20sobre%20una%20sesi%C3%B3n.">Preguntar por el estudio →</a></div></section>
+</main>
+<footer class="footer"><div class="wrap"><strong>CANVAS</strong><p>Espacios para proyectos independientes.</p></div></footer>
+<script src="../assets/js/site-shell.js?v=6" defer></script>
+</body>
+</html>''',encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html assets/js/mobile-index.js assets/js/site-shell.js estudio-fotografico/index.html assets/img/studio-main.jpg assets/img/studio-detail.jpg assets/img/studio-wide.jpg
+          git add '*.html' 'espacios/*.html' 'contacto/*.html' 'disponibilidad/*.html' 'novedades/*.html' 'estudio-fotografico/*.html' 2>/dev/null || true
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Presentar Canvas 90 como estudio fotografico"
+          git push
