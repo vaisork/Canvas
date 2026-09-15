@@ -1,0 +1,33 @@
+name: Update Canvas 90 weekend price
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-canvas90-weekend-price.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update weekend price
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for rel in ['espacios/canvas90.html','espacios/jardin.html']:
+              p=Path(rel)
+              s=p.read_text(encoding='utf-8')
+              s=s.replace('Desde $200 MXN/h','Desde $250 MXN/h')
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Save changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add espacios/canvas90.html espacios/jardin.html
+          git commit -m "Actualizar tarifa de fin de semana de Canvas 90 a 250" || exit 0
+          git push
