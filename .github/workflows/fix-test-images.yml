@@ -1,9 +1,57 @@
-name: Fix test index images
+name: Publish Pulso and Origen photos
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
 
 jobs:
-  info:
+  publish:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Corrección automática pausada; las fotos del index se gestionan directamente."
+      - uses: actions/checkout@v4
+      - name: Build Pulso and Origen JPGs
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64, re
+
+          out = Path('assets/img')
+          out.mkdir(parents=True, exist_ok=True)
+
+          for source, target in [
+              ('assets/img/pulso-lite.b64', 'pulso-index.jpg'),
+              ('assets/img/origen-lite.b64', 'origen-index.jpg'),
+          ]:
+              b64 = re.sub(r'\s+', '', Path(source).read_text(encoding='utf-8'))
+              b64 += '=' * (-len(b64) % 4)
+              data = base64.b64decode(b64)
+              if not data.startswith(b'\xff\xd8\xff'):
+                  raise RuntimeError(f'{source} no contiene un JPEG válido')
+              (out / target).write_bytes(data)
+              print(target, len(data))
+
+          p = Path('index-prueba.html')
+          s = p.read_text(encoding='utf-8')
+          s = re.sub(
+              r'(<section class="spot spot-pulso">.*?<figure class="photo">)<img[^>]*>(<span>Canvas Pulso</span>)',
+              r'\1<img src="assets/img/pulso-index.jpg" loading="lazy" decoding="async" alt="Canvas Pulso">\2',
+              s, count=1, flags=re.S
+          )
+          s = re.sub(
+              r'(<section class="spot spot-origen">.*?<figure class="photo">)<img[^>]*>(<span>Canvas Origen</span>)',
+              r'\1<img src="assets/img/origen-index.jpg" loading="lazy" decoding="async" alt="Canvas Origen">\2',
+              s, count=1, flags=re.S
+          )
+          p.write_text(s, encoding='utf-8')
+
+      - name: Commit photos
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index-prueba.html assets/img/pulso-index.jpg assets/img/origen-index.jpg
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Actualizar fotos de Canvas Pulso y Origen"
+          git push
