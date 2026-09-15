@@ -43,7 +43,7 @@
       .canvasMenuButton.isOpen span:nth-child(2){opacity:0}
       .canvasMenuButton.isOpen span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
       .canvasMobileDrawer{display:block;position:absolute;left:0;right:0;top:100%;background:#fffefb;border-top:1px solid #e7e2d9;border-bottom:1px solid #d8d2c7;box-shadow:0 16px 35px #00000016;max-height:0;opacity:0;overflow:hidden;pointer-events:none;transition:max-height .28s ease,opacity .2s ease}
-      .canvasMobileDrawer.isOpen{max-height:520px;opacity:1;pointer-events:auto}
+      .canvasMobileDrawer.isOpen{max-height:600px;opacity:1;pointer-events:auto}
       .canvasMobileDrawerInner{padding:10px 18px 18px;display:grid}
       .canvasMobileDrawer a{display:flex;align-items:center;justify-content:space-between;min-height:49px;padding:0 4px;border-bottom:1px solid #ebe6dd;text-decoration:none;color:#171717;font:600 1.2rem/1 "Cormorant Garamond",Georgia,serif;letter-spacing:normal;text-transform:none}
       .canvasMobileDrawer a::after{content:'→';font-family:Inter,system-ui,sans-serif;font-size:.8rem;color:#77736b}
@@ -80,6 +80,7 @@
     <nav class="canvasMobileDrawer" aria-label="Navegación móvil">
       <div class="canvasMobileDrawerInner">
         <a href="${root}index.html#espacios">Espacios</a>
+        <a href="${root}estudio-fotografico/">Estudio fotográfico</a>
         <a href="${root}index.html#ubicacion-landing">Ubicación</a>
         <a href="${root}disponibilidad/">Disponibilidad</a>
         <a href="${root}novedades/">Novedades</a>
