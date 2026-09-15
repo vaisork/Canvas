@@ -1,0 +1,40 @@
+name: Bust studio cache
+
+on:
+  push:
+    paths:
+      - '.github/workflows/bust-studio-cache.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update script versions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = re.sub(r'assets/js/mobile-index\.js\?v=\d+', 'assets/js/mobile-index.js?v=5', s)
+          p.write_text(s, encoding='utf-8')
+
+          for p in Path('.').rglob('*.html'):
+              s = p.read_text(encoding='utf-8')
+              n = re.sub(r'assets/js/site-shell\.js\?v=\d+', 'assets/js/site-shell.js?v=7', s)
+              if n != s:
+                  p.write_text(n, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html '*.html' 'espacios/*.html' 'contacto/*.html' 'disponibilidad/*.html' 'novedades/*.html' 'estudio-fotografico/*.html' 2>/dev/null || true
+          git commit -m "Actualizar cache del estudio fotografico" || exit 0
+          git push
