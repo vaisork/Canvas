@@ -1,0 +1,46 @@
+name: Install Analytics on all public pages
+
+on:
+  push:
+    paths:
+      - '.github/workflows/install-analytics-all-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add Analytics loader to every public HTML page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          changed=[]
+          for p in Path('.').rglob('*.html'):
+              if '.git' in p.parts or 'assets' in p.parts:
+                  continue
+              s=p.read_text(encoding='utf-8-sig')
+              if 'assets/js/analytics.js' in s:
+                  continue
+              depth=len(p.parent.parts)
+              prefix='../'*depth
+              tag=f'<script src="{prefix}assets/js/analytics.js?v=1" defer></script>'
+              if '</head>' in s:
+                  s=s.replace('</head>',f'  {tag}\n</head>',1)
+              else:
+                  continue
+              p.write_text(s,encoding='utf-8')
+              changed.append(str(p))
+          print('Updated:', *changed, sep='\n- ')
+          PY
+      - name: Commit Analytics installation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add '*.html' '*/*.html' '*/*/*.html' 2>/dev/null || true
+          git commit -m "Instalar Analytics en todas las paginas publicas" || exit 0
+          git push
