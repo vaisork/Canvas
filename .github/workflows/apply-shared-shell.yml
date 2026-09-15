@@ -1,0 +1,57 @@
+name: Apply shared Canvas shell
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add shared shell to secondary pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          pages = [
+              'contacto/index.html',
+              'disponibilidad/index.html',
+              'novedades/index.html',
+              'estudio-fotografico/index.html',
+              'espacios/canvas90.html',
+              'espacios/canvas90-galeria.html',
+              'espacios/pulso.html',
+              'espacios/origen.html',
+              'espacios/jardin.html',
+              'espacios/deck.html',
+          ]
+          tag = '<script src="../assets/js/site-shell.js?v=1" defer></script>'
+          for name in pages:
+              p = Path(name)
+              if not p.exists():
+                  print('Missing:', name)
+                  continue
+              s = p.read_text(encoding='utf-8')
+              if 'assets/js/site-shell.js' in s:
+                  print('Already linked:', name)
+                  continue
+              if '</body>' not in s:
+                  print('No body close:', name)
+                  continue
+              s = s.replace('</body>', tag + '\n</body>', 1)
+              p.write_text(s, encoding='utf-8')
+              print('Updated:', name)
+          PY
+      - name: Commit shared navigation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add contacto/index.html disponibilidad/index.html novedades/index.html estudio-fotografico/index.html espacios/*.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Unificar header y footer de páginas secundarias"
+          git push
