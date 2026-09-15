@@ -10,6 +10,19 @@
     .locationMapCard{cursor:pointer}
     .locationMapCard>a{display:block;width:100%;height:100%}
 
+    .studioFeature{background:#f1eee7;padding:76px 0;border-top:1px solid #ded9cf;border-bottom:1px solid #ded9cf}
+    .studioFeatureInner{width:min(1220px,calc(100% - 34px));margin:auto;display:grid;grid-template-columns:.92fr 1.08fr;gap:54px;align-items:center}
+    .studioFeatureCopy .studioTag{font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;font-weight:800;color:#55514a;margin-bottom:14px}
+    .studioFeatureCopy h2{font:600 clamp(3.2rem,5.4vw,5.25rem)/.9 'Cormorant Garamond',serif;letter-spacing:-.04em;margin:0 0 22px;max-width:9ch}
+    .studioFeatureCopy p{font-size:1.04rem;line-height:1.7;color:#4a4741;max-width:34rem;margin:0 0 22px}
+    .studioFacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:24px 0}
+    .studioFact{border-top:1px solid #bbb5aa;padding:12px 0 4px;font-size:.78rem;font-weight:700;letter-spacing:.04em}
+    .studioFeatureCopy .studioCta{display:inline-flex;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:12px 17px;font-weight:700;margin-top:5px}
+    .studioVisual{display:grid;grid-template-columns:1fr 1fr;gap:9px;position:relative}
+    .studioVisual .studioMain{grid-column:1/-1;display:block;width:100%;aspect-ratio:16/9;object-fit:cover;object-position:center;border:9px solid #fff;box-shadow:0 16px 36px #00000018}
+    .studioVisual .studioSmall{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border:6px solid #fff;box-shadow:0 10px 24px #00000012}
+    .studioVisual:after{content:'CANVAS 90 · ESTUDIO';position:absolute;right:16px;top:16px;background:#fffefb;padding:8px 10px;font-size:.62rem;font-weight:800;letter-spacing:.15em}
+
     @media(max-width:980px){
       .siteHeader{position:sticky;top:0;z-index:1000;height:68px;padding:0;background:#fffefb;overflow:visible}
       .headerInner{width:calc(100% - 24px);height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -23,12 +36,14 @@
       .mobileMenuButton.isOpen span:nth-child(2){opacity:0}
       .mobileMenuButton.isOpen span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
       .mobileDrawer{display:block;position:absolute;left:0;right:0;top:100%;background:#fffefb;border-top:1px solid #e7e2d9;border-bottom:1px solid #d8d2c7;box-shadow:0 16px 35px #00000016;max-height:0;opacity:0;overflow:hidden;pointer-events:none;transition:max-height .28s ease,opacity .2s ease}
-      .mobileDrawer.isOpen{max-height:520px;opacity:1;pointer-events:auto}
+      .mobileDrawer.isOpen{max-height:600px;opacity:1;pointer-events:auto}
       .mobileDrawerInner{padding:10px 18px 18px;display:grid}
       .mobileDrawer a{display:flex;align-items:center;justify-content:space-between;min-height:49px;padding:0 4px;border-bottom:1px solid #ebe6dd;text-decoration:none;font:600 1.2rem/1 'Cormorant Garamond',serif}
       .mobileDrawer a::after{content:'→';font-family:Inter,system-ui,sans-serif;font-size:.8rem;color:#77736b}
       .mobileDrawer a.mobileDrawerCta{margin-top:12px;min-height:46px;padding:0 14px;background:#171717;color:#fff;border:0;font-family:Inter,system-ui,sans-serif;font-size:.8rem;font-weight:700}
       .mobileDrawer a.mobileDrawerCta::after{color:#fff}
+      .studioFeatureInner{grid-template-columns:1fr;gap:34px}
+      .studioFeatureCopy h2{max-width:none}
     }
 
     @media(max-width:620px){
@@ -44,6 +59,17 @@
       .card>img:not(.cardThumb){width:50px;height:42px;object-fit:contain;object-position:center;margin:0}
       .cardThumb{display:block!important;width:92px!important;height:76px!important;object-fit:cover!important;object-position:center!important;border:4px solid rgba(255,255,255,.82);box-shadow:0 5px 14px #00000014}
       .spot{display:none!important}
+
+      .studioFeature{padding:44px 0}
+      .studioFeatureInner{width:calc(100% - 22px);gap:25px}
+      .studioFeatureCopy h2{font-size:3.05rem}
+      .studioFeatureCopy p{font-size:.95rem;line-height:1.6}
+      .studioFacts{margin:18px 0}
+      .studioFact{font-size:.68rem}
+      .studioVisual{gap:6px}
+      .studioVisual .studioMain{border-width:6px}
+      .studioVisual .studioSmall{border-width:4px}
+      .studioVisual:after{right:10px;top:10px;font-size:.54rem;padding:6px 8px}
 
       .possibilities{padding:38px 0 30px}
       .possibilitiesInner{width:calc(100% - 20px)}
@@ -107,6 +133,7 @@
     drawer.setAttribute('aria-label','Navegación móvil');
     drawer.innerHTML=`<div class="mobileDrawerInner">
       <a href="#espacios">Espacios</a>
+      <a href="estudio-fotografico/">Estudio fotográfico</a>
       <a href="#ubicacion-landing">Ubicación</a>
       <a href="disponibilidad/">Disponibilidad</a>
       <a href="novedades/">Novedades</a>
@@ -135,15 +162,8 @@
     });
   }
 
-  const locationButton=document.querySelector('.locationBtn.primary');
-  if(locationButton){
-    locationButton.href=MAP_URL;
-    locationButton.target='_blank';
-    locationButton.rel='noopener';
-  }
-
   const mapCard=document.querySelector('.locationMapCard');
-  if(mapCard&&!mapCard.querySelector('a')){
+  if(mapCard&&mapCard.tagName!=='A'&&!mapCard.querySelector('a')){
     const link=document.createElement('a');
     link.href=MAP_URL;
     link.target='_blank';
@@ -174,4 +194,34 @@
     sync();
     new MutationObserver(sync).observe(source,{attributes:true,attributeFilter:['src']});
   });
+
+  if(!document.querySelector('.studioFeature')){
+    const possibilities=document.querySelector('.possibilities');
+    if(possibilities){
+      const studio=document.createElement('section');
+      studio.className='studioFeature';
+      studio.id='estudio-fotografico';
+      studio.innerHTML=`
+        <div class="studioFeatureInner">
+          <div class="studioFeatureCopy">
+            <div class="studioTag">Canvas 90 · Estudio fotográfico</div>
+            <h2>El mismo espacio. Otra forma de crear.</h2>
+            <p>Canvas 90 también puede convertirse en tu estudio fotográfico. Un espacio amplio y transformable, preparado para montar sesiones con equipo profesional y darte libertad para construir cada toma.</p>
+            <div class="studioFacts">
+              <div class="studioFact">ESPACIO AMPLIO</div>
+              <div class="studioFact">EQUIPO PROFESIONAL</div>
+              <div class="studioFact">FONDOS Y SOPORTES</div>
+              <div class="studioFact">RETRATO · PRODUCTO · CONTENIDO</div>
+            </div>
+            <a class="studioCta" href="estudio-fotografico/">Conoce el estudio →</a>
+          </div>
+          <div class="studioVisual" aria-label="Canvas 90 configurado como estudio fotográfico">
+            <img class="studioMain" src="assets/img/studio-main.jpg?v=1" loading="lazy" alt="Canvas 90 montado como estudio fotográfico con fondo, softbox y equipo de iluminación">
+            <img class="studioSmall" src="assets/img/studio-detail.jpg?v=1" loading="lazy" alt="Equipo profesional de iluminación y fondo dentro de Canvas 90">
+            <img class="studioSmall" src="assets/img/studio-wide.jpg?v=1" loading="lazy" alt="Vista amplia de Canvas 90 durante un montaje fotográfico">
+          </div>
+        </div>`;
+      possibilities.parentNode.insertBefore(studio,possibilities);
+    }
+  }
 })();
