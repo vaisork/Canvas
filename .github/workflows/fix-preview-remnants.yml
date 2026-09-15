@@ -1,0 +1,69 @@
+name: Fix preview remnants
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-preview-remnants.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix preview HTML
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index-prueba.html')
+          t=p.read_text(encoding='utf-8')
+
+          old="""  const html=await fetch('index.html?preview='+Date.now(),{cache:'no-store'}).then(r=>r.text());"""
+          new="""  const html=await fetch('index.html?preview='+Date.now(),{cache:'no-store'}).then(r=>r.text());
+  const sourceDoc=new DOMParser().parseFromString(html,'text/html');
+  const sourceSections=[...sourceDoc.querySelectorAll('section')];
+  const sourceImage=(pattern)=>{
+    const section=sourceSections.find(s=>pattern.test((s.textContent||'').replace(/\\s+/g,' ')));
+    return section?.querySelector('img')?.getAttribute('src')||'';
+  };
+  const canvas90Src=sourceImage(/Dale espacio para crecer|Canvas 90/i);
+  const gardenSrc=sourceImage(/Que la idea tambi[eé]n salga afuera|Jard[ií]n/i);
+  const deckSrc=sourceImage(/Espacio para abrir la idea|Canvas Deck/i);"""
+          if old not in t:
+              raise SystemExit('No se encontró la carga inicial del HTML')
+          t=t.replace(old,new,1)
+
+          old_replace="""  out=out.replace(/<section class=\"spaces\" id=\"espacios\">[\\s\\S]*?<\\/section>/,spaces+c90+pulso+origen+jardin+deck);
+  out=out.replace(/<footer>[\\s\\S]*?<\\/footer>/,footer);"""
+          new_replace="""  out=out.replace(/<section class=\"spaces\" id=\"espacios\">[\\s\\S]*?<footer>[\\s\\S]*?<\\/footer>/,spaces+c90+pulso+origen+jardin+deck+footer);"""
+          if old_replace not in t:
+              raise SystemExit('No se encontró el bloque de reemplazo de espacios/footer')
+          t=t.replace(old_replace,new_replace,1)
+
+          old_imgs="""  requestAnimationFrame(()=>{
+    const imgs=[...document.querySelectorAll('.photoMain img')];
+    const canvas90=imgs[0],garden=imgs[1]||canvas90,deckImg=imgs[2]||garden;
+    const set=(id,img)=>{const el=document.getElementById(id);if(el&&img)el.src=img.src};
+    set('collageCanvas90',canvas90);set('collageGarden',garden);set('collageDeck',deckImg);
+    set('spotCanvas90',canvas90);set('spotGarden',garden);set('spotDeck',deckImg);
+  });"""
+          new_imgs="""  requestAnimationFrame(()=>{
+    const set=(id,src)=>{const el=document.getElementById(id);if(el&&src)el.src=src};
+    set('collageCanvas90',canvas90Src);set('collageGarden',gardenSrc);set('collageDeck',deckSrc);
+    set('spotCanvas90',canvas90Src);set('spotGarden',gardenSrc);set('spotDeck',deckSrc);
+  });"""
+          if old_imgs not in t:
+              raise SystemExit('No se encontró el selector anterior de imágenes')
+          t=t.replace(old_imgs,new_imgs,1)
+
+          p.write_text(t,encoding='utf-8')
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "Canvas Web Bot"
+          git config user.email "canvas-web-bot@users.noreply.github.com"
+          git add index-prueba.html
+          git commit -m "Limpiar remanentes y corregir foto de Deck"
+          git push
