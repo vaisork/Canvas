@@ -21,6 +21,7 @@
       .card strong{font-size:1.5rem;margin:6px 0 0}
       .card>img:not(.cardThumb){width:50px;height:42px;object-fit:contain;object-position:center;margin:0}
       .cardThumb{display:block!important;width:92px!important;height:76px!important;object-fit:cover!important;object-position:center!important;border:4px solid rgba(255,255,255,.82);box-shadow:0 5px 14px #00000014}
+      .spot{display:none!important}
     }
     @media(max-width:380px){
       .brand span{font-size:1.12rem;letter-spacing:.06em}
