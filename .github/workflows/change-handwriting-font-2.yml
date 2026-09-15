@@ -1,0 +1,34 @@
+name: Cambiar manuscrita del index a Patrick Hand
+
+on:
+  push:
+    paths:
+      - '.github/workflows/change-handwriting-font-2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cambiar fuente manuscrita
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('family=Caveat:wght@500;600&display=swap','family=Patrick+Hand&display=swap')
+          s=s.replace('"Caveat",cursive','"Patrick Hand",cursive')
+          s=s.replace("'Caveat',cursive","'Patrick Hand',cursive")
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Guardar cambio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Probar manuscrita Patrick Hand en index" || exit 0
+          git push
