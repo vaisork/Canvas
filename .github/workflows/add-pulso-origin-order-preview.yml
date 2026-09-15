@@ -1,0 +1,81 @@
+name: Add Pulso and order preview
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-pulso-origin-order-preview.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index de prueba
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index-prueba.html')
+          t=p.read_text()
+
+          css='''
+.spaceSpotlight{padding:82px 0;border-top:1px solid var(--spotLine);border-bottom:1px solid var(--spotLine);background:var(--spotBg)}
+.spaceSpotlight .spotInner{width:min(1180px,calc(100% - 34px));margin:auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:54px;align-items:center}
+.spaceSpotlight .spotEyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:.7rem;font-weight:800;color:var(--spotText);margin-bottom:12px}
+.spaceSpotlight h2{font:600 clamp(3.2rem,5.5vw,5.4rem)/.9 "Cormorant Garamond",serif;letter-spacing:-.04em;margin:0 0 20px;color:#171717}
+.spaceSpotlight p{font-size:1.04rem;line-height:1.75;color:#4d4a42;max-width:34rem}
+.spaceSpotlight .spotLine{width:82px;height:6px;background:var(--spotAccent);margin:22px 0}
+.spaceSpotlight a{display:inline-flex;margin-top:10px;border:1px solid #171717;padding:11px 15px;font-weight:700;color:#171717;text-decoration:none}
+.spaceSpotlight .spotPhoto{position:relative;background:#fff;padding:10px 10px 42px;box-shadow:0 18px 40px #0000001d}
+.spaceSpotlight .spotPhoto img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.spaceSpotlight .spotPhoto span{position:absolute;left:22px;bottom:10px;font:600 1.4rem/1 "Nothing You Could Do",cursive;color:#37332c}
+.spaceSpotlight .spotPhoto:before{content:"";position:absolute;width:94px;height:25px;top:-12px;left:50%;transform:translateX(-50%) rotate(-3deg);background:#d8c59d99}
+.spot-c90{--spotBg:#eaf6f7;--spotLine:#b9dfe3;--spotAccent:#167E8C;--spotText:#0f6672}
+.spot-pulso{--spotBg:#fde9e5;--spotLine:#f0c4bc;--spotAccent:#E8644F;--spotText:#9b3027}
+.spot-origen{--spotBg:#fff6da;--spotLine:#ead9a9;--spotAccent:#E0A51E;--spotText:#8a6a12}
+.spot-jardin{--spotBg:#edf6ec;--spotLine:#cfe2cd;--spotAccent:#57935A;--spotText:#3e7040}
+.spot-deck{--spotBg:#f9eee7;--spotLine:#e3c9b8;--spotAccent:#B27449;--spotText:#855538}
+@media(max-width:900px){.spaceSpotlight .spotInner{grid-template-columns:1fr}.spaceSpotlight .spotPhoto{order:2}}
+@media(max-width:620px){.spaceSpotlight{padding:58px 0}.spaceSpotlight .spotInner{width:calc(100% - 22px)}.spaceSpotlight h2{font-size:3.35rem}}
+'''
+          if '.spaceSpotlight{' not in t:
+              t=t.replace('\n.previewFooter{','\n'+css+'\n.previewFooter{',1)
+
+          # Keep old origin CSS harmless but do not render old originSpotlight block.
+          blocks='''
+  const c90Spot = `<section class="spaceSpotlight spot-c90" id="canvas90-preview"><div class="spotInner"><div><div class="spotEyebrow">Canvas 90 · espacio principal</div><h2>Dale espacio para crecer.</h2><div class="spotLine"></div><p>Un salón amplio y transformable para clases, movimiento, fotografía, talleres, encuentros y proyectos que necesitan más libertad.</p><a href="espacios/canvas90.html">Conoce Canvas 90 →</a></div><figure class="spotPhoto"><img id="spotCanvas90" alt="Canvas 90"><span>Canvas 90</span></figure></div></section>`;
+  const pulsoSpot = `<section class="spaceSpotlight spot-pulso" id="canvas-pulso-preview"><div class="spotInner"><div><div class="spotEyebrow">Canvas Pulso · 16 m²</div><h2>Un lugar para darle continuidad a tu proyecto.</h2><div class="spotLine"></div><p>Un espacio para reuniones pequeñas, trabajo concentrado, sesiones y proyectos que necesitan un lugar propio sin requerir un salón grande.</p><a href="espacios/pulso.html">Conoce Canvas Pulso →</a></div><figure class="spotPhoto"><img src="assets/img/canvas-pulso-real.jpg" alt="Canvas Pulso"><span>Canvas Pulso</span></figure></div></section>`;
+  const originSpot = `<section class="spaceSpotlight spot-origen" id="canvas-origen-preview"><div class="spotInner"><div><div class="spotEyebrow">Canvas Origen · 5 m²</div><h2>Todo proyecto necesita un lugar donde empezar.</h2><div class="spotLine"></div><p>El espacio más pequeño de Canvas. Íntimo, independiente y pensado para esos primeros pasos: trabajar, conversar, reunirse o darle forma a una idea.</p><a href="espacios/origen.html">Conoce Canvas Origen →</a></div><figure class="spotPhoto"><img src="assets/img/canvas-origen-real.jpg" alt="Canvas Origen"><span>Canvas Origen</span></figure></div></section>`;
+  const gardenSpot = `<section class="spaceSpotlight spot-jardin" id="jardin-preview"><div class="spotInner"><div><div class="spotEyebrow">El Jardín de Canvas</div><h2>Que la idea también salga afuera.</h2><div class="spotLine"></div><p>Un exterior abierto que complementa Canvas 90 y permite llevar reuniones, actividades y momentos de descanso hacia el jardín.</p><a href="espacios/jardin.html">Conoce El Jardín →</a></div><figure class="spotPhoto"><img id="spotGarden" alt="El Jardín de Canvas"><span>El Jardín</span></figure></div></section>`;
+  const deckSpot = `<section class="spaceSpotlight spot-deck" id="deck-preview"><div class="spotInner"><div><div class="spotEyebrow">Canvas Deck</div><h2>Espacio para abrir la idea.</h2><div class="spotLine"></div><p>Una terraza exterior con vista y carácter propio para conversar, trabajar, hacer una pausa o extender una actividad hacia afuera.</p><a href="espacios/deck.html">Conoce Canvas Deck →</a></div><figure class="spotPhoto"><img id="spotDeck" alt="Canvas Deck"><span>Canvas Deck</span></figure></div></section>`;
+'''
+          marker='  const footer = `'
+          if 'const c90Spot =' not in t:
+              t=t.replace(marker, blocks+'\n'+marker,1)
+
+          # Disable previous originSpotlight declaration if present to avoid duplicate ID/section.
+          t=t.replace('  const originSpotlight = `<section class="originSpotlight"', '  const legacyOriginSpotlight = `<section class="originSpotlight"')
+          t=t.replace("previewSpaces.insertAdjacentHTML('afterend',originSpotlight);", "previewSpaces.insertAdjacentHTML('afterend', c90Spot + pulsoSpot + originSpot + gardenSpot + deckSpot);")
+
+          # If previous insertion hook is absent, add ordered sections after the dark spaces selector.
+          hook="    const spacePhotos=[...document.querySelectorAll('.photoMain img')]"
+          if "c90Spot + pulsoSpot + originSpot + gardenSpot + deckSpot" not in t:
+              t=t.replace(hook, "    const previewSpaces=document.querySelector('.previewSpaces');if(previewSpaces)previewSpaces.insertAdjacentHTML('afterend', c90Spot + pulsoSpot + originSpot + gardenSpot + deckSpot);\n"+hook,1)
+
+          # Fill real photos already present in the original index for Canvas90, garden and deck.
+          fill="""    const c90el=document.getElementById('spotCanvas90');if(c90el&&canvas90)c90el.src=canvas90.src;\n    const gel=document.getElementById('spotGarden');if(gel&&garden)gel.src=garden.src;\n    const del=document.getElementById('spotDeck');if(del&&deck)del.src=deck.src;\n"""
+          target="    const set=(id,img)=>{const el=document.getElementById(id);if(el&&img)el.src=img.src};set('collageCanvas90',canvas90);set('collageGarden',garden);set('collageDeck',deck);"
+          if "getElementById('spotCanvas90')" not in t:
+              t=t.replace(target, target+'\n'+fill,1)
+
+          p.write_text(t)
+          PY
+      - name: Commit change
+        run: |
+          git config user.name "Canvas Web Bot"
+          git config user.email "canvas-web-bot@users.noreply.github.com"
+          git add index-prueba.html
+          git commit -m "Ordenar espacios y agregar Canvas Pulso en index de prueba"
+          git push
