@@ -1,0 +1,35 @@
+name: Fix mobile header
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index-prueba mobile header
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index-prueba.html')
+          s = p.read_text(encoding='utf-8')
+          old = '.siteHeader{height:78px}.headerInner{width:calc(100% - 22px)}.brand span{font-size:1.75rem}.visit{padding:9px 11px;font-size:.78rem}'
+          new = '.siteHeader{height:68px}.headerInner{width:calc(100% - 24px);gap:10px;justify-content:space-between}.brand{gap:8px;min-width:0;white-space:nowrap}.brand img{width:24px;height:24px;flex:0 0 24px}.brand span{font-size:1.45rem;letter-spacing:.12em}.visit{padding:8px 10px;font-size:0;line-height:1;flex:0 0 auto}.visit::after{content:"Conoce Canvas";font-size:.72rem;letter-spacing:0}'
+          if old not in s:
+              raise SystemExit('No se encontró el bloque móvil esperado')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index-prueba.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Ajustar header movil de index-prueba"
+          git push
