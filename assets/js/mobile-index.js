@@ -2,14 +2,15 @@
   const style=document.createElement('style');
   style.id='canvas-mobile-index-tweaks';
   style.textContent=`
-    .newsQuick,.cardThumb{display:none}
+    .newsQuick{display:inline-flex;align-items:center;font-size:.82rem;font-weight:600;text-decoration:none;white-space:nowrap;color:#56534e}
+    .cardThumb{display:none}
     @media(max-width:620px){
       .siteHeader{height:66px}
       .headerInner{width:calc(100% - 20px);gap:7px;justify-content:space-between}
       .brand{gap:6px;min-width:0;white-space:nowrap}
       .brand img{width:22px;height:22px;flex:0 0 22px}
       .brand span{font-size:1.25rem;letter-spacing:.08em}
-      .newsQuick{display:inline-flex;align-items:center;font-size:.68rem;font-weight:700;text-decoration:none;white-space:nowrap;padding:7px 2px}
+      .newsQuick{display:inline-flex;align-items:center;font-size:.68rem;font-weight:700;text-decoration:none;white-space:nowrap;padding:7px 2px;color:#171717}
       .visit{padding:8px 8px;font-size:0;line-height:1;flex:0 0 auto}
       .visit::after{content:"Conoce Canvas";font-size:.66rem;letter-spacing:0}
       .spaces{padding:40px 0 34px;border-bottom:0}
