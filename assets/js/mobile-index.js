@@ -6,6 +6,7 @@
   style.textContent=`
     .newsQuick{display:inline-flex;align-items:center;font-size:.82rem;font-weight:600;text-decoration:none;white-space:nowrap;color:#56534e}
     .cardThumb,.mobileMenuButton,.mobileDrawer{display:none}
+    .locationActions{display:none!important}
     .locationMapCard{cursor:pointer}
     .locationMapCard>a{display:block;width:100%;height:100%}
 
