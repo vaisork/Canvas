@@ -15,13 +15,14 @@
 .heroDeck h1{max-width:10ch}.heroDeck .lead{max-width:730px}.heroIcon{width:auto;height:52px;object-fit:contain;margin-bottom:18px}
 .split{display:grid;grid-template-columns:.92fr 1.08fr;gap:48px;align-items:center}.copy p{font-size:1.04rem;color:#474742;max-width:43rem}
 .preview{background:#fff;border:1px solid var(--line);padding:12px;box-shadow:0 18px 40px #00000012}.preview img{display:block;width:100%;height:430px;object-fit:cover}.previewActions{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:14px 4px 2px}.previewActions a{font-weight:700;text-decoration:underline}.previewActions span{font-size:.78rem;color:var(--muted)}
+.photoPlaceholder{height:430px;background:linear-gradient(135deg,#f0e8e1,#e2d5ca);display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#76685e}
 .included{background:#f7f5ef}.includedBox{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:start}.includedStatement{font:600 clamp(2.6rem,5vw,4.7rem)/.92 "Cormorant Garamond",serif;letter-spacing:-.04em;max-width:9ch}.includedCopy{font-size:1.05rem;color:#474742;max-width:42rem}.includedCopy strong{color:#171717}.noCost{margin-top:22px;padding:18px 20px;border-left:5px solid var(--deck);background:#fff;font-weight:700}
 .useGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}.useCard{border:1px solid var(--line);background:#fff;padding:24px}.useCard b{display:block;font:600 1.65rem/1 "Cormorant Garamond",serif;margin-bottom:10px}.useCard p{margin:0;color:var(--muted)}
 .amenities{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.amenity{padding:10px 13px;border:1px solid #c9b7a9;background:#fff}
 .galleryOnly{background:var(--deck);color:#fff;padding:48px 0}.galleryOnly .wrap{display:flex;justify-content:space-between;gap:28px;align-items:center}.galleryOnly h2{font-size:clamp(2.7rem,5vw,4rem);margin:0;max-width:12ch}.galleryOnly p{max-width:530px;margin:8px 0 0;color:#fff7f1}.galleryOnly .cta{background:#fff;color:#111;border-color:#fff;white-space:nowrap}
 body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner{gap:20px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.2rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.67rem}.canvasSiteFooter .canvasSocial{gap:18px}.canvasSiteFooter .canvasSocial svg{width:23px;height:23px}
-@media(max-width:850px){.split,.includedBox{grid-template-columns:1fr}.useGrid{grid-template-columns:1fr}.preview img{height:360px}.galleryOnly .wrap{align-items:flex-start;flex-direction:column}}
-@media(max-width:620px){.heroDeck{padding:44px 0}.preview img{height:280px}.useCard{padding:20px}.galleryOnly{padding:34px 0}.galleryOnly h2{font-size:2.35rem}.galleryOnly .cta{padding:11px 15px;font-size:.84rem}.canvasSiteFooter .canvasFooterInner{gap:14px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.05rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.63rem}.canvasSiteFooter .canvasSocial{gap:15px}.canvasSiteFooter .canvasSocial svg{width:21px;height:21px}}
+@media(max-width:850px){.split,.includedBox{grid-template-columns:1fr}.useGrid{grid-template-columns:1fr}.preview img,.photoPlaceholder{height:360px}.galleryOnly .wrap{align-items:flex-start;flex-direction:column}}
+@media(max-width:620px){.heroDeck{padding:44px 0}.preview img,.photoPlaceholder{height:280px}.useCard{padding:20px}.galleryOnly{padding:34px 0}.galleryOnly h2{font-size:2.35rem}.galleryOnly .cta{padding:11px 15px;font-size:.84rem}.canvasSiteFooter .canvasFooterInner{gap:14px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.05rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.63rem}.canvasSiteFooter .canvasSocial{gap:15px}.canvasSiteFooter .canvasSocial svg{width:21px;height:21px}}
 </style>
 </head>
 <body>
@@ -29,7 +30,7 @@ body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner
 <main>
 <section class="heroDeck"><div class="wrap"><img class="heroIcon" src="../assets/img/icon-deck.png?v=2" alt="Icono Canvas Deck"><div class="eyebrow">Canvas Deck · amenidad de Pulso y Origen</div><div class="space-accent deck"></div><h1>Antes de entrar, ya estás en Canvas.</h1><p class="lead">Canvas Deck es el vestíbulo exterior que comparten Canvas Pulso y Canvas Origen. Es el lugar que te recibe: un espacio abierto donde puedes esperar, sentarte, tomar algo o simplemente bajar el ritmo antes y después de usar cualquiera de los dos espacios.</p><div class="actions"><a class="cta" href="deck-galeria.html">Galería</a></div></div></section>
 
-<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">El espacio que conecta todo</div><h2>Un lugar para llegar, esperar y quedarse un rato.</h2><p>El Deck no es otro salón ni una renta adicional. Es la zona común que conecta la llegada con Canvas Pulso y Canvas Origen, y forma parte natural de la experiencia de ambos.</p><p>La idea es sencilla: mientras dentro sucede una clase, una consulta, una reunión o una sesión privada, afuera puede haber alguien esperando cómodamente, conversando o tomando algo.</p><div class="amenities"><span class="amenity">Mesas de jardín</span><span class="amenity">Sombrillas</span><span class="amenity">Zona de espera</span><span class="amenity">Descanso al aire libre</span></div></div><div class="preview"><img id="previewDeck" alt="Canvas Deck"><div class="previewActions"><span>Una mirada al Deck</span><a href="deck-galeria.html">Abrir galería →</a></div></div></div></section>
+<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">El espacio que conecta todo</div><h2>Un lugar para llegar, esperar y quedarse un rato.</h2><p>El Deck no es otro salón ni una renta adicional. Es la zona común que conecta la llegada con Canvas Pulso y Canvas Origen, y forma parte natural de la experiencia de ambos.</p><p>La idea es sencilla: mientras dentro sucede una clase, una consulta, una reunión o una sesión privada, afuera puede haber alguien esperando cómodamente, conversando o tomando algo.</p><div class="amenities"><span class="amenity">Mesas de jardín</span><span class="amenity">Sombrillas</span><span class="amenity">Zona de espera</span><span class="amenity">Descanso al aire libre</span></div></div><div class="preview" id="deckPreviewCard"><img id="previewDeck" alt="Canvas Deck"><div class="previewActions"><span>Una mirada al Deck</span><a href="deck-galeria.html">Abrir galería →</a></div></div></div></section>
 
 <section class="section included"><div class="wrap includedBox"><div><div class="eyebrow">Incluido con tu espacio</div><div class="includedStatement">No se renta aparte.</div></div><div class="includedCopy"><p>Si reservaste <strong>Canvas Pulso</strong> o <strong>Canvas Origen</strong>, puedes usar el Deck durante tu estancia. No tiene un precio independiente y no necesitas reservarlo por separado.</p><p>Es parte de las amenidades que acompañan a ambos espacios: llegas por aquí, puedes recibir aquí a alguien y también puedes salir un momento sin tener que abandonar Canvas.</p><div class="noCost">Deck incluido al rentar Pulso u Origen · sin costo adicional</div></div></div></section>
 
@@ -41,15 +42,31 @@ body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner
 <script>
 (async()=>{
   const preview=document.getElementById('previewDeck');
+  const card=document.getElementById('deckPreviewCard');
+  const showPlaceholder=()=>{
+    if(preview)preview.remove();
+    if(card&&!card.querySelector('.photoPlaceholder')){
+      const placeholder=document.createElement('div');
+      placeholder.className='photoPlaceholder';
+      placeholder.textContent='Fotografías del Deck próximamente';
+      card.insertBefore(placeholder,card.firstChild);
+    }
+  };
   try{
-    const html=await fetch('../assets/photo-source.html?v=deck',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('No se pudo cargar la fuente de fotos');return r.text()});
+    const html=await fetch('../assets/photo-source.html?v=deck2',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('No se pudo cargar la fuente de fotos');return r.text()});
     const doc=new DOMParser().parseFromString(html,'text/html');
-    const sections=[...doc.querySelectorAll('section')];
-    const section=sections.find(s=>/Canvas Deck|Espacio para abrir la idea/i.test((s.textContent||'').replace(/\s+/g,' ')));
-    const source=(root)=>[...root.querySelectorAll('img')].map(img=>img.getAttribute('src')).filter(src=>src&&src.startsWith('data:image/')).sort((a,b)=>b.length-a.length)[0]||'';
-    const photo=(section&&source(section))||source(doc);
-    if(photo)preview.src=photo;
-  }catch(e){console.warn('No se pudo cargar la foto de Canvas Deck',e)}
+    const section=[...doc.querySelectorAll('section')].find(s=>/Espacio para abrir la idea/i.test((s.textContent||'').replace(/\s+/g,' ')));
+    if(!section)throw new Error('No se encontró la sección específica de Canvas Deck');
+    const photo=[...section.querySelectorAll('img')]
+      .map(img=>img.getAttribute('src'))
+      .filter(src=>src&&src.startsWith('data:image/'))
+      .sort((a,b)=>b.length-a.length)[0]||'';
+    if(!photo)throw new Error('No se encontró una foto específica de Canvas Deck');
+    preview.src=photo;
+  }catch(e){
+    console.warn('No se pudo cargar una foto correcta de Canvas Deck',e);
+    showPlaceholder();
+  }
 })();
 </script>
 <script src="../assets/js/site-shell.js?v=4" defer></script>
