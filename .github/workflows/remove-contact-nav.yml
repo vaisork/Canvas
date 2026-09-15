@@ -1,0 +1,56 @@
+name: Remove duplicate Contact nav
+
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-contact-nav.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Quitar Contacto de headers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          # Index: desktop header + mobile drawer
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('<a href="contacto/">Contacto</a>', '')
+          s = s.replace('assets/js/mobile-index.js?v=2', 'assets/js/mobile-index.js?v=3')
+          p.write_text(s, encoding='utf-8')
+
+          # Mobile index drawer
+          p = Path('assets/js/mobile-index.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('      <a href="contacto/">Contacto</a>\n', '')
+          p.write_text(s, encoding='utf-8')
+
+          # Shared secondary header/mobile drawer
+          p = Path('assets/js/site-shell.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('        <a href="${root}contacto/">Contacto</a>\n', '')
+          p.write_text(s, encoding='utf-8')
+
+          # Bust shared-shell cache everywhere it is used
+          for p in Path('.').rglob('*.html'):
+              s = p.read_text(encoding='utf-8')
+              ns = re.sub(r'assets/js/site-shell\.js\?v=\d+', 'assets/js/site-shell.js?v=5', s)
+              if ns != s:
+                  p.write_text(ns, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then exit 0; fi
+          git add index.html assets/js/mobile-index.js assets/js/site-shell.js '*.html' 'espacios/*.html' 'contacto/*.html' 'disponibilidad/*.html' 'novedades/*.html' 'estudio-fotografico/*.html' 2>/dev/null || true
+          git commit -m "Quitar Contacto duplicado del header"
+          git push
