@@ -1,95 +1,9 @@
 name: Fix test index images
 on:
-  push:
-    branches: [main]
-permissions:
-  contents: write
+  workflow_dispatch:
+
 jobs:
-  fix:
-    if: github.actor != 'github-actions[bot]'
+  info:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build real lightweight photos and patch HTML
-        shell: python
-        run: |
-          from pathlib import Path
-          import re, base64, shutil
-
-          old = Path('index.html').read_text(encoding='utf-8')
-          out = Path('assets/img')
-          out.mkdir(parents=True, exist_ok=True)
-
-          def section_for(phrase):
-              pos = old.find(phrase)
-              if pos < 0:
-                  raise RuntimeError(f'No encontré sección: {phrase}')
-              start = old.rfind('<section', 0, pos)
-              end = old.find('</section>', pos)
-              if start < 0 or end < 0:
-                  raise RuntimeError(f'No pude delimitar sección: {phrase}')
-              return old[start:end+10]
-
-          def extract_photo(phrase, filename):
-              sec = section_for(phrase)
-              imgs = re.findall(r'src=["\']data:image/(?:jpeg|jpg);base64,([^"\']+)', sec, flags=re.S|re.I)
-              if not imgs:
-                  imgs = re.findall(r'src=["\']data:image/[^;]+;base64,([^"\']+)', sec, flags=re.S|re.I)
-              if not imgs:
-                  raise RuntimeError(f'No encontré fotografía para {phrase}')
-              b64 = max(imgs, key=len)
-              b64 = re.sub(r'\s+', '', b64)
-              b64 += '=' * (-len(b64) % 4)
-              data = base64.b64decode(b64)
-              (out/filename).write_bytes(data)
-              print(filename, len(data), data[:3])
-
-          extract_photo('Dale espacio para crecer.', 'canvas90-index.jpg')
-          extract_photo('Que la idea también salga afuera.', 'jardin-index.jpg')
-          extract_photo('Espacio para abrir la idea.', 'deck-index.jpg')
-
-          # Pulso sigue viniendo del recurso ligero ya validado.
-          b64 = re.sub(r'\s+', '', Path('assets/img/pulso-lite.b64').read_text(encoding='utf-8'))
-          b64 += '=' * (-len(b64) % 4)
-          data = base64.b64decode(b64)
-          (out/'pulso-index.jpg').write_bytes(data)
-          print('pulso-index.jpg', len(data), data[:3])
-
-          # Origen ya tiene una fotografía JPG real en el repositorio.
-          shutil.copyfile('assets/img/canvas-origen-real.jpg', out/'origen-index.jpg')
-          print('origen-index.jpg', (out/'origen-index.jpg').stat().st_size)
-
-          p = Path('index-prueba.html')
-          s = p.read_text(encoding='utf-8')
-
-          # Collage inicial.
-          s = re.sub(r'<img\s+data-legacy="canvas90"[^>]*>', '<img src="assets/img/canvas90-index.jpg" loading="lazy" decoding="async" alt="Canvas 90">', s)
-          s = re.sub(r'<img\s+data-legacy="garden"[^>]*>', '<img src="assets/img/jardin-index.jpg" loading="lazy" decoding="async" alt="El Jardín de Canvas">', s)
-          s = re.sub(r'<img\s+data-legacy="deck"[^>]*>', '<img src="assets/img/deck-index.jpg" loading="lazy" decoding="async" alt="Canvas Deck">', s)
-
-          # Bloques detallados.
-          s = re.sub(r'(<section class="spot spot-c90">.*?<figure class="photo">)<img[^>]*>(<span>Canvas 90</span>)', r'\1<img src="assets/img/canvas90-index.jpg" loading="lazy" decoding="async" alt="Canvas 90">\2', s, count=1, flags=re.S)
-          s = re.sub(r'(<section class="spot spot-pulso">.*?<figure class="photo">)<img[^>]*>(<span>Canvas Pulso</span>)', r'\1<img src="assets/img/pulso-index.jpg" loading="lazy" decoding="async" alt="Canvas Pulso">\2', s, count=1, flags=re.S)
-          s = re.sub(r'(<section class="spot spot-origen">.*?<figure class="photo">)<img[^>]*>(<span>Canvas Origen</span>)', r'\1<img src="assets/img/origen-index.jpg" loading="lazy" decoding="async" alt="Canvas Origen">\2', s, count=1, flags=re.S)
-          s = re.sub(r'(<section class="spot spot-jardin">.*?<figure class="photo">)<img[^>]*>(<span>El Jardín</span>)', r'\1<img src="assets/img/jardin-index.jpg" loading="lazy" decoding="async" alt="El Jardín de Canvas">\2', s, count=1, flags=re.S)
-          s = re.sub(r'(<section class="spot spot-deck">.*?<figure class="photo">)<img[^>]*>(<span>Canvas Deck</span>)', r'\1<img src="assets/img/deck-index.jpg" loading="lazy" decoding="async" alt="Canvas Deck">\2', s, count=1, flags=re.S)
-
-          # El index de prueba ya no debe depender del index viejo ni de Base64 cargado en navegador.
-          s = re.sub(r'<script>\s*\(\(\)=>\{let started=false;.*?</script>', '', s, flags=re.S)
-          s = re.sub(r'<script>\s*fetch\(\'assets/img/pulso-lite\.b64\'.*?</script>', '', s, flags=re.S)
-
-          p.write_text(s, encoding='utf-8')
-
-          for name in ['canvas90-index.jpg','pulso-index.jpg','origen-index.jpg','jardin-index.jpg','deck-index.jpg']:
-              data=(out/name).read_bytes()
-              if not data.startswith(b'\xff\xd8\xff'):
-                  raise RuntimeError(f'{name} no es JPEG válido')
-
-      - name: Commit repair
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index-prueba.html assets/img/*-index.jpg
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Usar fotografías reales en index de prueba"
-          git push
+      - run: echo "Corrección automática pausada; las fotos del index se gestionan directamente."
