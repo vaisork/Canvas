@@ -5,14 +5,14 @@
     .newsQuick{display:inline-flex;align-items:center;font-size:.82rem;font-weight:600;text-decoration:none;white-space:nowrap;color:#56534e}
     .cardThumb{display:none}
     @media(max-width:620px){
-      .siteHeader{height:66px}
-      .headerInner{width:calc(100% - 20px);gap:7px;justify-content:space-between}
-      .brand{gap:6px;min-width:0;white-space:nowrap}
-      .brand img{width:22px;height:22px;flex:0 0 22px}
-      .brand span{font-size:1.25rem;letter-spacing:.08em}
-      .newsQuick{display:inline-flex;align-items:center;font-size:.68rem;font-weight:700;text-decoration:none;white-space:nowrap;padding:7px 2px;color:#171717}
-      .visit{padding:8px 8px;font-size:0;line-height:1;flex:0 0 auto}
-      .visit::after{content:"Conoce Canvas";font-size:.66rem;letter-spacing:0}
+      .siteHeader{height:auto;padding:9px 0 0;background:#fffefb}
+      .headerInner{width:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"brand brand" "news visit";gap:0;align-items:center}
+      .brand{grid-area:brand;justify-self:center;gap:7px;min-width:0;white-space:nowrap;margin:0 0 9px}
+      .brand img{width:24px;height:24px;flex:0 0 24px}
+      .brand span{font-size:1.45rem;letter-spacing:.12em}
+      .newsQuick{grid-area:news;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 10px;border-top:1px solid #e7e2d9;border-right:1px solid #e7e2d9;font-size:.72rem;font-weight:700;text-decoration:none;white-space:nowrap;color:#171717}
+      .visit{grid-area:visit;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 10px;border:0;border-top:1px solid #e7e2d9;font-size:0;line-height:1;text-decoration:none}
+      .visit::after{content:"Conoce Canvas";font-size:.72rem;font-weight:700;letter-spacing:0}
       .spaces{padding:40px 0 34px;border-bottom:0}
       .spacesIntro{margin-bottom:18px}
       .cards{gap:8px}
@@ -24,10 +24,9 @@
       .spot{display:none!important}
     }
     @media(max-width:380px){
-      .brand span{font-size:1.12rem;letter-spacing:.06em}
-      .newsQuick{font-size:.64rem}
-      .visit{padding:7px 7px}
-      .visit::after{font-size:.62rem}
+      .brand img{width:22px;height:22px;flex-basis:22px}
+      .brand span{font-size:1.3rem;letter-spacing:.1em}
+      .newsQuick,.visit::after{font-size:.68rem}
       .card{grid-template-columns:minmax(0,1fr) 46px 78px;padding:12px;gap:8px}
       .card>img:not(.cardThumb){width:44px;height:38px}
       .cardThumb{width:78px!important;height:66px!important}
