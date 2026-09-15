@@ -84,6 +84,13 @@
     header.insertBefore(link,visit);
   }
 
+  const desktopLocation=header?.querySelector('.nav a[href="ubicacion/"]');
+  if(desktopLocation){
+    desktopLocation.href='#ubicacion-landing';
+    desktopLocation.removeAttribute('target');
+    desktopLocation.removeAttribute('rel');
+  }
+
   const siteHeader=document.querySelector('.siteHeader');
   if(siteHeader&&header&&!siteHeader.querySelector('.mobileMenuButton')){
     const button=document.createElement('button');
@@ -99,7 +106,7 @@
     drawer.setAttribute('aria-label','Navegación móvil');
     drawer.innerHTML=`<div class="mobileDrawerInner">
       <a href="#espacios">Espacios</a>
-      <a href="${MAP_URL}" target="_blank" rel="noopener">Ubicación</a>
+      <a href="#ubicacion-landing">Ubicación</a>
       <a href="disponibilidad/">Disponibilidad</a>
       <a href="contacto/">Contacto</a>
       <a href="novedades/">Novedades</a>
@@ -128,11 +135,12 @@
     });
   }
 
-  document.querySelectorAll('a[href="ubicacion/"]').forEach(a=>{
-    a.href=MAP_URL;
-    a.target='_blank';
-    a.rel='noopener';
-  });
+  const locationButton=document.querySelector('.locationBtn.primary');
+  if(locationButton){
+    locationButton.href=MAP_URL;
+    locationButton.target='_blank';
+    locationButton.rel='noopener';
+  }
 
   const mapCard=document.querySelector('.locationMapCard');
   if(mapCard&&!mapCard.querySelector('a')){
