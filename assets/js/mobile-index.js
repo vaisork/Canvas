@@ -1,9 +1,13 @@
 (()=>{
+  const MAP_URL='https://maps.app.goo.gl/8iztCUD8DyXN1Yzk9';
+
   const style=document.createElement('style');
   style.id='canvas-mobile-index-tweaks';
   style.textContent=`
     .newsQuick{display:inline-flex;align-items:center;font-size:.82rem;font-weight:600;text-decoration:none;white-space:nowrap;color:#56534e}
     .cardThumb,.mobileMenuButton,.mobileDrawer{display:none}
+    .locationMapCard{cursor:pointer}
+    .locationMapCard>a{display:block;width:100%;height:100%}
 
     @media(max-width:980px){
       .siteHeader{position:sticky;top:0;z-index:1000;height:68px;padding:0;background:#fffefb;overflow:visible}
@@ -95,7 +99,7 @@
     drawer.setAttribute('aria-label','Navegación móvil');
     drawer.innerHTML=`<div class="mobileDrawerInner">
       <a href="#espacios">Espacios</a>
-      <a href="ubicacion/">Ubicación</a>
+      <a href="${MAP_URL}" target="_blank" rel="noopener">Ubicación</a>
       <a href="disponibilidad/">Disponibilidad</a>
       <a href="contacto/">Contacto</a>
       <a href="novedades/">Novedades</a>
@@ -122,6 +126,23 @@
     document.addEventListener('click',e=>{
       if(!siteHeader.contains(e.target))closeMenu();
     });
+  }
+
+  document.querySelectorAll('a[href="ubicacion/"]').forEach(a=>{
+    a.href=MAP_URL;
+    a.target='_blank';
+    a.rel='noopener';
+  });
+
+  const mapCard=document.querySelector('.locationMapCard');
+  if(mapCard&&!mapCard.querySelector('a')){
+    const link=document.createElement('a');
+    link.href=MAP_URL;
+    link.target='_blank';
+    link.rel='noopener';
+    link.setAttribute('aria-label','Abrir ubicación de Canvas en Google Maps');
+    while(mapCard.firstChild)link.appendChild(mapCard.firstChild);
+    mapCard.appendChild(link);
   }
 
   const pairs=[
