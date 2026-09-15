@@ -49,5 +49,6 @@ function open(src){lbImg.src=src;lb.classList.add('open');document.body.style.ov
 function closeLb(){lb.classList.remove('open');lbImg.src='';document.body.style.overflow=''}
 lb.querySelector('.close').onclick=closeLb;lb.onclick=e=>{if(e.target===lb)closeLb()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});
 </script>
+<script src="../assets/js/site-shell.js?v=1" defer></script>
 </body>
 </html>
