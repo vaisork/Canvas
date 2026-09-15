@@ -1,0 +1,55 @@
+name: Finalize location block
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch location block directly in HTML
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          # Remove the two location action buttons permanently.
+          s = re.sub(
+              r'\n\s*<div class="locationActions">\s*<a class="locationBtn primary"[^>]*>Cómo llegar →</a>\s*<a class="locationBtn"[^>]*>@canvas_90</a>\s*</div>',
+              '',
+              s,
+              count=1,
+              flags=re.S,
+          )
+
+          # All internal location navigation now scrolls to the landing section.
+          s = s.replace('href="ubicacion/"', 'href="#ubicacion-landing"')
+
+          # Make map itself a direct Google Maps link in source HTML.
+          old = '''    <div class="locationMapCard">\n      <img src="assets/img/mapa-canvas.svg" alt="Mapa editorial de Canvas 90 entre Toluca y Metepec" loading="lazy">\n    </div>'''
+          new = '''    <a class="locationMapCard" href="https://maps.app.goo.gl/8iztCUD8DyXN1Yzk9" target="_blank" rel="noopener" aria-label="Abrir ubicación de Canvas en Google Maps">\n      <img src="assets/img/mapa-canvas.svg" alt="Mapa editorial de Canvas 90 entre Toluca y Metepec" loading="lazy">\n    </a>'''
+          s = s.replace(old, new, 1)
+
+          # Ensure anchor card behaves as a block and cache-bust current mobile script.
+          s = s.replace('.locationMapCard{border:', '.locationMapCard{display:block;text-decoration:none;border:', 1)
+          s = s.replace('assets/js/mobile-index.js?v=1', 'assets/js/mobile-index.js?v=2', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit final location cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Limpiar bloque de ubicación definitivamente"
+          git push
