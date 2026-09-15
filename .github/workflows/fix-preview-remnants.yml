@@ -13,53 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fix preview HTML
+      - name: Patch preview HTML
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('index-prueba.html')
-          t=p.read_text(encoding='utf-8')
-
-          old="""  const html=await fetch('index.html?preview='+Date.now(),{cache:'no-store'}).then(r=>r.text());"""
-          new="""  const html=await fetch('index.html?preview='+Date.now(),{cache:'no-store'}).then(r=>r.text());
-  const sourceDoc=new DOMParser().parseFromString(html,'text/html');
-  const sourceSections=[...sourceDoc.querySelectorAll('section')];
-  const sourceImage=(pattern)=>{
-    const section=sourceSections.find(s=>pattern.test((s.textContent||'').replace(/\\s+/g,' ')));
-    return section?.querySelector('img')?.getAttribute('src')||'';
-  };
-  const canvas90Src=sourceImage(/Dale espacio para crecer|Canvas 90/i);
-  const gardenSrc=sourceImage(/Que la idea tambi[eé]n salga afuera|Jard[ií]n/i);
-  const deckSrc=sourceImage(/Espacio para abrir la idea|Canvas Deck/i);"""
-          if old not in t:
-              raise SystemExit('No se encontró la carga inicial del HTML')
-          t=t.replace(old,new,1)
-
-          old_replace="""  out=out.replace(/<section class=\"spaces\" id=\"espacios\">[\\s\\S]*?<\\/section>/,spaces+c90+pulso+origen+jardin+deck);
-  out=out.replace(/<footer>[\\s\\S]*?<\\/footer>/,footer);"""
-          new_replace="""  out=out.replace(/<section class=\"spaces\" id=\"espacios\">[\\s\\S]*?<footer>[\\s\\S]*?<\\/footer>/,spaces+c90+pulso+origen+jardin+deck+footer);"""
-          if old_replace not in t:
-              raise SystemExit('No se encontró el bloque de reemplazo de espacios/footer')
-          t=t.replace(old_replace,new_replace,1)
-
-          old_imgs="""  requestAnimationFrame(()=>{
-    const imgs=[...document.querySelectorAll('.photoMain img')];
-    const canvas90=imgs[0],garden=imgs[1]||canvas90,deckImg=imgs[2]||garden;
-    const set=(id,img)=>{const el=document.getElementById(id);if(el&&img)el.src=img.src};
-    set('collageCanvas90',canvas90);set('collageGarden',garden);set('collageDeck',deckImg);
-    set('spotCanvas90',canvas90);set('spotGarden',garden);set('spotDeck',deckImg);
-  });"""
-          new_imgs="""  requestAnimationFrame(()=>{
-    const set=(id,src)=>{const el=document.getElementById(id);if(el&&src)el.src=src};
-    set('collageCanvas90',canvas90Src);set('collageGarden',gardenSrc);set('collageDeck',deckSrc);
-    set('spotCanvas90',canvas90Src);set('spotGarden',gardenSrc);set('spotDeck',deckSrc);
-  });"""
-          if old_imgs not in t:
-              raise SystemExit('No se encontró el selector anterior de imágenes')
-          t=t.replace(old_imgs,new_imgs,1)
-
-          p.write_text(t,encoding='utf-8')
-          PY
+          echo 'ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnA9UGF0aCgiaW5kZXgtcHJ1ZWJhLmh0bWwiKQp0PXAucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCm9sZD0iICBjb25zdCBodG1sPWF3YWl0IGZldGNoKCdpbmRleC5odG1sP3ByZXZpZXc9JytEYXRlLm5vdygpLHtjYWNoZTonbm8tc3RvcmUnfSkudGhlbihyPT5yLnRleHQoKSk7IgpuZXc9IiIiICBjb25zdCBodG1sPWF3YWl0IGZldGNoKCdpbmRleC5odG1sP3ByZXZpZXc9JytEYXRlLm5vdygpLHtjYWNoZTonbm8tc3RvcmUnfSkudGhlbihyPT5yLnRleHQoKSk7CiAgY29uc3Qgc291cmNlRG9jPW5ldyBET01QYXJzZXIoKS5wYXJzZUZyb21TdHJpbmcoaHRtbCwndGV4dC9odG1sJyk7CiAgY29uc3Qgc291cmNlU2VjdGlvbnM9Wy4uLnNvdXJjZURvYy5xdWVyeVNlbGVjdG9yQWxsKCdzZWN0aW9uJyldOwogIGNvbnN0IHNvdXJjZUltYWdlPShwYXR0ZXJuKT0+ewogICAgY29uc3Qgc2VjdGlvbj1zb3VyY2VTZWN0aW9ucy5maW5kKHM9PnBhdHRlcm4udGVzdCgocy50ZXh0Q29udGVudHx8JycpLnJlcGxhY2UoL1xccysvZywnICcpKSk7CiAgICByZXR1cm4gc2VjdGlvbj8ucXVlcnlTZWxlY3RvcignaW1nJyk/LmdldEF0dHJpYnV0ZSgnc3JjJyl8fCcnOwogIH07CiAgY29uc3QgY2FudmFzOTBTcmM9c291cmNlSW1hZ2UoL0RhbGUgZXNwYWNpbyBwYXJhIGNyZWNlcnxDYW52YXMgOTAvaSk7CiAgY29uc3QgZ2FyZGVuU3JjPXNvdXJjZUltYWdlKC9RdWUgbGEgaWRlYSB0YW1iaVtlw6ldbiBzYWxnYSBhZnVlcmF8SmFyZFtpw61dbi9pKTsKICBjb25zdCBkZWNrU3JjPXNvdXJjZUltYWdlKC9Fc3BhY2lvIHBhcmEgYWJyaXIgbGEgaWRlYXxDYW52YXMgRGVjay9pKTsiIiIKYXNzZXJ0IG9sZCBpbiB0CnQ9dC5yZXBsYWNlKG9sZCxuZXcsMSkKb2xkMj0iIiIgIG91dD1vdXQucmVwbGFjZSgvPHNlY3Rpb24gY2xhc3M9XFwic3BhY2VzXFwiIGlkPVxcImVzcGFjaW9zXFwiPltcXHNcXFNdKj88XFwvc2VjdGlvbj4vLHNwYWNlcytjOTArcHVsc28rb3JpZ2VuK2phcmRpbitkZWNrKTsKICBvdXQ9b3V0LnJlcGxhY2UoLzxmb290ZXI+W1xcc1xcU10qPzxcXC9mb290ZXI+Lyxmb290ZXIpOyIiIgpuZXcyPSIiIiAgb3V0PW91dC5yZXBsYWNlKC88c2VjdGlvbiBjbGFzcz1cXCJzcGFjZXNcXCIgaWQ9XFwiZXNwYWNpb3NcXCI+W1xcc1xcU10qPzxmb290ZXI+W1xcc1xcU10qPzxcXC9mb290ZXI+LyxzcGFjZXMrYzkwK3B1bHNvK29yaWdlbitqYXJkaW4rZGVjaytmb290ZXIpOyIiIgphc3NlcnQgb2xkMiBpbiB0CnQ9dC5yZXBsYWNlKG9sZDIsbmV3MiwxKQpvbGQzPSIiIiAgcmVxdWVzdEFuaW1hdGlvbkZyYW1lKCgpPT57CiAgICBjb25zdCBpbWdzPVsuLi5kb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCcucGhvdG9NYWluIGltZycpXTsKICAgIGNvbnN0IGNhbnZhczkwPWltZ3NbMF0sZ2FyZGVuPWltZ3NbMV18fGNhbnZhczkwLGRlY2tJbWc9aW1nc1syXXx8Z2FyZGVuOwogICAgY29uc3Qgc2V0PShpZCxpbWcpPT57Y29uc3QgZWw9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoaWQpO2lmKGVsJiZpbWcpZWwuc3JjPWltZy5zcmN9OwogICAgc2V0KCdjb2xsYWdlQ2FudmFzOTAnLGNhbnZhczkwKTtzZXQoJ2NvbGxhZ2VHYXJkZW4nLGdhcmRlbik7c2V0KCdjb2xsYWdlRGVjaycsZGVja0ltZyk7CiAgICBzZXQoJ3Nwb3RDYW52YXM5MCcsY2FudmFzOTApO3NldCgnc3BvdEdhcmRlbicsZ2FyZGVuKTtzZXQoJ3Nwb3REZWNrJyxkZWNrSW1nKTsKICB9KTsiIiIKbmV3Mz0iIiIgIHJlcXVlc3RBbmltYXRpb25GcmFtZSgoKT0+ewogICAgY29uc3Qgc2V0PShpZCxzcmMpPT57Y29uc3QgZWw9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoaWQpO2lmKGVsJiZzcmMpZWwuc3JjPXNyY307CiAgICBzZXQoJ2NvbGxhZ2VDYW52YXM5MCcsY2FudmFzOTBTcmMpO3NldCgnY29sbGFnZUdhcmRlbicsZ2FyZGVuU3JjKTtzZXQoJ2NvbGxhZ2VEZWNrJyxkZWNrU3JjKTsKICAgIHNldCgnc3BvdENhbnZhczkwJyxjYW52YXM5MFNyYyk7c2V0KCdzcG90R2FyZGVuJyxnYXJkZW5TcmMpO3NldCgnc3BvdERlY2snLGRlY2tTcmMpOwogIH0pOyIiIgphc3NlcnQgb2xkMyBpbiB0CnQ9dC5yZXBsYWNlKG9sZDMsbmV3MywxKQpwLndyaXRlX3RleHQodCxlbmNvZGluZz0idXRmLTgiKQo=' | base64 -d > /tmp/fix.py
+          python /tmp/fix.py
       - name: Commit fix
         run: |
           git config user.name "Canvas Web Bot"
