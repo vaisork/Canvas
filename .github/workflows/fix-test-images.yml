@@ -1,0 +1,49 @@
+name: Fix test index images
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair image sources
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index-prueba.html')
+          s=p.read_text(encoding='utf-8')
+
+          # Las fotos heredadas deben buscar las secciones detalladas, no las tarjetas de espacios.
+          s=s.replace("get(/Dale espacio para crecer|Canvas 90/i)", "get(/Dale espacio para crecer/i)")
+          s=s.replace("get(/Que la idea tambi[eé]n salga afuera|Jard[ií]n/i)", "get(/Que la idea tambi[eé]n salga afuera/i)")
+          s=s.replace("get(/Espacio para abrir la idea|Canvas Deck/i)", "get(/Espacio para abrir la idea/i)")
+
+          # Reemplaza la foto inline rota de Pulso por un recurso ligero cargado aparte.
+          pat=r'(<section class="spot spot-pulso">.*?<figure class="photo">)<img[^>]*>(<span>Canvas Pulso</span>)'
+          s,n=re.subn(pat, r'\1<img id="pulsoPhoto" loading="lazy" decoding="async" alt="Canvas Pulso">\2', s, count=1, flags=re.S)
+
+          # Carga la foto ligera de Pulso desde el archivo base64 de texto.
+          loader="""\n<script>\nfetch('assets/img/pulso-lite.b64',{cache:'force-cache'})\n  .then(r=>r.text())\n  .then(b=>{const i=document.getElementById('pulsoPhoto');if(i)i.src='data:image/jpeg;base64,'+b.trim()})\n  .catch(()=>{});\n</script>\n"""
+          if 'pulso-lite.b64' not in s:
+              s=s.replace('</body>', loader+'</body>')
+
+          p.write_text(s,encoding='utf-8')
+
+          # Limpieza de archivos de prueba que no forman parte del sitio.
+          for name in ['assets/img/canvas90-test.jpg','assets/img/canvas90-lite.txt']:
+              q=Path(name)
+              if q.exists(): q.unlink()
+          PY
+      - name: Commit repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Corregir fotografías del index de prueba"
+          git push
