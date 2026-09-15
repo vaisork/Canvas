@@ -14,7 +14,7 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re, base64, html
+          import re, base64, shutil
 
           old = Path('index.html').read_text(encoding='utf-8')
           out = Path('assets/img')
@@ -37,9 +37,10 @@ jobs:
                   imgs = re.findall(r'src=["\']data:image/[^;]+;base64,([^"\']+)', sec, flags=re.S|re.I)
               if not imgs:
                   raise RuntimeError(f'No encontré fotografía para {phrase}')
-              # En cada sección detallada la foto real es, por mucho, el data URI más grande.
               b64 = max(imgs, key=len)
-              data = base64.b64decode(re.sub(r'\s+', '', b64))
+              b64 = re.sub(r'\s+', '', b64)
+              b64 += '=' * (-len(b64) % 4)
+              data = base64.b64decode(b64)
               (out/filename).write_bytes(data)
               print(filename, len(data), data[:3])
 
@@ -47,21 +48,23 @@ jobs:
           extract_photo('Que la idea también salga afuera.', 'jardin-index.jpg')
           extract_photo('Espacio para abrir la idea.', 'deck-index.jpg')
 
-          for source, target in [
-              ('assets/img/pulso-lite.b64', 'pulso-index.jpg'),
-              ('assets/img/origen-lite.b64', 'origen-index.jpg'),
-          ]:
-              b64 = re.sub(r'\s+', '', Path(source).read_text(encoding='utf-8'))
-              data = base64.b64decode(b64)
-              (out/target).write_bytes(data)
-              print(target, len(data), data[:3])
+          # Pulso sigue viniendo del recurso ligero ya validado.
+          b64 = re.sub(r'\s+', '', Path('assets/img/pulso-lite.b64').read_text(encoding='utf-8'))
+          b64 += '=' * (-len(b64) % 4)
+          data = base64.b64decode(b64)
+          (out/'pulso-index.jpg').write_bytes(data)
+          print('pulso-index.jpg', len(data), data[:3])
+
+          # Origen ya tiene una fotografía JPG real en el repositorio.
+          shutil.copyfile('assets/img/canvas-origen-real.jpg', out/'origen-index.jpg')
+          print('origen-index.jpg', (out/'origen-index.jpg').stat().st_size)
 
           p = Path('index-prueba.html')
           s = p.read_text(encoding='utf-8')
 
           # Collage inicial.
           s = re.sub(r'<img\s+data-legacy="canvas90"[^>]*>', '<img src="assets/img/canvas90-index.jpg" loading="lazy" decoding="async" alt="Canvas 90">', s)
-          s = re.sub(r'<img\s+data-legacy="garden"[^>]*>', '<img src="assets/img/jardin-index.jpg" loading="lazy" decoding="async" alt="El Jardín">', s)
+          s = re.sub(r'<img\s+data-legacy="garden"[^>]*>', '<img src="assets/img/jardin-index.jpg" loading="lazy" decoding="async" alt="El Jardín de Canvas">', s)
           s = re.sub(r'<img\s+data-legacy="deck"[^>]*>', '<img src="assets/img/deck-index.jpg" loading="lazy" decoding="async" alt="Canvas Deck">', s)
 
           # Bloques detallados.
@@ -71,13 +74,12 @@ jobs:
           s = re.sub(r'(<section class="spot spot-jardin">.*?<figure class="photo">)<img[^>]*>(<span>El Jardín</span>)', r'\1<img src="assets/img/jardin-index.jpg" loading="lazy" decoding="async" alt="El Jardín de Canvas">\2', s, count=1, flags=re.S)
           s = re.sub(r'(<section class="spot spot-deck">.*?<figure class="photo">)<img[^>]*>(<span>Canvas Deck</span>)', r'\1<img src="assets/img/deck-index.jpg" loading="lazy" decoding="async" alt="Canvas Deck">\2', s, count=1, flags=re.S)
 
-          # Ya no dependemos del index viejo ni de fetches base64 en el navegador.
+          # El index de prueba ya no debe depender del index viejo ni de Base64 cargado en navegador.
           s = re.sub(r'<script>\s*\(\(\)=>\{let started=false;.*?</script>', '', s, flags=re.S)
           s = re.sub(r'<script>\s*fetch\(\'assets/img/pulso-lite\.b64\'.*?</script>', '', s, flags=re.S)
 
           p.write_text(s, encoding='utf-8')
 
-          # Comprobación rápida: los cinco archivos deben ser JPEG válidos.
           for name in ['canvas90-index.jpg','pulso-index.jpg','origen-index.jpg','jardin-index.jpg','deck-index.jpg']:
               data=(out/name).read_bytes()
               if not data.startswith(b'\xff\xd8\xff'):
