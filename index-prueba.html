@@ -19,7 +19,7 @@
 <section class="spaces" id="espacios"><div class="spacesInner"><div class="spacesIntro"><h2>Cada idea tiene su lugar.</h2><p>Canvas reúne espacios de distintas escalas para proyectos que necesitan amplitud, exterior o un entorno más íntimo. Cada uno tiene su propio carácter, pero todos comparten la misma intención: darte un lugar para hacer que tu proyecto suceda.</p></div><div class="cards"><a class="card c90" href="espacios/canvas90.html"><div><small>Amplio · transformable</small><strong>Canvas 90</strong></div><img src="assets/img/icon-canvas90.png" loading="lazy" alt=""></a><a class="card pulse" href="espacios/pulso.html"><div><small>Íntimo · continuidad</small><strong>Canvas Pulso</strong></div><img src="assets/img/icon-pulso.png" loading="lazy" alt=""></a><a class="card origin" href="espacios/origen.html"><div><small>Íntimo · comienzo</small><strong>Canvas Origen</strong></div><img src="assets/img/icon-origen.png" loading="lazy" alt=""></a><a class="card gardenCard" href="espacios/jardin.html"><div><small>Exterior · abierto</small><strong>El Jardín de Canvas</strong></div><img src="assets/img/icon-jardin.png" loading="lazy" alt=""></a><a class="card deckCard" href="espacios/deck.html"><div><small>Exterior · urbano</small><strong>Canvas Deck</strong></div><img src="assets/img/icon-deck.png" loading="lazy" alt=""></a></div></div></section>
 <section class="spot spot-c90"><div class="spotInner"><div><div class="eyebrow">Canvas 90 · espacio principal</div><h2>Dale espacio para crecer.</h2><div class="accentLine"></div><p>Un salón amplio y transformable para clases, movimiento, fotografía, talleres, encuentros y proyectos que necesitan más libertad.</p><a href="espacios/canvas90.html">Conoce Canvas 90 →</a></div><figure class="photo"><img id="detailCanvas90" loading="lazy" decoding="async" alt="Canvas 90"><span>Canvas 90</span></figure></div></section>
 <section class="spot spot-pulso"><div class="spotInner"><div><div class="eyebrow">Canvas Pulso · 16 m²</div><h2>Un lugar para darle continuidad a tu proyecto.</h2><div class="accentLine"></div><p>Un espacio para reuniones pequeñas, trabajo concentrado, sesiones y proyectos que necesitan un lugar propio sin requerir un salón grande.</p><a href="espacios/pulso.html">Conoce Canvas Pulso →</a></div><figure class="photo"><img id="detailPulso" loading="lazy" decoding="async" alt="Canvas Pulso"><span>Canvas Pulso</span></figure></div></section>
-<section class="spot spot-origen"><div class="spotInner"><div><div class="eyebrow">Canvas Origen · 5 m²</div><h2>Todo proyecto necesita un lugar donde empezar.</h2><div class="accentLine"></div><p>El espacio más pequeño de Canvas. Íntimo, independiente y pensado para esos primeros pasos: trabajar, conversar, reunirse o darle forma a una idea.</p><a href="espacios/origen.html">Conoce Canvas Origen →</a></div><figure class="photo"><img src="assets/img/canvas-origen-real.jpg" loading="lazy" decoding="async" alt="Canvas Origen"><span>Canvas Origen</span></figure></div></section>
+<section class="spot spot-origen"><div class="spotInner"><div><div class="eyebrow">Canvas Origen · 5 m²</div><h2>Todo proyecto necesita un lugar donde empezar.</h2><div class="accentLine"></div><p>El espacio más pequeño de Canvas. Íntimo, independiente y pensado para esos primeros pasos: trabajar, conversar, reunirse o darle forma a una idea.</p><a href="espacios/origen.html">Conoce Canvas Origen →</a></div><figure class="photo"><img id="detailOrigen" loading="lazy" decoding="async" alt="Canvas Origen"><span>Canvas Origen</span></figure></div></section>
 <section class="spot spot-jardin"><div class="spotInner"><div><div class="eyebrow">El Jardín de Canvas</div><h2>Que la idea también salga afuera.</h2><div class="accentLine"></div><p>Un exterior abierto que complementa Canvas 90 y permite llevar reuniones, actividades y momentos de descanso hacia el jardín.</p><a href="espacios/jardin.html">Conoce El Jardín →</a></div><figure class="photo"><img id="detailGarden" loading="lazy" decoding="async" alt="El Jardín de Canvas"><span>El Jardín</span></figure></div></section>
 <section class="spot spot-deck"><div class="spotInner"><div><div class="eyebrow">Canvas Deck</div><h2>Espacio para abrir la idea.</h2><div class="accentLine"></div><p>Una terraza exterior con vista y carácter propio para conversar, trabajar, hacer una pausa o extender una actividad hacia afuera.</p><a href="espacios/deck.html">Conoce Canvas Deck →</a></div><figure class="photo"><img id="detailDeck" loading="lazy" decoding="async" alt="Canvas Deck"><span>Canvas Deck</span></figure></div></section>
 </main>
@@ -61,17 +61,24 @@
     console.warn('No se pudieron cargar las fotos heredadas de Canvas',error);
   }
 
-  try{
-    let b64=await fetch('assets/img/pulso-lite.b64',{cache:'force-cache'}).then(r=>{
-      if(!r.ok)throw new Error('No se pudo leer Pulso');
-      return r.text();
-    });
-    b64=b64.replace(/\s+/g,'');
-    while(b64.length%4)b64+='=';
-    setPhoto(['detailPulso'],'data:image/jpeg;base64,'+b64);
-  }catch(error){
-    console.warn('No se pudo cargar la foto de Canvas Pulso',error);
-  }
+  const loadBase64Photo=async(path,id,label)=>{
+    try{
+      let b64=await fetch(path,{cache:'no-store'}).then(r=>{
+        if(!r.ok)throw new Error('No se pudo leer '+label);
+        return r.text();
+      });
+      b64=b64.replace(/\s+/g,'');
+      while(b64.length%4)b64+='=';
+      setPhoto([id],'data:image/jpeg;base64,'+b64);
+    }catch(error){
+      console.warn('No se pudo cargar la foto de '+label,error);
+    }
+  };
+
+  await Promise.all([
+    loadBase64Photo('assets/img/pulso-lite.b64?v=2','detailPulso','Canvas Pulso'),
+    loadBase64Photo('assets/img/origen-lite.b64?v=2','detailOrigen','Canvas Origen')
+  ]);
 })();
 </script>
 </body>
