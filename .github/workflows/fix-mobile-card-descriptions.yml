@@ -1,0 +1,58 @@
+name: Fix mobile card descriptions
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-mobile-card-descriptions.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix mobile spacing and description size
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('assets/js/mobile-index.js')
+          s=p.read_text(encoding='utf-8')
+          old="""      .card{border-top:0;min-height:118px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr) 54px 92px;align-items:center;gap:10px}
+      .card small{font-size:.68rem}
+      .card strong{font-size:1.5rem;margin:6px 0 0}
+"""
+          new="""      .card{border-top:0;min-height:150px;padding:16px 14px;display:grid;grid-template-columns:minmax(0,1fr) 54px 92px;align-items:center;gap:10px}
+      .card>div{min-width:0;align-self:center}
+      .card small{display:block;font-size:.72rem;line-height:1.25}
+      .card strong{display:block;font-size:1.5rem;line-height:1.02;margin:8px 0 0}
+      .card .cardDesc{display:block!important;margin:10px 0 0!important;font-size:.82rem!important;line-height:1.3!important;max-width:23ch!important;color:#4d4943!important}
+"""
+          if old not in s:
+              raise SystemExit('No se encontro el bloque movil esperado')
+          s=s.replace(old,new,1)
+
+          old2="""      .card{grid-template-columns:minmax(0,1fr) 46px 78px;padding:12px;gap:8px}
+"""
+          new2="""      .card{grid-template-columns:minmax(0,1fr) 46px 78px;min-height:146px;padding:14px 12px;gap:8px}
+      .card .cardDesc{font-size:.77rem!important;line-height:1.28!important;margin-top:9px!important}
+"""
+          if old2 in s:
+              s=s.replace(old2,new2,1)
+          p.write_text(s,encoding='utf-8')
+
+          i=Path('index.html')
+          h=i.read_text(encoding='utf-8')
+          h=h.replace('assets/js/mobile-index.js?v=5','assets/js/mobile-index.js?v=6')
+          i.write_text(h,encoding='utf-8')
+          PY
+      - name: Save changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/js/mobile-index.js index.html
+          git commit -m "Corregir descripciones de tarjetas en movil" || exit 0
+          git push
