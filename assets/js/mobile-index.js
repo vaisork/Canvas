@@ -22,6 +22,21 @@
       .card>img:not(.cardThumb){width:50px;height:42px;object-fit:contain;object-position:center;margin:0}
       .cardThumb{display:block!important;width:92px!important;height:76px!important;object-fit:cover!important;object-position:center!important;border:4px solid rgba(255,255,255,.82);box-shadow:0 5px 14px #00000014}
       .spot{display:none!important}
+
+      .possibilities{padding:38px 0 30px}
+      .possibilitiesInner{width:calc(100% - 20px)}
+      .possibilities h2{font-size:2.45rem;line-height:.94;margin:0 0 20px}
+      .possibilityGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .posCard{padding:6px 6px 9px;box-shadow:0 8px 18px #0000000d}
+      .posCard img{aspect-ratio:4/3;object-fit:cover}
+      .posCard strong{margin:8px 3px 1px;font-size:.64rem;line-height:1.18;letter-spacing:.09em}
+      .posCard:last-child{grid-column:1/-1}
+      .posCard:last-child img{aspect-ratio:16/6;object-position:center 42%}
+      .possibilityNote{margin-top:17px;font-size:1.4rem;line-height:1.12}
+
+      .activityStrip{padding:25px 0 28px}
+      .activityStripInner{width:calc(100% - 20px)}
+      .activityList{justify-content:flex-start;gap:8px 18px;font-size:1.5rem;line-height:1}
     }
     @media(max-width:380px){
       .brand img{width:22px;height:22px;flex-basis:22px}
@@ -30,6 +45,9 @@
       .card{grid-template-columns:minmax(0,1fr) 46px 78px;padding:12px;gap:8px}
       .card>img:not(.cardThumb){width:44px;height:38px}
       .cardThumb{width:78px!important;height:66px!important}
+      .possibilities h2{font-size:2.2rem}
+      .posCard strong{font-size:.6rem}
+      .activityList{font-size:1.38rem;gap:7px 15px}
     }
   `;
   document.head.appendChild(style);
