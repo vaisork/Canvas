@@ -13,42 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add Canvas Origen section to preview index
+      - name: Patch preview index
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('index-prueba.html')
-          t = p.read_text()
-
-          css = r'''
-.originSpotlight{background:#fffaf0;padding:84px 0;border-top:1px solid #ead9a9;border-bottom:1px solid #ead9a9}
-.originSpotlight .originInner{width:min(1180px,calc(100% - 34px));margin:auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:54px;align-items:center}
-.originCopy .originEyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:.7rem;font-weight:800;color:#8a6a12;margin-bottom:12px}
-.originCopy h2{font:600 clamp(3.4rem,6vw,5.7rem)/.88 "Cormorant Garamond",serif;letter-spacing:-.04em;margin:0 0 22px;color:#171717}
-.originCopy p{font-size:1.05rem;line-height:1.75;color:#4d4a42;max-width:34rem}
-.originCopy .originLine{width:82px;height:6px;background:#E0A51E;margin:22px 0}
-.originCopy a{display:inline-flex;margin-top:10px;border:1px solid #171717;padding:11px 15px;font-weight:700;color:#171717;text-decoration:none}
-.originPhoto{position:relative;background:#fff;padding:10px 10px 42px;box-shadow:0 18px 40px #0000001d;transform:rotate(.6deg)}
-.originPhoto img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
-.originPhoto span{position:absolute;left:22px;bottom:10px;font:600 1.45rem/1 "Nothing You Could Do",cursive;color:#37332c}
-.originPhoto:before{content:"";position:absolute;width:94px;height:25px;top:-12px;left:50%;transform:translateX(-50%) rotate(-3deg);background:#d8c59d99}
-@media(max-width:900px){.originSpotlight .originInner{grid-template-columns:1fr}.originPhoto{transform:none}}
-@media(max-width:620px){.originSpotlight{padding:60px 0}.originSpotlight .originInner{width:calc(100% - 22px)}.originCopy h2{font-size:3.5rem}}
-'''
-          if '.originSpotlight{' not in t:
-              t = t.replace('\n.previewFooter{', css + '\n.previewFooter{', 1)
-
-          origin = '''<section class="originSpotlight" id="canvas-origen-preview"><div class="originInner"><div class="originCopy"><div class="originEyebrow">Canvas Origen · 5 m²</div><h2>Todo proyecto necesita un lugar donde empezar.</h2><div class="originLine"></div><p>El espacio más pequeño de Canvas. Íntimo, independiente y pensado para esos primeros pasos: trabajar, conversar, reunirse o darle forma a una idea sin necesitar un lugar grande.</p><a href="espacios/origen.html">Conoce Canvas Origen →</a></div><figure class="originPhoto"><img src="assets/img/canvas-origen-real.jpg" alt="Canvas Origen"><span>Canvas Origen</span></figure></div></section>'''
-          marker = '  const footer = `'
-          if 'const originSpotlight =' not in t:
-              t = t.replace(marker, '  const originSpotlight = `' + origin + '`;\n\n' + marker, 1)
-
-          hook = "    const spacePhotos = [...document.querySelectorAll('.photoMain img')];"
-          if "insertAdjacentHTML('afterend', originSpotlight)" not in t:
-              t = t.replace(hook, "    const previewSpaces = document.querySelector('.previewSpaces');\n    if(previewSpaces) previewSpaces.insertAdjacentHTML('afterend', originSpotlight);\n" + hook, 1)
-
-          p.write_text(t)
-          PY
+          echo 'CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aApwPVBhdGgoImluZGV4LXBydWViYS5odG1sIikKdD1wLnJlYWRfdGV4dCgpCmNzcz0nJycuY29yaWdpblNwb3RsaWdodHtiYWNrZ3JvdW5kOiNmZmZhZjA7cGFkZGluZzo4NHB4IDA7Ym9yZGVyLXRvcDoxcHggc29saWQgI2VhZDlhOTtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjZWFkOWE5fQoub3JpZ2luU3BvdGxpZ2h0IC5vcmlnaW5Jbm5lcnt3aWR0aDptaW4oMTE4MHB4LGNhbGMoMTAwJSAtIDM0cHgpKTttYXJnaW46YXV0bztkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOi45ZnIgMS4xZnI7Z2FwOjU0cHg7YWxpZ24taXRlbXM6Y2VudGVyfQoub3JpZ2luQ29weSAub3JpZ2luRXllYnJvd3t0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7bGV0dGVyLXNwYWNpbmc6LjE4ZW07Zm9udC1zaXplOi43cmVtO2ZvbnQtd2VpZ2h0OjgwMDtjb2xvcjojOGE2YTEyO21hcmdpbi1ib3R0b206MTJweH0KLm9yaWdpbkNvcHkgaDJ7Zm9udDo2MDAgY2xhbXAoMy40cmVtLDZ2dyw1LjdyZW0pLy44OCAiQ29ybW9yYW50IEdhcmFtb25kIixzZXJpZjtsZXR0ZXItc3BhY2luZzotLjA0ZW07bWFyZ2luOjAgMCAyMnB4O2NvbG9yOiMxNzE3MTd9Ci5vcmlnaW5Db3B5IHB7Zm9udC1zaXplOjEuMDVyZW07bGluZS1oZWlnaHQ6MS43NTtjb2xvcjojNGQ0YTQyO21heC13aWR0aDozNHJlbX0KLm9yaWdpbkNvcHkgLm9yaWdpbkxpbmV7d2lkdGg6ODJweDtoZWlnaHQ6NnB4O2JhY2tncm91bmQ6I0UwQTUxRTttYXJnaW46MjJweCAwfQoub3JpZ2luQ29weSBhe2Rpc3BsYXk6aW5saW5lLWZsZXg7bWFyZ2luLXRvcDoxMHB4O2JvcmRlcjoxcHggc29saWQgIzE3MTcxNztwYWRkaW5nOjExcHggMTVweDtmb250LXdlaWdodDo3MDA7Y29sb3I6IzE3MTcxNzt0ZXh0LWRlY29yYXRpb246bm9uZX0KLm9yaWdpblBob3Rve3Bvc2l0aW9uOnJlbGF0aXZlO2JhY2tncm91bmQ6I2ZmZjtwYWRkaW5nOjEwcHggMTBweCA0MnB4O2JveC1zaGFkb3c6MCAxOHB4IDQwcHggIzAwMDAwMDFkO3RyYW5zZm9ybTpyb3RhdGUoLjZkZWcpfQoub3JpZ2luUGhvdG8gaW1ne2Rpc3BsYXk6YmxvY2s7d2lkdGg6MTAwJTtoZWlnaHQ6YXV0bzthc3BlY3QtcmF0aW86NC8zO29iamVjdC1maXQ6Y292ZXJ9Ci5vcmlnaW5QaG90byBzcGFue3Bvc2l0aW9uOmFic29sdXRlO2xlZnQ6MjJweDtib3R0b206MTBweDtmb250OjYwMCAxLjQ1cmVtLzEgIk5vdGhpbmcgWW91IENvdWxkIERvIixjdXJzaXZlO2NvbG9yOiMzNzMzMmN9Ci5vcmlnaW5QaG90bzpiZWZvcmV7Y29udGVudDoiIjtwb3NpdGlvbjphYnNvbHV0ZTt3aWR0aDo5NHB4O2hlaWdodDoyNXB4O3RvcDotMTJweDtsZWZ0OjUwJTt0cmFuc2Zvcm06dHJhbnNsYXRlWCgtNTAlKSByb3RhdGUoLTNkZWcpO2JhY2tncm91bmQ6I2Q4YzU5ZDk5fQpAbWVkaWEobWF4LXdpZHRoOjkwMHB4KXsub3JpZ2luU3BvdGxpZ2h0IC5vcmlnaW5Jbm5lcntncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyfS5vcmlnaW5QaG90b3t0cmFuc2Zvcm06bm9uZX19CkBtZWRpYShtYXgtd2lkdGg6NjIwcHgpey5vcmlnaW5TcG90bGlnaHR7cGFkZGluZzo2MHB4IDB9Lm9yaWdpblNwb3RsaWdodCAub3JpZ2luSW5uZXJ7d2lkdGg6Y2FsYygxMDAlIC0gMjJweCl9Lm9yaWdpbkNvcHkgaDJ7Zm9udC1zaXplOjMuNXJlbX19CicnJwppZiAnLm9yaWdpblNwb3RsaWdodHsnIG5vdCBpbiB0OgogICAgdD10LnJlcGxhY2UoJ1xuLnByZXZpZXdGb290ZXJ7JywnXG4nK2NzcycrXG4ucHJldmlld0Zvb3RlcnsnLDEpCm9yaWdpbj0nJyc8c2VjdGlvbiBjbGFzcz0ib3JpZ2luU3BvdGxpZ2h0IiBpZD0iY2FudmFzLW9yaWdlbi1wcmV2aWV3Ij48ZGl2IGNsYXNzPSJvcmlnaW5Jbm5lciI+PGRpdiBjbGFzcz0ib3JpZ2luQ29weSI+PGRpdiBjbGFzcz0ib3JpZ2luRXllYnJvdyI+Q2FudmFzIE9yaWdlbiDCtyA1IG3CsjwvZGl2PjxoMj5Ub2RvIHByb3llY3RvIG5lY2VzaXRhIHVuIGx1Z2FyIGRvbmRlIGVtcGV6YXIuPC9oMj48ZGl2IGNsYXNzPSJvcmlnaW5MaW5lIj48L2Rpdj48cD5FbCBlc3BhY2lvIG3DoXMgcGVxdcOxbyBkZSBDYW52YXMuIMOtbXRpbW8sIGluZGVwZW5kaWVudGUgeSBwZW5zYWRvIHBhcmEgZXNvcyBwcmltZXJvcyBwYXNvczogdHJhYmFqYXIsIGNvbnZlcnNhciwgcmV1bmlyc2UgbyBkYXJsZSBmb3JtYSBhIHVuYSBpZGVhIHNpbiBuZWNlc2l0YXIgdW4gbHVnYXIgZ3JhbmRlLjwvcD48YSBocmVmPSJlc3BhY2lvcy9vcmlnZW4uaHRtbCI+Q29ub2NlIENhbnZhcyBPcmlnZW4g4oaSPC9hPjwvZGl2PjxmaWd1cmUgY2xhc3M9Im9yaWdpblBob3RvIj48aW1nIHNyYz0iYXNzZXRzL2ltZy9jYW52YXMtb3JpZ2VuLXJlYWwuanBnIiBhbHQ9IkNhbnZhcyBPcmlnZW4iPjxzcGFuPkNhbnZhcyBPcmlnZW48L3NwYW4+PC9maWd1cmU+PC9kaXY+PC9zZWN0aW9uPicnJwppZiAnY29uc3Qgb3JpZ2luU3BvdGxpZ2h0ID0nIG5vdCBpbiB0OgogICAgdD10LnJlcGxhY2UoJyAgY29uc3QgZm9vdGVyID0gYCcsJyAgY29uc3Qgb3JpZ2luU3BvdGxpZ2h0ID0gYCcrb3JpZ2luKydgO1xuXG4gIGNvbnN0IGZvb3RlciA9IGAnLDEpCmhvb2s9IiAgICBjb25zdCBzcGFjZVBob3Rvcz1bLi4uZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnLnBob3RvTWFpbiBpbWcnKV0iCmlmICJpbnNlcnRBZGphY2VudEhUTUwoJ2FmdGVyZW5kJyxvcmlnaW5TcG90bGlnaHQpIiBub3QgaW4gdDoKICAgIHQ9dC5yZXBsYWNlKGhvb2ssIiAgICBjb25zdCBwcmV2aWV3U3BhY2VzPWRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5wcmV2aWV3U3BhY2VzJyk7aWYocHJldmlld1NwYWNlcylwcmV2aWV3U3BhY2VzLmluc2VydEFkamFjZW50SFRNTCgnYWZ0ZXJlbmQnLG9yaWdpblNwb3RsaWdodCk7XG4iK2hvb2ssMSkKcC53cml0ZV90ZXh0KHQpCg==' | base64 -d > /tmp/patch.py
+          python /tmp/patch.py
       - name: Commit change
         run: |
           git config user.name "Canvas Web Bot"
