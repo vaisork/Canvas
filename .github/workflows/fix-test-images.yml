@@ -1,82 +1,10 @@
-name: Add possibilities to test index
-on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/fix-test-images.yml'
+name: Canvas maintenance helper
 
-permissions:
-  contents: write
+on:
+  workflow_dispatch:
 
 jobs:
-  apply:
-    if: github.actor != 'github-actions[bot]'
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Agregar posibilidades al index de prueba
-        shell: python
-        run: |
-          from pathlib import Path
-
-          p = Path('index-prueba.html')
-          s = p.read_text(encoding='utf-8')
-
-          css = r'''
-/* possibilities-v1 */
-.possibilities{background:#f5f2eb;padding:72px 0 54px}.possibilitiesInner{width:min(1320px,calc(100% - 72px));margin:auto}.possibilities h2{font:600 clamp(2.7rem,4vw,4rem)/.96 "Cormorant Garamond",serif;margin:0 0 30px}.possibilityGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;align-items:start}.posCard{background:#fff;padding:9px 9px 15px;border:1px solid #ebe5da;box-shadow:0 16px 34px #00000012}.posCard:nth-child(2),.posCard:nth-child(4){transform:rotate(.45deg)}.posCard:nth-child(3){transform:rotate(-.35deg)}.posCard img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#e8e6df}.posCard strong{display:block;margin:12px 3px 0;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;line-height:1.25}.possibilityNote{margin-top:26px;font:600 1.8rem/1.2 "Nothing You Could Do",cursive}.activityStrip{background:#101010;color:#fff;padding:38px 0 44px}.activityStripInner{width:min(1380px,calc(100% - 48px));margin:auto}.activityList{display:flex;flex-wrap:wrap;justify-content:center;gap:18px 42px;font:500 clamp(2.05rem,3.4vw,3.45rem)/1.05 "Cormorant Garamond",serif}.activityList span{white-space:nowrap}@media(max-width:1100px){.possibilityGrid{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.possibilitiesInner,.activityStripInner{width:calc(100% - 22px)}.possibilityGrid{grid-template-columns:1fr}.posCard{transform:none!important}.activityList{justify-content:flex-start;gap:12px 28px;font-size:2.15rem}}
-'''
-
-          html = r'''
-<section class="possibilities" id="posibilidades">
-  <div class="possibilitiesInner">
-    <h2>Algunas posibilidades</h2>
-    <div class="possibilityGrid">
-      <article class="posCard">
-        <img src="https://images.pexels.com/photos/18812920/pexels-photo-18812920/free-photo-of-couple-practicing-ballroom-dancing.jpeg?auto=compress&dpr=1&h=750&w=1260" loading="lazy" referrerpolicy="no-referrer" alt="Baile de salón">
-        <strong>Baile de salón</strong>
-      </article>
-      <article class="posCard">
-        <img src="https://images.pexels.com/photos/7521352/pexels-photo-7521352.jpeg?cs=srgb&dl=pexels-pavel-danilyuk-7521352.jpg&fm=jpg" loading="lazy" referrerpolicy="no-referrer" alt="Música y canto">
-        <strong>Música / canto</strong>
-      </article>
-      <article class="posCard">
-        <img src="https://images.pexels.com/photos/5757078/pexels-photo-5757078.jpeg?auto=compress&dpr=1&h=750&w=1260" loading="lazy" referrerpolicy="no-referrer" alt="Arte y talleres">
-        <strong>Arte / talleres</strong>
-      </article>
-      <article class="posCard">
-        <img src="https://images.pexels.com/photos/5890296/pexels-photo-5890296.jpeg?cs=srgb&dl=pexels-shkrabaanthony-5890296.jpg&fm=jpg" loading="lazy" referrerpolicy="no-referrer" alt="Yoga y bienestar">
-        <strong>Yoga / bienestar</strong>
-      </article>
-      <article class="posCard">
-        <img src="https://images.pexels.com/photos/7176027/pexels-photo-7176027.jpeg?cs=srgb&dl=pexels-shvets-production-7176027.jpg&fm=jpg" loading="lazy" referrerpolicy="no-referrer" alt="Consulta psicológica">
-        <strong>Consulta psicológica</strong>
-      </article>
-    </div>
-    <div class="possibilityNote">Y todo lo que imagines...</div>
-  </div>
-</section>
-<section class="activityStrip" aria-label="Actividades posibles en Canvas">
-  <div class="activityStripInner">
-    <div class="activityList">
-      <span>Clases</span><span>Fotografía</span><span>Talleres</span><span>Baile</span><span>Música</span><span>Canto</span><span>Yoga</span><span>Meditación</span><span>Bienestar</span><span>Consulta psicológica</span><span>Reuniones</span><span>Capacitaciones</span><span>Círculos</span><span>Sesiones privadas</span><span>Coworking</span><span>Asesorías</span><span>Ensayos</span><span>Y más</span>
-    </div>
-  </div>
-</section>
-'''
-
-          if '/* possibilities-v1 */' not in s:
-              s = s.replace('</style>', css + '\n</style>', 1)
-          if 'id="posibilidades"' not in s:
-              s = s.replace('</main>', html + '\n</main>', 1)
-
-          p.write_text(s, encoding='utf-8')
-
-      - name: Commit bloque de posibilidades
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index-prueba.html
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Agregar posibilidades y actividades al index de prueba"
-          git push
+      - run: echo "Helper manual de mantenimiento"
