@@ -1,0 +1,40 @@
+name: Promote index cleanup
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Finalize principal index
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('<title>Canvas · Index de prueba</title>', '<title>Canvas | Un lugar para crear, compartir y ser</title>', 1)
+          s = s.replace('href="index-prueba.html"', 'href="index.html"', 1)
+          s = s.replace("fetch('index.html?v=photos'", "fetch('assets/photo-source.html?v=photos'", 1)
+          p.write_text(s, encoding='utf-8')
+
+          n = Path('novedades/index.html')
+          if n.exists():
+              t = n.read_text(encoding='utf-8').replace('../index-prueba.html', '../index.html')
+              n.write_text(t, encoding='utf-8')
+          PY
+      - name: Commit principal index cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html novedades/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Finalizar index principal de Canvas"
+          git push
