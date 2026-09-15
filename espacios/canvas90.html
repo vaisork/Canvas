@@ -32,12 +32,25 @@
 <footer class="footer"><div class="wrap"><strong>CANVAS</strong><p>Espacios para proyectos independientes.</p></div></footer>
 <script>
 (async()=>{
+  const preview=document.getElementById('previewPhoto');
   try{
-    const html=await fetch('../index.html',{cache:'force-cache'}).then(r=>r.text());
+    const html=await fetch('../assets/photo-source.html?v=canvas90',{cache:'no-store'}).then(r=>{
+      if(!r.ok)throw new Error('No se pudo cargar la fuente de fotos');
+      return r.text();
+    });
     const doc=new DOMParser().parseFromString(html,'text/html');
-    const photos=[...doc.querySelectorAll('img[src^="data:image/"]')].map(x=>x.getAttribute('src'));
-    if(photos.length) document.getElementById('previewPhoto').src=photos[0];
-  }catch(e){}
+    const sections=[...doc.querySelectorAll('section')];
+    const section=sections.find(s=>/Dale espacio para crecer/i.test((s.textContent||'').replace(/\s+/g,' ')));
+    const source=(root)=>[...root.querySelectorAll('img')]
+      .map(img=>img.getAttribute('src'))
+      .filter(src=>src&&src.startsWith('data:image/'))
+      .sort((a,b)=>b.length-a.length)[0]||'';
+    const photo=(section&&source(section))||source(doc);
+    if(!photo)throw new Error('No se encontró una foto de Canvas 90');
+    preview.src=photo;
+  }catch(e){
+    console.warn('No se pudo cargar la foto de Canvas 90',e);
+  }
 })();
 </script>
 <script src="../assets/js/site-shell.js?v=1" defer></script>
