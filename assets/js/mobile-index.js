@@ -109,7 +109,6 @@
       <a href="#espacios">Espacios</a>
       <a href="#ubicacion-landing">Ubicación</a>
       <a href="disponibilidad/">Disponibilidad</a>
-      <a href="contacto/">Contacto</a>
       <a href="novedades/">Novedades</a>
       <a class="mobileDrawerCta" href="contacto/">Conoce Canvas</a>
     </div>`;

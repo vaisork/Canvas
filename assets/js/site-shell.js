@@ -72,7 +72,6 @@
         <a href="${root}index.html#espacios">Espacios</a>
         <a href="${root}index.html#ubicacion-landing">Ubicación</a>
         <a href="${root}disponibilidad/">Disponibilidad</a>
-        <a href="${root}contacto/">Contacto</a>
       </nav>
       <a class="canvasNews" href="${root}novedades/">Novedades</a>
       <a class="canvasVisit" href="${root}contacto/">Ven a conocer Canvas</a>
@@ -83,7 +82,6 @@
         <a href="${root}index.html#espacios">Espacios</a>
         <a href="${root}index.html#ubicacion-landing">Ubicación</a>
         <a href="${root}disponibilidad/">Disponibilidad</a>
-        <a href="${root}contacto/">Contacto</a>
         <a href="${root}novedades/">Novedades</a>
         <a class="canvasDrawerCta" href="${root}contacto/">Conoce Canvas</a>
       </div>
