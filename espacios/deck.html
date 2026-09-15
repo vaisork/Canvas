@@ -1,2 +1,57 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Canvas Deck | Canvas</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../assets/css/site.css"></head><body><header><div class="wrap nav"><a class="brand" href="../index.html">CANVAS</a><nav class="navlinks"><a href="canvas90.html">Canvas 90</a><a href="jardin.html">Jardín</a><a href="deck.html">Deck</a><a href="../disponibilidad/index.html">Disponibilidad</a><a class="cta" href="https://wa.me/527821402617" target="_blank">WhatsApp</a></nav></div></header><main><section class="hero"><div class="wrap"><div class="eyebrow">Canvas Deck · exterior / urbano</div><div class="space-accent deck"></div><h1>Un espacio abierto sobre la ciudad.</h1><p class="lead">Una terraza amplia, con carácter urbano, madera, barandales y vistas abiertas al entorno.</p><div class="actions"><a class="cta dark" href="#disponibilidad">Ver disponibilidad</a><a class="cta" href="https://wa.me/527821402617?text=Hola%2C%20quiero%20conocer%20Canvas%20Deck." target="_blank">Quiero conocerlo</a></div></div></section><section class="section"><div class="wrap"><h2>Conoce el Deck</h2><div class="grid2"><div class="placeholder">Foto amplia #1</div><div class="placeholder">Foto amplia #2</div><div class="placeholder">Foto amplia #3</div><div><h3>Amplitud primero</h3><p>Esta página está preparada para mostrar varias tomas amplias antes de entrar a detalles de murales, barandales y vistas urbanas.</p><div class="chips"><span class="chip">Fotografía</span><span class="chip">Talleres</span><span class="chip">Pintura</span><span class="chip">Reuniones</span><span class="chip">Contenido</span><span class="chip">Grupos pequeños</span></div></div></div></div></section><section class="section" id="disponibilidad"><div class="wrap"><div class="eyebrow">Disponibilidad</div><h2>¿Cuándo está libre Canvas Deck?</h2><p class="note">Maqueta visual. Después se conectará a su calendario real.</p><div class="slot-list" id="slotsDeck" data-demo-slots></div></div></section></main><footer class="footer"><div class="wrap"><strong>CANVAS</strong><p>Espacios para proyectos independientes.</p></div></footer><script src="../assets/js/availability.js"></script><script src="../assets/js/site-shell.js?v=1" defer></script>
-</body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canvas Deck | Canvas</title>
+<meta name="description" content="Canvas Deck es el vestíbulo exterior compartido de Canvas Pulso y Canvas Origen: un espacio con mesas de jardín y sombrillas para esperar, descansar o tomar algo antes y después de una sesión.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/site.css?v=deck4">
+<style>
+:root{--deck:#B27449;--deckDark:#744a2d;--deckSoft:#f8eee6}
+.heroDeck{padding:70px 0 58px;background:linear-gradient(180deg,#fffefb 0,#f8eee6 100%)}
+.heroDeck h1{max-width:10ch}.heroDeck .lead{max-width:730px}.heroIcon{width:auto;height:52px;object-fit:contain;margin-bottom:18px}
+.split{display:grid;grid-template-columns:.92fr 1.08fr;gap:48px;align-items:center}.copy p{font-size:1.04rem;color:#474742;max-width:43rem}
+.preview{background:#fff;border:1px solid var(--line);padding:12px;box-shadow:0 18px 40px #00000012}.preview img{display:block;width:100%;height:430px;object-fit:cover}.previewActions{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:14px 4px 2px}.previewActions a{font-weight:700;text-decoration:underline}.previewActions span{font-size:.78rem;color:var(--muted)}
+.included{background:#f7f5ef}.includedBox{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:start}.includedStatement{font:600 clamp(2.6rem,5vw,4.7rem)/.92 "Cormorant Garamond",serif;letter-spacing:-.04em;max-width:9ch}.includedCopy{font-size:1.05rem;color:#474742;max-width:42rem}.includedCopy strong{color:#171717}.noCost{margin-top:22px;padding:18px 20px;border-left:5px solid var(--deck);background:#fff;font-weight:700}
+.useGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}.useCard{border:1px solid var(--line);background:#fff;padding:24px}.useCard b{display:block;font:600 1.65rem/1 "Cormorant Garamond",serif;margin-bottom:10px}.useCard p{margin:0;color:var(--muted)}
+.amenities{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.amenity{padding:10px 13px;border:1px solid #c9b7a9;background:#fff}
+.galleryOnly{background:var(--deck);color:#fff;padding:48px 0}.galleryOnly .wrap{display:flex;justify-content:space-between;gap:28px;align-items:center}.galleryOnly h2{font-size:clamp(2.7rem,5vw,4rem);margin:0;max-width:12ch}.galleryOnly p{max-width:530px;margin:8px 0 0;color:#fff7f1}.galleryOnly .cta{background:#fff;color:#111;border-color:#fff;white-space:nowrap}
+body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner{gap:20px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.2rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.67rem}.canvasSiteFooter .canvasSocial{gap:18px}.canvasSiteFooter .canvasSocial svg{width:23px;height:23px}
+@media(max-width:850px){.split,.includedBox{grid-template-columns:1fr}.useGrid{grid-template-columns:1fr}.preview img{height:360px}.galleryOnly .wrap{align-items:flex-start;flex-direction:column}}
+@media(max-width:620px){.heroDeck{padding:44px 0}.preview img{height:280px}.useCard{padding:20px}.galleryOnly{padding:34px 0}.galleryOnly h2{font-size:2.35rem}.galleryOnly .cta{padding:11px 15px;font-size:.84rem}.canvasSiteFooter .canvasFooterInner{gap:14px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.05rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.63rem}.canvasSiteFooter .canvasSocial{gap:15px}.canvasSiteFooter .canvasSocial svg{width:21px;height:21px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="../index.html">CANVAS</a></div></header>
+<main>
+<section class="heroDeck"><div class="wrap"><img class="heroIcon" src="../assets/img/icon-deck.png?v=2" alt="Icono Canvas Deck"><div class="eyebrow">Canvas Deck · amenidad de Pulso y Origen</div><div class="space-accent deck"></div><h1>Antes de entrar, ya estás en Canvas.</h1><p class="lead">Canvas Deck es el vestíbulo exterior que comparten Canvas Pulso y Canvas Origen. Es el lugar que te recibe: un espacio abierto donde puedes esperar, sentarte, tomar algo o simplemente bajar el ritmo antes y después de usar cualquiera de los dos espacios.</p><div class="actions"><a class="cta" href="deck-galeria.html">Galería</a></div></div></section>
+
+<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">El espacio que conecta todo</div><h2>Un lugar para llegar, esperar y quedarse un rato.</h2><p>El Deck no es otro salón ni una renta adicional. Es la zona común que conecta la llegada con Canvas Pulso y Canvas Origen, y forma parte natural de la experiencia de ambos.</p><p>La idea es sencilla: mientras dentro sucede una clase, una consulta, una reunión o una sesión privada, afuera puede haber alguien esperando cómodamente, conversando o tomando algo.</p><div class="amenities"><span class="amenity">Mesas de jardín</span><span class="amenity">Sombrillas</span><span class="amenity">Zona de espera</span><span class="amenity">Descanso al aire libre</span></div></div><div class="preview"><img id="previewDeck" alt="Canvas Deck"><div class="previewActions"><span>Una mirada al Deck</span><a href="deck-galeria.html">Abrir galería →</a></div></div></div></section>
+
+<section class="section included"><div class="wrap includedBox"><div><div class="eyebrow">Incluido con tu espacio</div><div class="includedStatement">No se renta aparte.</div></div><div class="includedCopy"><p>Si reservaste <strong>Canvas Pulso</strong> o <strong>Canvas Origen</strong>, puedes usar el Deck durante tu estancia. No tiene un precio independiente y no necesitas reservarlo por separado.</p><p>Es parte de las amenidades que acompañan a ambos espacios: llegas por aquí, puedes recibir aquí a alguien y también puedes salir un momento sin tener que abandonar Canvas.</p><div class="noCost">Deck incluido al rentar Pulso u Origen · sin costo adicional</div></div></div></section>
+
+<section class="section"><div class="wrap"><div class="eyebrow">Cómo puede acompañar tu visita</div><h2>El espacio de afuera también importa.</h2><div class="useGrid"><article class="useCard"><b>Mientras alguien toma una clase</b><p>Un acompañante puede esperar afuera, sentarse bajo una sombrilla, leer, trabajar o tomar algo mientras termina la sesión.</p></article><article class="useCard"><b>Entre una sesión y otra</b><p>Puedes salir unos minutos, cambiar de aire, conversar o recibir a la siguiente persona sin hacerlo dentro de Pulso u Origen.</p></article><article class="useCard"><b>Antes o después</b><p>El Deck funciona como punto de encuentro: llegar con tiempo, sentarse a platicar o extender unos minutos la experiencia antes de irte.</p></article></div></div></section>
+
+<section class="galleryOnly"><div class="wrap"><div><div class="eyebrow" style="color:#f5dfd0">Canvas Deck</div><h2>Conoce el lugar que te recibe.</h2><p>La galería irá mostrando cómo conviven el Deck, Canvas Pulso y Canvas Origen dentro de un mismo recorrido.</p></div><a class="cta" href="deck-galeria.html">Galería →</a></div></section>
+</main>
+<footer class="footer"><div class="wrap"><strong>CANVAS</strong><p>Espacios para proyectos independientes.</p></div></footer>
+<script>
+(async()=>{
+  const preview=document.getElementById('previewDeck');
+  try{
+    const html=await fetch('../assets/photo-source.html?v=deck',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('No se pudo cargar la fuente de fotos');return r.text()});
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    const sections=[...doc.querySelectorAll('section')];
+    const section=sections.find(s=>/Canvas Deck|Espacio para abrir la idea/i.test((s.textContent||'').replace(/\s+/g,' ')));
+    const source=(root)=>[...root.querySelectorAll('img')].map(img=>img.getAttribute('src')).filter(src=>src&&src.startsWith('data:image/')).sort((a,b)=>b.length-a.length)[0]||'';
+    const photo=(section&&source(section))||source(doc);
+    if(photo)preview.src=photo;
+  }catch(e){console.warn('No se pudo cargar la foto de Canvas Deck',e)}
+})();
+</script>
+<script src="../assets/js/site-shell.js?v=4" defer></script>
+</body>
+</html>
