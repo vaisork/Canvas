@@ -1,0 +1,1 @@
+Galería Estudio Fotográfico Canvas 90. Imágenes optimizadas desde la carpeta Estudio Fotografico de Google Drive.
