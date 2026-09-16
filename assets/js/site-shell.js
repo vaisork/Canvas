@@ -77,7 +77,7 @@
         <a href="${root}index.html#ubicacion-landing">Ubicación</a>
         <a href="${root}disponibilidad/">Disponibilidad</a>
       </nav>
-      <a class="canvasNews" href="${root}novedades/">Novedades</a>
+      <a class="canvasNews" href="${root}novedades/">Qué pasa en Canvas</a>
       <a class="canvasVisit" href="${root}contacto/">Ven a conocer Canvas</a>
       <button class="canvasMenuButton" type="button" aria-label="Abrir menú de navegación" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
@@ -87,7 +87,7 @@
         <a href="${root}estudio-fotografico/">Estudio fotográfico</a>
         <a href="${root}index.html#ubicacion-landing">Ubicación</a>
         <a href="${root}disponibilidad/">Disponibilidad</a>
-        <a href="${root}novedades/">Novedades</a>
+        <a href="${root}novedades/">Qué pasa en Canvas</a>
         <a class="canvasDrawerCta" href="${root}contacto/">Conoce Canvas</a>
       </div>
     </nav>`;

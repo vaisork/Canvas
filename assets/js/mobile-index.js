@@ -109,8 +109,8 @@
     const link=document.createElement('a');
     link.className='newsQuick';
     link.href='novedades/';
-    link.textContent='Novedades';
-    link.setAttribute('aria-label','Novedades de Canvas');
+    link.textContent='Qué pasa en Canvas';
+    link.setAttribute('aria-label','Qué pasa en Canvas');
     header.insertBefore(link,visit);
   }
 
@@ -139,7 +139,7 @@
       <a href="estudio-fotografico/">Estudio fotográfico</a>
       <a href="#ubicacion-landing">Ubicación</a>
       <a href="disponibilidad/">Disponibilidad</a>
-      <a href="novedades/">Novedades</a>
+      <a href="novedades/">Qué pasa en Canvas</a>
       <a class="mobileDrawerCta" href="contacto/">Conoce Canvas</a>
     </div>`;
     siteHeader.appendChild(drawer);
