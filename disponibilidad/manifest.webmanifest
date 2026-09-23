@@ -1,0 +1,19 @@
+{
+  "name": "Canvas Calendario",
+  "short_name": "Calendario",
+  "description": "Disponibilidad de Canvas 90, Canvas Origen y Canvas Pulso.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffefb",
+  "theme_color": "#167E8C",
+  "icons": [
+    {
+      "src": "../assets/img/calendar-shortcut-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
