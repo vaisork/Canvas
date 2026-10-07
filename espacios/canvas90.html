@@ -38,39 +38,17 @@ body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner
 @media(max-width:620px){.hero90{padding:44px 0}.preview img{height:280px}.price90{padding:22px}.finalCta{padding:34px 0}.finalCta h2{font-size:2.35rem;line-height:.96}.finalCta p{font-size:.93rem;line-height:1.45}.finalCta .cta{padding:11px 15px;font-size:.84rem}.canvasSiteFooter .canvasFooterInner{gap:14px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.05rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.63rem}.canvasSiteFooter .canvasSocial{gap:15px}.canvasSiteFooter .canvasSocial svg{width:21px;height:21px}}
 </style>
   <script src="../assets/js/analytics.js?v=1" defer></script>
+<link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="../index.html" style="display:flex;align-items:center;gap:9px"><img src="../assets/img/canvas-icon-mark.png" alt="" style="display:block;width:auto;height:26px;object-fit:contain">CANVAS</a><nav class="navlinks"><a href="canvas90.html">Canvas 90</a><a href="jardin.html">Jardín</a><a href="deck.html">Deck</a><a href="#tarifas">Tarifas</a><a href="../disponibilidad/index.html">Disponibilidad</a><a class="cta" href="https://wa.me/527821402617?text=Hola%2C%20vi%20Canvas%2090%20y%20quiero%20conocer%20el%20espacio." target="_blank" rel="noopener">WhatsApp</a></nav></div></header>
 <main>
 <section class="hero90"><div class="wrap"><img class="heroIcon" src="../assets/img/icon-canvas90.png" alt="Icono Canvas 90"><div class="eyebrow">Canvas 90 · amplio / transformable</div><div class="space-accent blue"></div><h1>Dale espacio para crecer.</h1><p class="lead">El espacio principal de Canvas. Un lugar amplio y flexible que puede transformarse para clases, movimiento, fotografía, talleres, reuniones y proyectos que necesitan libertad para tomar forma.</p><div class="actions"><a class="cta" href="canvas90-galeria.html">Ver galería</a></div></div></section>
-<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">El espacio</div><h2>Un salón que no decide por ti.</h2><p>Canvas 90 está pensado para cambiar de carácter según lo que quieras hacer. Puede abrirse para una clase, convertirse en set para una sesión, recibir un taller o simplemente dejarte un gran espacio libre para construir tu propia dinámica.</p><p>Su valor está en la amplitud y en la posibilidad de usar también el entorno de Canvas: el jardín como extensión natural y otros espacios de la casa según el proyecto.</p><div class="chips"><span class="chip">Movimiento</span><span class="chip">Fotografía</span><span class="chip">Danza</span><span class="chip">Talleres</span><span class="chip">Cursos</span><span class="chip">Contenido</span></div></div><div class="preview"><img id="previewPhoto" alt="Canvas 90"><div class="previewActions"><span>Una mirada al espacio</span><a href="canvas90-galeria.html">Abrir galería completa →</a></div></div></div></section>
+<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">El espacio</div><h2>Un salón que no decide por ti.</h2><p>Canvas 90 está pensado para cambiar de carácter según lo que quieras hacer. Puede abrirse para una clase, convertirse en set para una sesión, recibir un taller o simplemente dejarte un gran espacio libre para construir tu propia dinámica.</p><p>Su valor está en la amplitud y en la posibilidad de usar también el entorno de Canvas: el jardín como extensión natural y otros espacios de la casa según el proyecto.</p><div class="chips"><span class="chip">Movimiento</span><span class="chip">Fotografía</span><span class="chip">Danza</span><span class="chip">Talleres</span><span class="chip">Cursos</span><span class="chip">Contenido</span></div></div><div class="preview"><img id="previewPhoto" src="../assets/img/foto-canvas90.jpg" decoding="async" alt="Canvas 90"><div class="previewActions"><span>Una mirada al espacio</span><a href="canvas90-galeria.html">Abrir galería completa →</a></div></div></div></section>
 <section class="section prices" id="tarifas"><div class="wrap"><div class="eyebrow">Tarifas Canvas 90</div><h2>No necesitas tener tu propio local.</h2><p class="priceIntro">Puedes usar Canvas 90 únicamente el tiempo que tu proyecto necesita. Las tarifas más bajas están pensadas especialmente para quienes hacen del espacio parte de su rutina.</p><div class="priceGrid90"><div class="price90"><strong>Entre semana</strong><b>Desde $150 MXN/h</b><span>Para uso recurrente y proyectos entre semana.</span></div><div class="price90"><strong>Fin de semana</strong><b>Desde $250 MXN/h</b><span>Consulta el horario que necesitas.</span></div><div class="price90"><strong>Proyectos recurrentes</strong><b>Hablemos</b><span>Tarifas preferenciales para quienes usan Canvas de manera constante.</span></div></div></div></section>
 <section class="section finalCta"><div class="wrap"><div><div class="eyebrow" style="color:#e7edf3">Canvas 90</div><h2>¿Qué harías aquí?</h2><p>Cuéntanos qué quieres hacer, cuántas personas participarían y qué horario tienes en mente.</p></div><a class="cta" href="https://wa.me/527821402617?text=Hola%2C%20vi%20Canvas%2090%20y%20quiero%20consultar%20un%20horario%20para%20mi%20proyecto." target="_blank" rel="noopener">Preguntar por Canvas 90 →</a></div></section>
 </main>
 <footer class="footer"><div class="wrap"><strong>CANVAS</strong><p>Espacios para proyectos independientes.</p></div></footer>
-<script>
-(async()=>{
-  const preview=document.getElementById('previewPhoto');
-  try{
-    const html=await fetch('../assets/photo-source.html?v=canvas90',{cache:'no-store'}).then(r=>{
-      if(!r.ok)throw new Error('No se pudo cargar la fuente de fotos');
-      return r.text();
-    });
-    const doc=new DOMParser().parseFromString(html,'text/html');
-    const sections=[...doc.querySelectorAll('section')];
-    const section=sections.find(s=>/Dale espacio para crecer/i.test((s.textContent||'').replace(/\s+/g,' ')));
-    const source=(root)=>[...root.querySelectorAll('img')]
-      .map(img=>img.getAttribute('src'))
-      .filter(src=>src&&src.startsWith('data:image/'))
-      .sort((a,b)=>b.length-a.length)[0]||'';
-    const photo=(section&&source(section))||source(doc);
-    if(!photo)throw new Error('No se encontró una foto de Canvas 90');
-    preview.src=photo;
-  }catch(e){
-    console.warn('No se pudo cargar la foto de Canvas 90',e);
-  }
-})();
-</script>
-<script src="../assets/js/site-shell.js?v=8" defer></script>
+<script src="../assets/js/site-shell.js?v=9" defer></script>
 </body>
 </html>
