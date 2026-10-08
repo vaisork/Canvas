@@ -41,13 +41,14 @@ body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner
 @media(max-width:620px){.heroDeck{padding:44px 0}.preview img,.photoPlaceholder{height:280px}.useCard{padding:20px}.galleryOnly{padding:34px 0}.galleryOnly h2{font-size:2.35rem}.galleryOnly .cta{padding:11px 15px;font-size:.84rem}.canvasSiteFooter .canvasFooterInner{gap:14px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.05rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.63rem}.canvasSiteFooter .canvasSocial{gap:15px}.canvasSiteFooter .canvasSocial svg{width:21px;height:21px}}
 </style>
   <script src="../assets/js/analytics.js?v=1" defer></script>
+<link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="../index.html">CANVAS</a></div></header>
 <main>
 <section class="heroDeck"><div class="wrap"><img class="heroIcon" src="../assets/img/icon-deck.png?v=2" alt="Icono Canvas Deck"><div class="eyebrow">Canvas Deck · amenidad de Pulso y Origen</div><div class="space-accent deck"></div><h1>Antes de entrar, ya estás en Canvas.</h1><p class="lead">Canvas Deck es el vestíbulo exterior que comparten Canvas Pulso y Canvas Origen. Es el lugar que te recibe: un espacio abierto donde puedes esperar, sentarte, tomar algo o simplemente bajar el ritmo antes y después de usar cualquiera de los dos espacios.</p><div class="actions"><a class="cta" href="deck-galeria.html">Galería</a></div></div></section>
 
-<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">El espacio que conecta todo</div><h2>Un lugar para llegar, esperar y quedarse un rato.</h2><p>El Deck no es otro salón ni una renta adicional. Es la zona común que conecta la llegada con Canvas Pulso y Canvas Origen, y forma parte natural de la experiencia de ambos.</p><p>La idea es sencilla: mientras dentro sucede una clase, una consulta, una reunión o una sesión privada, afuera puede haber alguien esperando cómodamente, conversando o tomando algo.</p><div class="amenities"><span class="amenity">Mesas de jardín</span><span class="amenity">Sombrillas</span><span class="amenity">Zona de espera</span><span class="amenity">Descanso al aire libre</span></div></div><div class="preview" id="deckPreviewCard"><img id="previewDeck" alt="Canvas Deck"><div class="previewActions"><span>Una mirada al Deck</span><a href="deck-galeria.html">Abrir galería →</a></div></div></div></section>
+<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">El espacio que conecta todo</div><h2>Un lugar para llegar, esperar y quedarse un rato.</h2><p>El Deck no es otro salón ni una renta adicional. Es la zona común que conecta la llegada con Canvas Pulso y Canvas Origen, y forma parte natural de la experiencia de ambos.</p><p>La idea es sencilla: mientras dentro sucede una clase, una consulta, una reunión o una sesión privada, afuera puede haber alguien esperando cómodamente, conversando o tomando algo.</p><div class="amenities"><span class="amenity">Mesas de jardín</span><span class="amenity">Sombrillas</span><span class="amenity">Zona de espera</span><span class="amenity">Descanso al aire libre</span></div></div><div class="preview" id="deckPreviewCard"><img id="previewDeck" src="../assets/img/foto-deck.jpg" decoding="async" alt="Canvas Deck"><div class="previewActions"><span>Una mirada al Deck</span><a href="deck-galeria.html">Abrir galería →</a></div></div></div></section>
 
 <section class="section included"><div class="wrap includedBox"><div><div class="eyebrow">Incluido con tu espacio</div><div class="includedStatement">No se renta aparte.</div></div><div class="includedCopy"><p>Si reservaste <strong>Canvas Pulso</strong> o <strong>Canvas Origen</strong>, puedes usar el Deck durante tu estancia. No tiene un precio independiente y no necesitas reservarlo por separado.</p><p>Es parte de las amenidades que acompañan a ambos espacios: llegas por aquí, puedes recibir aquí a alguien y también puedes salir un momento sin tener que abandonar Canvas.</p><div class="noCost">Deck incluido al rentar Pulso u Origen · sin costo adicional</div></div></div></section>
 
@@ -56,36 +57,6 @@ body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner
 <section class="galleryOnly"><div class="wrap"><div><div class="eyebrow" style="color:#f5dfd0">Canvas Deck</div><h2>Conoce el lugar que te recibe.</h2><p>La galería irá mostrando cómo conviven el Deck, Canvas Pulso y Canvas Origen dentro de un mismo recorrido.</p></div><a class="cta" href="deck-galeria.html">Galería →</a></div></section>
 </main>
 <footer class="footer"><div class="wrap"><strong>CANVAS</strong><p>Espacios para proyectos independientes.</p></div></footer>
-<script>
-(async()=>{
-  const preview=document.getElementById('previewDeck');
-  const card=document.getElementById('deckPreviewCard');
-  const showPlaceholder=()=>{
-    if(preview)preview.remove();
-    if(card&&!card.querySelector('.photoPlaceholder')){
-      const placeholder=document.createElement('div');
-      placeholder.className='photoPlaceholder';
-      placeholder.textContent='Fotografías del Deck próximamente';
-      card.insertBefore(placeholder,card.firstChild);
-    }
-  };
-  try{
-    const html=await fetch('../assets/photo-source.html?v=deck2',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('No se pudo cargar la fuente de fotos');return r.text()});
-    const doc=new DOMParser().parseFromString(html,'text/html');
-    const section=[...doc.querySelectorAll('section')].find(s=>/Espacio para abrir la idea/i.test((s.textContent||'').replace(/\s+/g,' ')));
-    if(!section)throw new Error('No se encontró la sección específica de Canvas Deck');
-    const photo=[...section.querySelectorAll('img')]
-      .map(img=>img.getAttribute('src'))
-      .filter(src=>src&&src.startsWith('data:image/'))
-      .sort((a,b)=>b.length-a.length)[0]||'';
-    if(!photo)throw new Error('No se encontró una foto específica de Canvas Deck');
-    preview.src=photo;
-  }catch(e){
-    console.warn('No se pudo cargar una foto correcta de Canvas Deck',e);
-    showPlaceholder();
-  }
-})();
-</script>
-<script src="../assets/js/site-shell.js?v=8" defer></script>
+<script src="../assets/js/site-shell.js?v=9" defer></script>
 </body>
 </html>

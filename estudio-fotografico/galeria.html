@@ -17,6 +17,7 @@
 @media(max-width:760px){.gHero{padding:44px 0 36px}.gWrap{width:calc(100% - 22px)}.gHero h1{font-size:3.7rem}.gallery{padding:30px 0 46px}.grid{grid-template-columns:1fr;gap:8px}.shot,.shot:nth-child(n){grid-column:auto;min-height:0}.shot img{height:auto;min-height:0}.shot figcaption{font-size:.58rem}.closing{padding:40px 0}}
 </style>
 <script src="../assets/js/analytics.js?v=1" defer></script>
+<link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="../index.html">CANVAS</a></div></header>
@@ -35,6 +36,6 @@
 <footer class="footer"><div class="wrap"><strong>CANVAS</strong></div></footer>
 <div class="lightbox" aria-hidden="true"><button type="button" aria-label="Cerrar">×</button><img alt=""></div>
 <script>const lb=document.querySelector('.lightbox'),li=lb.querySelector('img');document.querySelectorAll('.shot img').forEach(img=>img.addEventListener('click',()=>{li.src=img.src;li.alt=img.alt;lb.classList.add('open');lb.setAttribute('aria-hidden','false')}));function closeLb(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');li.src=''}lb.addEventListener('click',e=>{if(e.target===lb||e.target.tagName==='BUTTON')closeLb()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});</script>
-<script src="../assets/js/site-shell.js?v=8" defer></script>
+<script src="../assets/js/site-shell.js?v=9" defer></script>
 </body>
 </html>

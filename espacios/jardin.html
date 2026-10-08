@@ -41,13 +41,14 @@ body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner
 @media(max-width:620px){.heroGarden{padding:44px 0}.preview img{height:285px}.includedCard,.idea,.price{padding:20px}.ideasGrid{grid-template-columns:1fr}.shadeMark{font-size:4.2rem}.galleryOnly{padding:34px 0}.canvasSiteFooter .canvasFooterInner{gap:14px}.canvasSiteFooter .canvasFooterBrand strong{font-size:1.05rem}.canvasSiteFooter .canvasFooterBrand span{font-size:.63rem}.canvasSiteFooter .canvasSocial{gap:15px}.canvasSiteFooter .canvasSocial svg{width:21px;height:21px}}
 </style>
   <script src="../assets/js/analytics.js?v=1" defer></script>
+<link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="../index.html">CANVAS</a></div></header>
 <main>
 <section class="heroGarden"><div class="wrap"><img class="heroIcon" src="../assets/img/icon-jardin.png?v=3" alt="Icono El Jardín de Canvas"><div class="eyebrow">Amenidad de Canvas 90 · exterior / abierto</div><div class="space-accent green"></div><h1>Canvas 90 también sucede afuera.</h1><p class="lead">Cuando rentas Canvas 90 no recibes solamente el salón interior. También tienes acceso a El Jardín de Canvas: un espacio exterior conectado al salón que amplía lo que puedes hacer durante una clase, presentación, taller, reunión o evento.</p><div class="actions"><a class="cta" href="canvas90-galeria.html">Galería</a></div></div></section>
 
-<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">Interior + exterior</div><h2>Más espacio sin cambiar de lugar.</h2><p>Una de las grandes ventajas de Canvas 90 es poder <strong>combinar el salón con el jardín durante la misma renta</strong>. Mientras una actividad sucede adentro, afuera puedes crear otro ambiente: descanso, conversación, alimentos, espera o simplemente un respiro entre actividades.</p><p>El jardín aporta luz, vegetación y una sensación más abierta al lugar. No funciona como un espacio aislado de Canvas 90: funciona como su extensión natural.</p><div class="chips"><span class="chip">Descanso</span><span class="chip">Mesas de jardín</span><span class="chip">Coffee break</span><span class="chip">Convivencia</span><span class="chip">Fotografía</span><span class="chip">Actividades al aire libre</span></div></div><div class="preview"><img id="gardenPhoto" alt="El Jardín de Canvas"><div class="previewActions"><span>Una extensión natural de Canvas 90</span><a href="canvas90-galeria.html">Galería →</a></div></div></div></section>
+<section class="section"><div class="wrap split"><div class="copy"><div class="eyebrow">Interior + exterior</div><h2>Más espacio sin cambiar de lugar.</h2><p>Una de las grandes ventajas de Canvas 90 es poder <strong>combinar el salón con el jardín durante la misma renta</strong>. Mientras una actividad sucede adentro, afuera puedes crear otro ambiente: descanso, conversación, alimentos, espera o simplemente un respiro entre actividades.</p><p>El jardín aporta luz, vegetación y una sensación más abierta al lugar. No funciona como un espacio aislado de Canvas 90: funciona como su extensión natural.</p><div class="chips"><span class="chip">Descanso</span><span class="chip">Mesas de jardín</span><span class="chip">Coffee break</span><span class="chip">Convivencia</span><span class="chip">Fotografía</span><span class="chip">Actividades al aire libre</span></div></div><div class="preview"><img id="gardenPhoto" src="../assets/img/foto-jardin.jpg" decoding="async" alt="El Jardín de Canvas"><div class="previewActions"><span>Una extensión natural de Canvas 90</span><a href="canvas90-galeria.html">Galería →</a></div></div></div></section>
 
 <section class="section included"><div class="wrap"><div class="eyebrow">Incluido con Canvas 90</div><h2>Dos ambientes dentro de una misma renta.</h2><p>Al reservar Canvas 90 puedes utilizar el espacio interior y El Jardín de Canvas. Eso permite que tu proyecto tenga diferentes momentos sin dividir al grupo ni rentar otro lugar.</p><div class="includedGrid"><div class="includedCard"><strong>Presentación adentro</strong><p>Mientras sucede una charla, capacitación o presentación en Canvas 90, el jardín puede recibir a quienes descansan, esperan o conversan.</p></div><div class="includedCard"><strong>Convivencia afuera</strong><p>Puedes colocar mesas de jardín para café, alimentos, networking o una pausa más relajada antes de regresar al salón.</p></div><div class="includedCard"><strong>Un evento con ritmo</strong><p>Alterna momentos formales dentro con momentos más libres afuera. El cambio de ambiente ayuda a que una experiencia larga no se sienta encerrada en un solo espacio.</p></div></div></div></section>
 
@@ -60,21 +61,6 @@ body footer.canvasSiteFooter{padding:20px 0}.canvasSiteFooter .canvasFooterInner
 <section class="galleryOnly"><div class="wrap"><a class="cta" href="canvas90-galeria.html">Galería</a></div></section>
 </main>
 <footer class="footer"><div class="wrap"><strong>CANVAS</strong><p>Espacios para proyectos independientes.</p></div></footer>
-<script>
-(async()=>{
-  const preview=document.getElementById('gardenPhoto');
-  try{
-    const html=await fetch('../assets/photo-source.html?v=garden3',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('No se pudo cargar la fuente');return r.text()});
-    const doc=new DOMParser().parseFromString(html,'text/html');
-    const sections=[...doc.querySelectorAll('section')];
-    const section=sections.find(s=>/Que la idea tambi[eé]n salga afuera/i.test((s.textContent||'').replace(/\s+/g,' ')));
-    const source=(root)=>[...root.querySelectorAll('img')].map(img=>img.getAttribute('src')).filter(src=>src&&src.startsWith('data:image/')).sort((a,b)=>b.length-a.length)[0]||'';
-    const photo=(section&&source(section))||'';
-    if(!photo)throw new Error('No se encontró una foto del jardín');
-    preview.src=photo;
-  }catch(e){console.warn('No se pudo cargar la foto del jardín',e)}
-})();
-</script>
-<script src="../assets/js/site-shell.js?v=8" defer></script>
+<script src="../assets/js/site-shell.js?v=9" defer></script>
 </body>
 </html>
