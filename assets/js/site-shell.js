@@ -21,7 +21,7 @@
   header.className='canvasSiteHeader';
   header.innerHTML=`
     <div class="canvasHeaderInner">
-      <a class="canvasBrand" href="${root}index.html" aria-label="Canvas, inicio"><img src="${root}assets/img/canvas-icon-mark.png" alt=""><span>CANVAS</span></a>
+      <a class="canvasBrand" href="${root}index.html" aria-label="Canvas, inicio"><img src="${root}assets/img/canvas-icon-mark-optimized.webp" alt=""><span>CANVAS</span></a>
       <nav class="canvasDesktopNav" aria-label="Navegación principal">
         <a href="${root}index.html#espacios">Espacios</a>
         <a href="${root}estudio-fotografico/">Estudio fotográfico</a>

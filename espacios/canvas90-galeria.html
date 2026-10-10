@@ -21,9 +21,6 @@
 <meta property="og:image:alt" content="Salón principal de Canvas 90 en Metepec">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://canvas90.mx/assets/img/og-canvas90.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/site.css">
 <style>
 .heroGallery{padding:58px 0 34px}.heroGallery h1{max-width:12ch}.heroGallery p{max-width:700px;color:var(--muted)}
@@ -35,38 +32,26 @@
 </style>
   <script src="../assets/js/analytics.js?v=1" defer></script>
 <link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=1">
 </head>
 <body>
-<header><div class="wrap nav"><a class="brand" href="../index.html" style="display:flex;align-items:center;gap:9px"><img src="../assets/img/canvas-icon-mark.png" alt="" style="display:block;width:auto;height:26px;object-fit:contain">CANVAS</a><nav class="navlinks"><a href="canvas90.html">Canvas 90</a><a href="canvas90.html#tarifas">Tarifas</a><a href="canvas90.html#disponibilidad">Disponibilidad</a><a class="cta" href="https://wa.me/527821402617?text=Hola%2C%20vi%20la%20galer%C3%ADa%20de%20Canvas%2090%20y%20quiero%20conocer%20el%20espacio." target="_blank" rel="noopener">Ven a conocerlo</a></nav></div></header>
+<header><div class="wrap nav"><a class="brand" href="../index.html" style="display:flex;align-items:center;gap:9px"><img src="../assets/img/canvas-icon-mark-optimized.webp" alt="" style="display:block;width:auto;height:26px;object-fit:contain">CANVAS</a><nav class="navlinks"><a href="canvas90.html">Canvas 90</a><a href="canvas90.html#tarifas">Tarifas</a><a href="canvas90.html#disponibilidad">Disponibilidad</a><a class="cta" href="https://wa.me/527821402617?text=Hola%2C%20vi%20la%20galer%C3%ADa%20de%20Canvas%2090%20y%20quiero%20conocer%20el%20espacio." target="_blank" rel="noopener">Ven a conocerlo</a></nav></div></header>
 <main>
 <section class="heroGallery"><div class="wrap"><div class="eyebrow">Canvas 90 · Galería</div><h1>Mira el espacio antes de imaginar qué harías aquí.</h1><p>Una selección de vistas reales de Canvas 90 y de los espacios que lo rodean. Haz clic en cualquier fotografía para verla completa.</p></div></section>
-<section><div class="wrap"><div id="gallery" class="galleryGrid"><div class="loading">Cargando fotografías…</div></div></div></section>
+<section><div class="wrap"><div id="gallery" class="galleryGrid"><figure class="shot" tabindex="0" role="button" aria-label="Ampliar Canvas 90"><img src="../assets/img/foto-canvas90.jpg" srcset="../assets/img/foto-canvas90-480.webp 480w, ../assets/img/foto-canvas90.jpg 900w" sizes="(max-width: 760px) 100vw, 800px" loading="eager" decoding="async" alt="Canvas 90"><figcaption>Canvas 90</figcaption></figure><figure class="shot" tabindex="0" role="button" aria-label="Ampliar El Jardín de Canvas"><img src="../assets/img/foto-jardin.jpg" srcset="../assets/img/foto-jardin-480.webp 480w, ../assets/img/foto-jardin.jpg 900w" sizes="(max-width: 760px) 100vw, 800px" loading="lazy" decoding="async" alt="El Jardín de Canvas"><figcaption>El Jardín de Canvas</figcaption></figure><figure class="shot" tabindex="0" role="button" aria-label="Ampliar Canvas Deck"><img src="../assets/img/foto-deck.jpg" srcset="../assets/img/foto-deck-480.webp 480w, ../assets/img/foto-deck.jpg 900w" sizes="(max-width: 760px) 100vw, 800px" loading="lazy" decoding="async" alt="Canvas Deck"><figcaption>Canvas Deck</figcaption></figure></div></div></section>
 </main>
 <footer class="footer"><div class="wrap"><strong>CANVAS</strong><p><a href="canvas90.html" style="color:#fff;text-decoration:underline">Volver a Canvas 90</a></p></div></footer>
 <div class="lightbox" id="lightbox"><button class="close" aria-label="Cerrar">×</button><img id="lightboxImg" alt="Vista ampliada de Canvas 90"></div>
 <script>
-(async()=>{
-  const gallery=document.getElementById('gallery');
-  try{
-    const html=await fetch('../index.html',{cache:'force-cache'}).then(r=>r.text());
-    const doc=new DOMParser().parseFromString(html,'text/html');
-    const seen=new Set(),photos=[];
-    [...doc.querySelectorAll('img[src^="data:image/"]')].forEach(img=>{
-      const src=img.getAttribute('src');
-      if(src&&!seen.has(src)){seen.add(src);photos.push({src,alt:img.alt||''})}
-    });
-    const labels=['Canvas 90','Canvas 90','El Jardín de Canvas','Canvas Deck','Canvas 90','Canvas 90','Canvas','Canvas 90'];
-    const selected=photos.slice(0,Math.min(8,photos.length));
-    if(!selected.length) throw new Error('Sin fotos');
-    gallery.innerHTML=selected.map((p,i)=>`<figure class="shot" data-i="${i}"><img src="${p.src}" alt="${p.alt||labels[i]||'Canvas 90'}"><figcaption>${labels[i]||'Canvas 90'}</figcaption></figure>`).join('');
-    gallery.querySelectorAll('.shot').forEach((el,i)=>el.onclick=()=>open(selected[i].src));
-  }catch(e){gallery.innerHTML='<div class="loading">No fue posible cargar la galería en este momento.</div>'}
-})();
+document.querySelectorAll('#gallery .shot').forEach(el=>{
+  el.onclick=()=>open(el.querySelector('img').src);
+  el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(el.querySelector('img').src)}};
+});
 const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
 function open(src){lbImg.src=src;lb.classList.add('open');document.body.style.overflow='hidden'}
 function closeLb(){lb.classList.remove('open');lbImg.src='';document.body.style.overflow=''}
 lb.querySelector('.close').onclick=closeLb;lb.onclick=e=>{if(e.target===lb)closeLb()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});
 </script>
-<script src="../assets/js/site-shell.js?v=9" defer></script>
+<script src="../assets/js/site-shell.js?v=10" defer></script>
 </body>
 </html>
