@@ -15,10 +15,10 @@
 <meta property="og:title" content="Galería Canvas Origen | Canvas">
 <meta property="og:description" content="Conoce Canvas Origen por dentro: un espacio pequeño, cálido y listo para trabajar, conversar o empezar algo propio.">
 <meta property="og:url" content="https://canvas90.mx/espacios/origen-galeria.html">
-<meta property="og:image" content="https://canvas90.mx/assets/img/foto-origen.jpg">
+<meta property="og:image" content="https://canvas90.mx/assets/img/foto-origen.jpg?v=20261010-real">
 <meta property="og:image:alt" content="Interior de Canvas Origen">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://canvas90.mx/assets/img/foto-origen.jpg">
+<meta name="twitter:image" content="https://canvas90.mx/assets/img/foto-origen.jpg?v=20261010-real">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,6 +30,12 @@
 .videoWrap{margin-top:18px;background:#171717;color:#fff;display:grid;grid-template-columns:.75fr 1.25fr;gap:24px;padding:26px;align-items:center}.videoCopy strong{display:block;font:600 2.5rem/1 "Cormorant Garamond",serif;margin:8px 0 12px}.videoCopy p{color:#d8d4ca;line-height:1.6;margin:0}.videoWrap video{width:100%;max-height:520px;background:#000;object-fit:contain}
 .galleryActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.back,.contact{display:inline-flex;padding:12px 16px;border:1px solid #171717;font-weight:700;text-decoration:none}.contact{background:#171717;color:#fff}
 @media(max-width:760px){.galleryHero{padding:42px 0 30px}.galleryGrid{grid-template-columns:1fr;grid-template-rows:auto}.galleryItem.main{grid-row:auto}.galleryItem{height:300px}.galleryItem.access{height:390px}.videoWrap{grid-template-columns:1fr;padding:18px}.videoWrap video{max-height:480px}.galleryActions{flex-direction:column}.back,.contact{justify-content:center}}
+/* Use each photograph’s native proportions, including on mobile. */
+.galleryGrid{grid-template-columns:1fr 1fr;grid-template-rows:auto;align-items:start}
+.galleryItem.main{grid-column:1/-1;grid-row:auto}
+.galleryItem,.galleryItem.access{height:auto}
+.galleryItem img{height:auto;object-fit:contain}
+@media(max-width:760px){.galleryGrid{grid-template-columns:1fr}}
 </style>
 <script src="../assets/js/analytics.js?v=1" defer></script>
 <link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
@@ -40,11 +46,11 @@
 <section class="galleryHero"><div class="wrap"><div class="eyebrow">Canvas Origen · Galería</div><div class="accent"></div><h1>Canvas Origen, por dentro.</h1><p>Un espacio pequeño, cálido y listo para trabajar, conversar o empezar algo propio. Estas son fotografías reales del espacio tal como se encuentra hoy.</p></div></section>
 <section class="gallerySection"><div class="wrap">
 <div class="galleryGrid">
-<figure class="galleryItem main"><img src="../assets/img/foto-origen.jpg" loading="eager" decoding="async" alt="Vista principal de Canvas Origen con escritorio, sillón y mobiliario"></figure>
-<figure class="galleryItem"><img src="../assets/img/origen-interior.jpg" loading="lazy" decoding="async" alt="Vista interior de Canvas Origen desde el acceso"></figure>
-<figure class="galleryItem access"><img src="../assets/img/origen-acceso.jpg" loading="lazy" decoding="async" alt="Acceso de Canvas Origen desde Canvas Deck"></figure>
+<figure class="galleryItem main"><img src="../assets/img/foto-origen.jpg?v=20261010-real" loading="eager" decoding="async" alt="Vista principal de Canvas Origen con escritorio, sillón y mobiliario"></figure>
+<figure class="galleryItem"><img src="../assets/img/origen-interior.jpg?v=20261010-real" loading="lazy" decoding="async" alt="Vista interior de Canvas Origen desde el acceso"></figure>
+<figure class="galleryItem access"><img src="../assets/img/origen-acceso.jpg?v=20261010-real" loading="lazy" decoding="async" alt="Puerta y ventanal de Canvas Origen hacia el Deck"></figure>
 </div>
-<div class="videoWrap"><div class="videoCopy"><div class="eyebrow" style="color:#E0A51E">Recorrido breve</div><strong>Así se siente Origen.</strong><p>Una vista rápida del espacio y de su relación con el Deck, sin reconstrucciones ni renders.</p></div><video controls playsinline preload="metadata" poster="../assets/img/foto-origen.jpg"><source src="../assets/video/origen-recorrido.mp4" type="video/mp4">Tu navegador no puede reproducir este video.</video></div>
+<div class="videoWrap"><div class="videoCopy"><div class="eyebrow" style="color:#E0A51E">Recorrido breve</div><strong>Así se siente Origen.</strong><p>Una vista rápida del espacio y de su relación con el Deck, sin reconstrucciones ni renders.</p></div><video controls playsinline preload="metadata" poster="../assets/img/foto-origen.jpg?v=20261010-real"><source src="../assets/video/origen-recorrido.mp4?v=20261010-real" type="video/mp4">Tu navegador no puede reproducir este video.</video></div>
 <div class="galleryActions"><a class="back" href="origen.html">← Volver a Canvas Origen</a><a class="contact" href="https://wa.me/527821402617?text=Hola%2C%20vi%20Canvas%20Origen%20y%20quiero%20consultar%20un%20horario%20para%20mi%20proyecto." target="_blank" rel="noopener">Preguntar por Origen →</a></div>
 </div></section>
 </main>
