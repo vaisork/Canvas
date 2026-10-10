@@ -22,9 +22,6 @@
 <meta property="og:image:alt" content="Canvas Deck frente a Canvas Pulso y Canvas Origen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://canvas90.mx/assets/img/og-deck.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#fffefb;--ink:#171717;--muted:#77756e;--line:#e7e3da;
@@ -101,9 +98,10 @@ footer{padding:28px 0 45px;color:var(--muted);font-size:.72rem;letter-spacing:.1
 </style>
   <script src="../assets/js/analytics.js?v=1" defer></script>
 <link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=1">
 </head>
 <body>
-<header><div class="wrap top"><a class="brand" href="../index.html"><img src="../assets/img/canvas-icon-mark.png" alt="">CANVAS</a><div class="tag">Espacios para lo que te mueve</div></div></header>
+<header><div class="wrap top"><a class="brand" href="../index.html"><img src="../assets/img/canvas-icon-mark-optimized.webp" alt="">CANVAS</a><div class="tag">Espacios para lo que te mueve</div></div></header>
 <main class="wrap">
 <section class="hero"><div class="kicker">Disponibilidad</div><h1>Vista general de disponibilidad.</h1><p class="lead">La vista general muestra los tres espacios en grande, uno debajo del otro, para comparar un mismo día sin perder legibilidad. La vista por espacio conserva el detalle de toda la semana.</p><div class="modebar"><button class="btn active" data-mode="general">Vista general</button><button class="btn" data-mode="single">Vista por espacio</button></div><div class="spacebar hidden" id="spacebar"><button class="btn spacebtn canvas90 active" data-space="canvas90">Canvas 90</button><button class="btn spacebtn origen" data-space="origen">Canvas Origen</button><button class="btn spacebtn pulso" data-space="pulso">Canvas Pulso</button></div></section>
 <div class="controls"><div class="center"><button class="small" id="prev" aria-label="Semana anterior">←</button><div class="weektitle" id="weekTitle">—</div><button class="small" id="next" aria-label="Semana siguiente">→</button></div><label class="datejump">Ir a fecha <input type="date" id="datePicker"></label></div>
@@ -113,7 +111,7 @@ footer{padding:28px 0 45px;color:var(--muted);font-size:.72rem;letter-spacing:.1
 </main>
 <script>
 const API='https://script.google.com/macros/s/AKfycbzLNsOEKTft_CHu_caYYFRm9cICPK-cxPNM6jJUMf5phBoIuHhxUVkTvxkyoc7QC5IC/exec';
-const SPACES={canvas90:{name:'Canvas 90',sub:'Espacio principal + jardín',icon:'../assets/img/icon-canvas90.png',color:'#167E8C'},origen:{name:'Canvas Origen',sub:'El espacio más pequeño de Canvas · 5 m²',icon:'../assets/img/icon-origen.png',color:'#E0A51E'},pulso:{name:'Canvas Pulso',sub:'Para reuniones pequeñas · 16 m²',icon:'../assets/img/icon-pulso.png',color:'#E8644F'}};
+const SPACES={canvas90:{name:'Canvas 90',sub:'Espacio principal + jardín',icon:'../assets/img/icon-canvas90-optimized.webp',color:'#167E8C'},origen:{name:'Canvas Origen',sub:'El espacio más pequeño de Canvas · 5 m²',icon:'../assets/img/icon-origen-optimized.webp',color:'#E0A51E'},pulso:{name:'Canvas Pulso',sub:'Para reuniones pequeñas · 16 m²',icon:'../assets/img/icon-pulso-optimized.webp',color:'#E8644F'}};
 const OPEN=7*60,CLOSE=22*60;let mode='general',space='canvas90',weekStart=startOfWeek(new Date()),selected=formatKey(new Date()),data={canvas90:[],origen:[],pulso:[]};
 function startOfWeek(d){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()),n=(x.getDay()+6)%7;x.setDate(x.getDate()-n);return x}function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}function formatKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function parseKey(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)}function fmtLong(k){return new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(parseKey(k))}function fmtWeek(a,b){const f=new Intl.DateTimeFormat('es-MX',{day:'numeric',month:'long',year:'numeric'});return `${f.format(a)} — ${f.format(b)}`}function hhmm(m){return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`}function days(){return Array.from({length:7},(_,i)=>addDays(weekStart,i))}
 function dayBusy(spaceKey,key){return data[spaceKey].map(x=>{const s=new Date(x.desde),e=new Date(x.hasta),day=parseKey(key),day2=addDays(day,1),a=Math.max(s.getTime(),day.getTime()),b=Math.min(e.getTime(),day2.getTime());if(b<=a)return null;const aa=new Date(a),bb=new Date(b);return{start:Math.max(OPEN,aa.getHours()*60+aa.getMinutes()),end:Math.min(CLOSE,bb.getHours()*60+bb.getMinutes())}}).filter(x=>x&&x.end>x.start).sort((a,b)=>a.start-b.start)}
@@ -129,6 +127,6 @@ function renderAll(){document.getElementById('weekTitle').textContent=fmtWeek(we
 async function load(){document.getElementById('status').textContent='Consultando Google Calendar…';const desde=formatKey(addDays(weekStart,-1)),hasta=formatKey(addDays(weekStart,7));try{const keys=['canvas90','origen','pulso'],res=await Promise.all(keys.map(k=>fetch(`${API}?espacio=${k}&desde=${desde}&hasta=${hasta}`,{cache:'no-store'}).then(r=>r.json())));res.forEach((x,i)=>data[keys[i]]=x.ok&&Array.isArray(x.ocupados)?x.ocupados:[]);document.getElementById('status').textContent='Disponibilidad real cargada';renderAll()}catch(e){console.error(e);document.getElementById('status').textContent='No se pudo consultar el calendario';renderAll()}}
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-mode]').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode;document.getElementById('spacebar').classList.toggle('hidden',mode!=='single');renderAll()});document.querySelectorAll('[data-space]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-space]').forEach(x=>x.classList.remove('active'));b.classList.add('active');space=b.dataset.space;renderAll()});document.getElementById('prev').onclick=()=>{weekStart=addDays(weekStart,-7);selected=formatKey(weekStart);load()};document.getElementById('next').onclick=()=>{weekStart=addDays(weekStart,7);selected=formatKey(weekStart);load()};document.getElementById('datePicker').onchange=e=>{if(!e.target.value)return;selected=e.target.value;weekStart=startOfWeek(parseKey(selected));load()};load();
 </script>
-<script src="../assets/js/site-shell.js?v=9" defer></script>
+<script src="../assets/js/site-shell.js?v=10" defer></script>
 </body>
 </html>
