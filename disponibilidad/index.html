@@ -101,6 +101,8 @@ footer{padding:28px 0 45px;color:var(--muted);font-size:.72rem;letter-spacing:.1
 .calendarNotice{padding:20px 18px;align-self:stretch;font-size:1rem;line-height:1.5;min-width:0;overflow-wrap:anywhere}
 .calendarNotice strong{display:block;font-size:1rem}.calendarNotice p{margin:8px 0 14px}
 .calendarNotice.error{background:#fff0ed;color:#8b2118;border:2px solid #b93728}
+/* El aviso de error ya trae su propio enlace a WhatsApp. */
+.rowcard:has(.calendarNotice.error) .mobileCta{display:none}
 .calendarNotice.loading{background:#f1f1ee;color:#45443f}
 .calendarNotice a{color:inherit;font-weight:700;display:inline-block;margin-top:8px}
 .state.unavailable i{background:#b9b9b3}.state{font-size:14px}
