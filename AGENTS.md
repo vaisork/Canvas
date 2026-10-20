@@ -8,6 +8,7 @@ Sitio estático (HTML/CSS/JS plano, sin build) para Canvas 90, espacio de evento
 - `espacios/`, `estudio-fotografico/`, `contacto/`, `disponibilidad/` — páginas del sitio
 - `novedades/` — «Qué pasa en Canvas», timeline de noticias de eventos
 - `buzon/` — envíos pendientes de publicar (ver `buzon/LEEME.md`)
+- `kit/<id>/` — kits de publicación de la Fábrica (Canvas9works `marketing/fabrica/salida/<id>/` copiada tal cual; noindex)
 - `assets/` — CSS/JS/imágenes compartidas
 
 ## De dónde llegan las noticias

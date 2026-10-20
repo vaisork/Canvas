@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit · Canvas 90 · El camino del guerrero</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&amp;family=Inter:wght@400;600&amp;display=swap">
+<style>
+:root { --fondo: #fffefb; --texto: #171717; --acento: #167E8C; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--fondo); color: var(--texto); font: 16px/1.5 Inter, sans-serif; }
+main { max-width: 920px; margin: auto; padding: 24px 16px; overflow-wrap: anywhere; }
+h1, h2 { font-family: 'Cormorant Garamond', serif; line-height: 1.1; }
+h1 { font-size: clamp(2rem, 8vw, 3.5rem); margin: 12px 0; }
+h2 { font-size: 2rem; margin: 0 0 16px; }
+.marca { border-bottom: 3px solid var(--acento); padding-bottom: 12px; }
+.tarjetas { display: grid; gap: 24px; margin: 24px 0; }
+section { min-width: 0; padding: 16px; border: 1px solid currentColor; border-radius: 12px; margin-bottom: 24px; }
+.tarjetas section { margin: 0; }
+img { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto 16px; }
+button, .boton { display: inline-block; max-width: 100%; padding: 12px 16px; border: 1px solid currentColor; border-radius: 8px; background: var(--texto); color: var(--fondo); font: inherit; text-decoration: none; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+.acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+textarea { display: block; width: 100%; margin: 12px 0; padding: 12px; min-height: 240px; resize: vertical; background: var(--fondo); color: var(--texto); border: 1px solid currentColor; font: inherit; }
+#whatsapp { min-height: 140px; }
+#estado { position: sticky; bottom: 0; padding: 12px; background: var(--fondo); border-left: 4px solid var(--acento); min-height: 48px; }
+:focus-visible { outline: 3px solid var(--acento); outline-offset: 3px; }
+@media (min-width: 700px) { .tarjetas { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<main>
+<header><p class="marca">Canvas 90</p><h1>El camino del guerrero</h1>
+<p>1. Copia el texto · 2. Comparte la imagen · 3. Pega el texto</p></header>
+<div class="tarjetas">
+<section aria-labelledby="post-titulo"><h2 id="post-titulo">Post 4:5</h2>
+<img src="post-4x5.jpg" alt="Post: El camino del guerrero" width="1080" height="1350">
+<button type="button" data-imagen="post-4x5.jpg" disabled>📤 Compartir esta imagen</button>
+<a href="post-4x5.jpg" download>Descargar imagen</a></section>
+<section aria-labelledby="historia-titulo"><h2 id="historia-titulo">Historia 9:16</h2>
+<img src="historia-9x16.jpg" alt="Historia: El camino del guerrero" width="1080" height="1920">
+<button type="button" data-imagen="historia-9x16.jpg" disabled>📤 Compartir esta imagen</button>
+<a href="historia-9x16.jpg" download>Descargar imagen</a></section>
+</div>
+<section><h2><label for="post">Texto de venta</label></h2>
+<textarea id="post" readonly>🥋 ¿Listo para descubrir el camino del guerrero?
+
+Bujutsu, el arte marcial de los samuráis; Kyudo, el arte japonés del arco, y defensa personal urbana llegan a Canvas 90. No necesitas experiencia: solo curiosidad, disposición para aprender y ganas de ponerte a prueba.
+
+📅 Viernes 23 · 6:00 a 9:00 pm
+📅 Domingo 25 · 5:00 a 9:00 pm
+📅 Miércoles 28 · 6:00 a 7:00 pm
+📅 Viernes 30 · 6:00 a 9:00 pm
+
+📍 Canvas 90, Metepec
+👉 canvas90.mx/novedades/camino-del-guerrero/
+
+#ArtesMarciales #Kyudo #DefensaPersonal #CulturaJaponesa #Canvas90 #Metepec
+</textarea>
+<button type="button" data-copiar="post">📋 Copiar texto</button></section>
+<section><h2><label for="whatsapp">WhatsApp</label></h2>
+<textarea id="whatsapp">🥋 El camino del guerrero llega a Canvas 90: Bujutsu, Kyudo y defensa personal urbana. Vie 23, Dom 25, Mié 28 y Vie 30 de octubre. No necesitas experiencia. Info: canvas90.mx/novedades/camino-del-guerrero/
+</textarea>
+<div class="acciones"><button type="button" data-copiar="whatsapp">📋 Copiar</button>
+<a class="boton" id="abrir-whatsapp" href="https://wa.me/?text=%F0%9F%A5%8B%20El%20camino%20del%20guerrero%20llega%20a%20Canvas%2090%3A%20Bujutsu%2C%20Kyudo%20y%20defensa%20personal%20urbana.%20Vie%2023%2C%20Dom%2025%2C%20Mi%C3%A9%2028%20y%20Vie%2030%20de%20octubre.%20No%20necesitas%20experiencia.%20Info%3A%20canvas90.mx%2Fnovedades%2Fcamino-del-guerrero%2F%0A" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></div></section>
+<p id="estado" role="status" aria-live="polite"></p>
+</main>
+<script>
+const estado = document.getElementById('estado');
+const decir = texto => { estado.textContent = texto; };
+document.querySelectorAll('[data-copiar]').forEach(boton => {
+  boton.addEventListener('click', async () => {
+    const campo = document.getElementById(boton.dataset.copiar);
+    try {
+      campo.focus(); campo.select(); campo.setSelectionRange(0, campo.value.length);
+      if (!document.execCommand('copy')) await navigator.clipboard.writeText(campo.value);
+      decir('Texto copiado. Comparte la imagen y pega el texto.');
+    } catch (_) { decir('No se pudo copiar. Mantén pulsado el texto para copiarlo.'); }
+  });
+});
+const whatsapp = document.getElementById('whatsapp');
+whatsapp.addEventListener('input', () => {
+  document.getElementById('abrir-whatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(whatsapp.value);
+});
+document.querySelectorAll('[data-imagen]').forEach(async boton => {
+  const descarga = boton.nextElementSibling;
+  // Precargar el archivo conserva el gesto del usuario al abrir el panel nativo.
+  try {
+    if (!navigator.share || !navigator.canShare) throw new Error('descarga');
+    const respuesta = await fetch(boton.dataset.imagen);
+    if (!respuesta.ok) throw new Error('imagen');
+    const archivo = new File([await respuesta.blob()], boton.dataset.imagen, {type: 'image/jpeg'});
+    if (!navigator.canShare({files: [archivo]})) throw new Error('descarga');
+    descarga.hidden = true;
+    boton.disabled = false;
+    boton.addEventListener('click', async () => {
+      try {
+        await navigator.share({files: [archivo]});
+        decir('Imagen compartida. Pega el texto en tu publicación.');
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          descarga.hidden = false;
+          decir('No se pudo compartir. Puedes descargar la imagen.');
+        }
+      }
+    });
+  } catch (_) { boton.hidden = true; }
+});
+</script>
+</body>
+</html>
