@@ -31,7 +31,7 @@ Cualquier agente publica desde `buzon/`. No hace falta Claude para publicar.
 3. **Optimizar las fotos** antes de subirlas a `novedades/img/` (redimensionar a ~1400-1600 px de ancho, JPEG calidad ~78-82 %). Recortar franjas negras o vacías.
 4. La categoría la escribe libremente quien envía: usarla tal cual como etiqueta (`.meta .cat`) y en `data-cat` del `<article>`.
 5. **Crear `novedades/SLUG/index.html` para compartir la noticia**, siguiendo el formato de las páginas existentes: título, descripción del `.deck`, `og:type=article`, `og:site_name=Canvas`, `og:locale=es_MX`, `og:title`, `og:description`, `og:image` absoluta de la foto principal, `og:url` y canonical `https://canvas90.mx/novedades/SLUG/`, y `twitter:card=summary_large_image`. Redirigir con JavaScript `location.replace('../#SLUG')`, sin meta refresh, e incluir el enlace visible «Ver la noticia» a `../#SLUG`. Agregar también el botón `.share-news` en la `.meta` del artículo para usar el script compartido.
-6. **Escribir `novedades/SLUG/post.txt`: el texto de venta para Facebook e Instagram.** El botón «Compartir» copia este texto y comparte las fotos de la noticia. Formato (texto plano UTF-8, máximo ~1 200 caracteres):
+6. **Escribir `novedades/SLUG/post.txt`: el texto de venta para Facebook e Instagram.** El botón «Compartir» abre un panel con este texto (botón «Copiar texto») y comparte las fotos de la noticia. Formato (texto plano UTF-8, máximo ~1 200 caracteres):
    - Gancho de una línea con emoji.
    - 2-3 líneas: qué es y por qué venir, con los hechos del envío.
    - Fechas y horarios (📅) si el evento es próximo; si ya pasó, una línea de cierre o agradecimiento.
