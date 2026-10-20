@@ -69,18 +69,58 @@
 })();
 </script>
 <script>
-document.addEventListener('click', async function(event){
-  var button = event.target.closest('.share-news');
-  if (!button) return;
-  var article = button.closest('article');
-  var title = article.querySelector('h2').textContent;
-  var text = article.querySelector('.deck').textContent;
-  var url = 'https://canvas90.mx/novedades/' + article.id + '/';
-  if (navigator.share) {
-    try { await navigator.share({title: title, text: text, url: url}); return; }
-    catch (error) { if (error.name === 'AbortError') return; }
-  }
-  window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank', 'noopener,noreferrer');
-});
+(function(){
+  var toast = document.createElement('div');
+  toast.setAttribute('role', 'status');
+  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);max-width:calc(100% - 32px);padding:12px 18px;background:#171717;color:#fff;border-radius:6px;z-index:100;font-size:.85rem';
+  toast.hidden = true;
+  document.body.appendChild(toast);
+  var toastTimer;
+
+  document.querySelectorAll('article[data-cat]').forEach(function(article){
+    var button = article.querySelector('.share-news');
+    if (!button) return;
+    var title = article.querySelector('h2').textContent;
+    var url = 'https://canvas90.mx/novedades/' + article.id + '/';
+    var text = title + '\n\n' + article.querySelector('.deck').textContent + '\n\n' + url;
+    fetch(article.id + '/post.txt').then(function(response){
+      if (!response.ok) throw new Error('post.txt unavailable');
+      return response.text();
+    }).then(function(post){ text = post; }).catch(function(){});
+
+    button.addEventListener('click', async function(){
+      var post = text;
+      try {
+        if (navigator.clipboard) navigator.clipboard.writeText(post).catch(function(){});
+      } catch (error) {}
+      toast.textContent = 'Texto copiado: pégalo en tu publicación';
+      toast.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ toast.hidden = true; }, 4000);
+
+      function facebook(){
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank', 'noopener,noreferrer');
+      }
+      if (!navigator.share) { facebook(); return; }
+      try {
+        var images = Array.from(article.querySelectorAll('.poster img, .featurePhoto img, .shots img')).slice(0, 10);
+        var files = await Promise.all(images.map(async function(img){
+          var source = new URL(img.currentSrc || img.src, location.href);
+          if (source.origin !== location.origin) throw new Error('Image must be same-origin');
+          var response = await fetch(source.href, {mode: 'same-origin'});
+          if (!response.ok) throw new Error('Image unavailable');
+          var blob = await response.blob();
+          return new File([blob], source.pathname.split('/').pop(), {type: blob.type});
+        }));
+        if (files.length && navigator.canShare && navigator.canShare({files: files})) {
+          await navigator.share({files: files, text: post});
+          return;
+        }
+      } catch (error) { if (error.name === 'AbortError') return; }
+      try { await navigator.share({title: title, text: post, url: url}); }
+      catch (error) { if (error.name !== 'AbortError') facebook(); }
+    });
+  });
+})();
 </script>
 </body></html>
