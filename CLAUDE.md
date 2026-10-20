@@ -23,6 +23,7 @@ Es una página que sube fotos (comprimidas en el navegador) y guarda texto/categ
 2. **Igualar el diseño real de `novedades/index.html`**, no una versión simplificada: misma tipografía (Cormorant Garamond para títulos, Inter para cuerpo), misma paleta (`--teal:#167E8C`, `--yellow:#E0A51E`, `--coral:#E8644F`, fondo `--paper:#fffefb`), mismo layout de intro (flyer/foto principal al lado del texto, no apilado), cuadrícula `.shots` de fotos con `<figcaption>` por imagen, y agregar la entrada correspondiente al menú `.timeline` de arriba.
 3. **Optimizar las fotos** antes de subirlas al repo (redimensionar a ~1400-1600px de ancho, JPEG calidad ~78-82%) — las que vienen del Buzón ya llegan comprimidas pero conviene revisar tamaño final.
 4. La categoría la escribe libremente quien envía (chips + opción "Otro" con texto libre) — usarla tal cual como la etiqueta de categoría (`.meta .cat`) del post.
+5. **Crear `novedades/SLUG/index.html` para compartir la noticia**, siguiendo el formato de las páginas existentes: título, descripción del `.deck`, `og:type=article`, `og:site_name=Canvas`, `og:locale=es_MX`, `og:title`, `og:description`, `og:image` absoluta de la foto principal, `og:url` y canonical `https://canvas90.mx/novedades/SLUG/`, y `twitter:card=summary_large_image`. Redirigir con JavaScript `location.replace('../#SLUG')`, sin meta refresh, e incluir el enlace visible «Ver la noticia» a `../#SLUG`. Agregar también el botón `.share-news` en la `.meta` del artículo para usar el script compartido.
 
 ## Flujo de publicación
 
