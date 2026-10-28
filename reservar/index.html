@@ -64,7 +64,40 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(2.4rem,5vw,3.8rem);lin
 .form-group label{font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
 .form-group input,.form-group select{border:1px solid var(--line);border-radius:3px;padding:12px 14px;font:inherit;font-size:.92rem;background:#fff;color:var(--ink);outline:none;transition:border-color .15s}
 .form-group input:focus,.form-group select:focus{border-color:#181818}
+.form-group select option:disabled{color:#b0ada6;background:#f5f4f0}
 .form-hint{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+/* Calendario del día (línea de tiempo 07:00–22:00 estilo disponibilidad) */
+.day-calendar{border:1px solid var(--line);background:#faf9f6;border-radius:4px;padding:16px 18px;margin:4px 0 18px}
+.day-cal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.day-cal-title{display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.day-cal-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
+.day-cal-dot.pulso{background:var(--pulso)}
+.day-cal-dot.origen{background:var(--origen)}
+.day-cal-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.72rem;color:var(--muted)}
+.day-cal-legend span{display:flex;align-items:center;gap:6px}
+.day-cal-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.day-cal-legend .leg-free.pulso{background:var(--pulsoSoft);border:1px solid #efb9b0}
+.day-cal-legend .leg-free.origen{background:var(--origenSoft);border:1px solid #ead08a}
+.day-cal-legend .leg-busy.pulso{background:rgba(232,100,79,.88)}
+.day-cal-legend .leg-busy.origen{background:rgba(224,165,30,.9)}
+.day-cal-legend .leg-sel{background:#181818}
+.timelineWrap{padding:4px 0 6px;overflow:hidden}
+.timelineInner{width:100%}
+.hours{display:grid;grid-template-columns:repeat(16,1fr);font-size:.63rem;color:var(--muted);margin-bottom:8px}
+.hours span{text-align:left;white-space:nowrap}
+.track{height:64px;position:relative;border-radius:5px;overflow:hidden;background:repeating-linear-gradient(to right,transparent 0,transparent calc(6.666% - 1px),rgba(255,255,255,.95) calc(6.666% - 1px),rgba(255,255,255,.95) 6.666%)}
+.track.origen{background-color:var(--origenSoft)}
+.track.pulso{background-color:var(--pulsoSoft)}
+.busy{position:absolute;top:0;bottom:0;border-radius:5px;display:flex;align-items:center;justify-content:center;padding:4px 8px;font-size:.66rem;font-weight:700;color:#fff;overflow:hidden;white-space:nowrap;z-index:2;pointer-events:none}
+.busy.origen{background:rgba(224,165,30,.9);color:#594000}
+.busy.pulso{background:rgba(232,100,79,.88)}
+.selected-slot{position:absolute;top:3px;bottom:3px;border-radius:4px;background:rgba(24,24,24,.86);color:#fff;display:flex;align-items:center;justify-content:center;padding:2px 6px;font-size:.66rem;font-weight:700;white-space:nowrap;overflow:hidden;z-index:3;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.slot-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(15,1fr);z-index:1}
+.slot-btn{border:none;background:transparent;padding:0;margin:0;cursor:pointer;transition:background-color .12s}
+.slot-btn:hover:not(:disabled){background:rgba(24,24,24,.08)}
+.slot-btn:disabled{cursor:not-allowed}
+.day-cal-ranges{margin-top:8px;font-size:.76rem;color:#4e4d48;line-height:1.45;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 
 /* Resumen y total */
 .summary-box{background:#faf9f6;border:1px solid var(--line);border-radius:4px;padding:18px;margin:20px 0}
@@ -108,6 +141,12 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(2.4rem,5vw,3.8rem);lin
   .spaces-grid{grid-template-columns:1fr}
   .fields-row{grid-template-columns:1fr}
   .form-panel{padding:16px}
+  .day-calendar{padding:14px 12px}
+  .hours{grid-template-columns:repeat(16,minmax(0,1fr));font-size:.60rem;letter-spacing:0;margin-bottom:8px}
+  .hours span{overflow:visible;transform:none;text-align:center}
+  .track{height:58px;border-radius:6px}
+  .busy{font-size:0;padding:0}
+  .selected-slot{font-size:0;padding:0}
   .summary-total .total-amount{font-size:1.8rem}
 }
 </style>
@@ -189,6 +228,31 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(2.4rem,5vw,3.8rem);lin
         <div>
           <div class="section-title"><span>2</span> Fecha y horario deseado</div>
           <div class="form-panel">
+            <!-- Calendario del día (línea de tiempo 07:00–22:00) -->
+            <div id="dayCalendar" class="day-calendar" aria-live="polite">
+              <div class="day-cal-head">
+                <div class="day-cal-title">
+                  <i id="calDot" class="day-cal-dot pulso"></i>
+                  <span id="calTitle">Canvas Pulso · —</span>
+                </div>
+                <div class="day-cal-legend">
+                  <span><i id="legFree" class="leg-free pulso"></i>Disponible</span>
+                  <span><i id="legBusy" class="leg-busy pulso"></i>No disponible</span>
+                  <span><i class="leg-sel"></i>Tu selección</span>
+                </div>
+              </div>
+              <div class="timelineWrap">
+                <div class="timelineInner">
+                  <div class="hours" id="calHours"></div>
+                  <div class="track pulso" id="calTrack"></div>
+                </div>
+              </div>
+              <div class="day-cal-ranges">
+                <span id="calRanges">Consultando disponibilidad…</span>
+                <span style="color:var(--muted)">Haz clic en una hora libre o usa el selector</span>
+              </div>
+            </div>
+
             <div class="fields-row">
               <div class="form-group">
                 <label for="fecha">Fecha</label>
@@ -201,7 +265,7 @@ h1{font-family:"Cormorant Garamond",serif;font-size:clamp(2.4rem,5vw,3.8rem);lin
                 <select id="horaInicio" required>
                   <option value="">Consultando disponibilidad…</option>
                 </select>
-                <div class="form-hint" id="horaHint">Selecciona tu hora de entrada</div>
+                <div class="form-hint" id="horaHint">Las horas ocupadas están deshabilitadas</div>
               </div>
 
               <div class="form-group">
@@ -289,6 +353,9 @@ const apartadoParam = params.get('apartado');
 let selectedSpace = 'pulso';
 let freeHours = [];
 let currentPrice = PRECIOS[selectedSpace];
+let calLoaded = false;
+
+const ALL_HOURS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
 const formSection = document.getElementById('formSection');
 const resultSection = document.getElementById('resultSection');
@@ -296,6 +363,7 @@ const demoNotice = document.getElementById('demoNotice');
 const fechaInput = document.getElementById('fecha');
 const horaInicioSelect = document.getElementById('horaInicio');
 const horasSelect = document.getElementById('horas');
+const duracionHint = document.getElementById('duracionHint');
 const nombreInput = document.getElementById('nombre');
 const telefonoInput = document.getElementById('telefono');
 const sumEspacio = document.getElementById('sumEspacio');
@@ -304,6 +372,15 @@ const sumTotal = document.getElementById('sumTotal');
 const errorAlert = document.getElementById('errorAlert');
 const dispStatus = document.getElementById('dispStatus');
 const btnSubmit = document.getElementById('btnSubmit');
+const calDot = document.getElementById('calDot');
+const calTitle = document.getElementById('calTitle');
+const legFree = document.getElementById('legFree');
+const legBusy = document.getElementById('legBusy');
+const calHours = document.getElementById('calHours');
+const calTrack = document.getElementById('calTrack');
+const calRanges = document.getElementById('calRanges');
+
+calHours.innerHTML = Array.from({ length: 16 }, (_, i) => `<span>${7 + i}</span>`).join('');
 
 // Inicializar si estamos en demo
 if (isDemo) {
@@ -359,6 +436,11 @@ document.querySelectorAll('.space-card').forEach(card => {
 // Configurar fecha mínima hoy
 function pad2(n) { return String(n).padStart(2, '0'); }
 function formatYMD(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+function fmtFechaLarga(ymd) {
+  const [y, m, d] = ymd.split('-').map(Number);
+  if (!y || !m || !d) return ymd;
+  return new Intl.DateTimeFormat('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(y, m - 1, d));
+}
 
 const hoy = new Date();
 // Si son más de las 19:00, sugerir mañana para tener catálogo completo de horarios
@@ -373,72 +455,162 @@ fechaInput.addEventListener('change', () => {
 horaInicioSelect.addEventListener('change', () => {
   actualizarOpcionesDuracion();
   actualizarResumen();
+  renderizarCalendarioDia();
 });
 
 horasSelect.addEventListener('change', () => {
   actualizarResumen();
+  renderizarCalendarioDia();
 });
 
 nombreInput.addEventListener('input', () => errorAlert.classList.add('hidden'));
 telefonoInput.addEventListener('input', () => errorAlert.classList.add('hidden'));
 
+function agruparBloques(horas) {
+  const ordenadas = [...horas].sort((a, b) => a - b);
+  const bloques = [];
+  ordenadas.forEach(h => {
+    const ult = bloques[bloques.length - 1];
+    if (ult && ult[1] === h) ult[1] = h + 1;
+    else bloques.push([h, h + 1]);
+  });
+  return bloques;
+}
+
+function simularHorasLibresDemo(espacio, fecha) {
+  const dia = Number((fecha || '').split('-')[2]) || 28;
+  const par = dia % 2 === 0;
+  let ocupadas;
+  if (espacio === 'pulso') {
+    ocupadas = par ? [10, 11, 16, 17] : [9, 10, 15, 16, 17];
+  } else {
+    ocupadas = par ? [9, 10, 14, 15] : [11, 12, 17, 18];
+  }
+  return ALL_HOURS.filter(h => !ocupadas.includes(h));
+}
+
+function renderizarCalendarioDia() {
+  const fecha = fechaInput.value;
+  calDot.className = `day-cal-dot ${selectedSpace}`;
+  legFree.className = `leg-free ${selectedSpace}`;
+  legBusy.className = `leg-busy ${selectedSpace}`;
+  calTrack.className = `track ${selectedSpace}`;
+  calTitle.textContent = `${NOMBRES[selectedSpace]} · ${fecha ? fmtFechaLarga(fecha) : '—'}`;
+
+  if (!calLoaded) {
+    calTrack.innerHTML = '';
+    calRanges.textContent = 'Consultando disponibilidad…';
+    return;
+  }
+
+  const ocupadas = ALL_HOURS.filter(h => !freeHours.includes(h));
+  const bloquesOcupados = agruparBloques(ocupadas);
+  const bloquesLibres = agruparBloques(freeHours);
+
+  const busyHtml = bloquesOcupados.map(([ini, fin]) => {
+    const left = ((ini - 7) / 15) * 100;
+    const width = ((fin - ini) / 15) * 100;
+    return `<div class="busy ${selectedSpace}" style="left:${left}%;width:${width}%">No disponible</div>`;
+  }).join('');
+
+  const startHour = Number(horaInicioSelect.value);
+  const durHours = Number(horasSelect.value) || 0;
+  let selectedHtml = '';
+  if (startHour && durHours > 0 && freeHours.includes(startHour)) {
+    const left = ((startHour - 7) / 15) * 100;
+    const width = (durHours / 15) * 100;
+    selectedHtml = `<div class="selected-slot" style="left:${left}%;width:${width}%">${pad2(startHour)}:00–${pad2(startHour + durHours)}:00</div>`;
+  }
+
+  const slotsHtml = ALL_HOURS.map(h => {
+    const libre = freeHours.includes(h);
+    const label = `${pad2(h)}:00 a ${pad2(h + 1)}:00 (${libre ? 'Disponible' : 'Ocupado'})`;
+    return `<button type="button" class="slot-btn" data-hour="${h}" ${libre ? '' : 'disabled aria-disabled="true"'} title="${label}" aria-label="${label}"></button>`;
+  }).join('');
+
+  calTrack.innerHTML = `${busyHtml}${selectedHtml}<div class="slot-grid">${slotsHtml}</div>`;
+
+  calTrack.querySelectorAll('.slot-btn:not(:disabled)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const h = Number(btn.dataset.hour);
+      if (freeHours.includes(h)) {
+        horaInicioSelect.value = String(h);
+        actualizarOpcionesDuracion();
+        actualizarResumen();
+        renderizarCalendarioDia();
+      }
+    });
+  });
+
+  if (bloquesLibres.length === 0) {
+    calRanges.textContent = 'Sin horarios libres este día';
+  } else {
+    calRanges.textContent = 'Horarios libres: ' + bloquesLibres.map(([a, b]) => `${pad2(a)}:00 — ${pad2(b)}:00`).join(' · ');
+  }
+}
+
 async function consultarDisponibilidad() {
   const fecha = fechaInput.value;
   if (!fecha) return;
 
+  const prevHour = Number(horaInicioSelect.value);
+  calLoaded = false;
   horaInicioSelect.innerHTML = '<option value="">Consultando disponibilidad…</option>';
   horaInicioSelect.disabled = true;
   dispStatus.classList.add('hidden');
   errorAlert.classList.add('hidden');
+  renderizarCalendarioDia();
 
   try {
     let horasLibres = [];
     let precio = PRECIOS[selectedSpace];
 
     if (isDemo) {
-      // Simulación en modo demo
-      await new Promise(r => setTimeout(r, 100));
-      horasLibres = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+      // Simulación en modo demo con bloques ocupados
+      await new Promise(r => setTimeout(r, 80));
+      horasLibres = simularHorasLibresDemo(selectedSpace, fecha);
     } else {
       const resp = await fetch(`${API_BASE}/disponibilidad?espacio=${selectedSpace}&fecha=${fecha}`);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = await resp.json();
-      horasLibres = Array.isArray(data.horas_libres) ? data.horas_libres : [];
+      horasLibres = Array.isArray(data.horas_libres) ? data.horas_libres.map(Number) : [];
       if (data.precio_hora) precio = Number(data.precio_hora);
     }
 
     currentPrice = precio;
-
-    // Filtrar horas pasadas si la fecha es hoy
-    const ahora = new Date();
-    if (fecha === formatYMD(ahora)) {
-      const horaActual = ahora.getHours();
-      horasLibres = horasLibres.filter(h => h > horaActual);
-    }
-
-    freeHours = horasLibres.sort((a, b) => a - b);
+    freeHours = horasLibres.filter(h => h >= 7 && h <= 21).sort((a, b) => a - b);
+    calLoaded = true;
 
     if (freeHours.length === 0) {
       horaInicioSelect.innerHTML = '<option value="">Sin horarios disponibles este día</option>';
       horaInicioSelect.disabled = true;
       horasSelect.innerHTML = '<option value="0">0 horas</option>';
       horasSelect.disabled = true;
+      duracionHint.textContent = 'Sin bloques disponibles';
       dispStatus.textContent = 'No hay horarios disponibles para la fecha y espacio seleccionados. Por favor elige otro día.';
       dispStatus.className = 'alert-box error';
       dispStatus.classList.remove('hidden');
     } else {
-      horaInicioSelect.innerHTML = freeHours.map(h => {
-        const hh = pad2(h) + ':00';
-        return `<option value="${h}">${hh}</option>`;
+      const initialHour = freeHours.includes(prevHour) ? prevHour : freeHours[0];
+      horaInicioSelect.innerHTML = ALL_HOURS.map(h => {
+        const hh = `${pad2(h)}:00`;
+        const libre = freeHours.includes(h);
+        if (!libre) {
+          return `<option value="${h}" disabled>${hh} — No disponible</option>`;
+        }
+        return `<option value="${h}"${h === initialHour ? ' selected' : ''}>${hh} — Disponible</option>`;
       }).join('');
       horaInicioSelect.disabled = false;
       actualizarOpcionesDuracion();
     }
   } catch (err) {
+    calLoaded = false;
+    freeHours = [];
     horaInicioSelect.innerHTML = '<option value="">Error al consultar horarios</option>';
     horaInicioSelect.disabled = true;
     horasSelect.innerHTML = '<option value="0">0 horas</option>';
     horasSelect.disabled = true;
+    calRanges.textContent = 'No se pudo cargar el calendario del día.';
     dispStatus.textContent = isDemo 
       ? 'Error de prueba.' 
       : 'No fue posible conectar con el sistema de disponibilidad. Puedes consultar o apartar directamente por WhatsApp al 782 140 2617.';
@@ -447,17 +619,19 @@ async function consultarDisponibilidad() {
   }
 
   actualizarResumen();
+  if (calLoaded) renderizarCalendarioDia();
 }
 
 function actualizarOpcionesDuracion() {
   const startHour = Number(horaInicioSelect.value);
-  if (!startHour || isNaN(startHour)) {
+  if (!startHour || isNaN(startHour) || !freeHours.includes(startHour)) {
     horasSelect.innerHTML = '<option value="1">1 hora</option>';
     horasSelect.disabled = true;
+    duracionHint.textContent = 'Bloques de 1 hora';
     return;
   }
 
-  // Contar cuántas horas consecutivas están libres desde startHour (hasta límite 22:00)
+  // Contar cuántas horas consecutivas están libres desde startHour (respetando huecos libres hasta 22:00)
   let maxConsecutivas = 0;
   let cursor = startHour;
   while (freeHours.includes(cursor) && cursor < 22) {
@@ -467,16 +641,18 @@ function actualizarOpcionesDuracion() {
 
   if (maxConsecutivas < 1) maxConsecutivas = 1;
 
-  const currentVal = Number(horasSelect.value) || 1;
+  const prevVal = Number(horasSelect.value) || 1;
+  const targetVal = Math.min(prevVal, maxConsecutivas);
   horasSelect.innerHTML = '';
   for (let i = 1; i <= maxConsecutivas; i++) {
     const opt = document.createElement('option');
     opt.value = i;
-    opt.textContent = `${i} ${i === 1 ? 'hora' : 'horas'}`;
-    if (i === currentVal) opt.selected = true;
+    opt.textContent = `${i} ${i === 1 ? 'hora' : 'horas'} (${pad2(startHour)}:00 a ${pad2(startHour + i)}:00)`;
+    if (i === targetVal) opt.selected = true;
     horasSelect.appendChild(opt);
   }
   horasSelect.disabled = false;
+  duracionHint.textContent = `Máximo ${maxConsecutivas} ${maxConsecutivas === 1 ? 'hora libre continua' : 'horas libres continuas'} antes del siguiente ocupado`;
 }
 
 function actualizarResumen() {
