@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Reservar Canvas 90">
+  <rect width="512" height="512" fill="#fffefb"/>
+  <g transform="translate(256,256) scale(3.0400) translate(-100,-94.75)">
+    <!-- Anillos superiores del calendario -->
+    <rect x="65" y="40.5" width="9.5" height="22" rx="4.75" fill="#03454d"/>
+    <rect x="118.5" y="40.5" width="9.5" height="22" rx="4.75" fill="#03454d"/>
+    <!-- Barra superior central -->
+    <rect x="77.5" y="52.5" width="38" height="7.8" rx="1.5" fill="#03454d"/>
+    <!-- Esquina superior derecha -->
+    <path d="M 131 52.5 H 133 A 13.5 13.5 0 0 1 146.5 66 V 77.5 C 143.8 75.5 141.2 74.5 138.7 74.2 V 64.5 A 4.2 4.2 0 0 0 134.5 60.3 H 131 Z" fill="#03454d"/>
+    <!-- Marco principal del calendario -->
+    <path d="M 62 52.5 H 59.5 A 13.5 13.5 0 0 0 46 66 V 135.5 A 13.5 13.5 0 0 0 59.5 149 H 133 A 13.5 13.5 0 0 0 146.5 135.5 V 122 C 144 125 141.5 127.5 138.7 129.5 V 137 A 4.2 4.2 0 0 1 134.5 141.2 H 58 A 4.2 4.2 0 0 1 53.8 137 V 64.5 A 4.2 4.2 0 0 1 58 60.3 H 62 Z" fill="#03454d"/>
+    <!-- Trazo superior de la C de Canvas 90 -->
+    <path d="M 52 125.5 C 63 122 73 115 86 103.5 C 102 89 116 76.5 132.5 76.5 C 145.5 76.5 154 85 154 96.5 C 154 100.5 152.2 102.5 150.2 102.2 C 148.4 101.9 147.8 99.5 147.5 96.8 C 146.5 89 140.5 84 131.5 84 C 118.5 84 105.5 95 90.5 108.5 C 77 120.5 65.5 129 52 133.5 Z" fill="#03454d"/>
+    <!-- Trazo inferior de la C de Canvas 90 -->
+    <path d="M 83.5 124.5 C 82 122.8 82.3 120.2 84.2 119 C 86 117.8 88.2 118.6 89.8 120.3 C 95.5 126.8 102.5 131 111 131 C 122.5 131 133.5 124.5 142.2 113.8 C 143.6 112.1 145.8 111.8 147.2 113 C 148.6 114.2 148.5 116.5 147 118.5 C 136.8 131.2 124.2 138.2 110.5 138.2 C 99.5 138.2 90.2 133 83.5 124.5 Z" fill="#03454d"/>
+    <!-- Reloj de reserva por hora (Pulso #E8644F + Origen #E0A51E + Canvas #03454d) -->
+    <circle cx="76.5" cy="81" r="17" fill="#E8644F"/>
+    <circle cx="76.5" cy="81" r="12.8" fill="#fffefb"/>
+    <path d="M 76.5 81 L 76.5 68.2 A 12.8 12.8 0 0 1 89.3 81 Z" fill="#f7dc90"/>
+    <rect x="74.7" y="70.5" width="3.6" height="12.2" rx="1.8" fill="#03454d"/>
+    <rect x="74.7" y="79.2" width="10.8" height="3.6" rx="1.8" fill="#03454d"/>
+    <circle cx="76.5" cy="81" r="2.5" fill="#03454d"/>
+  </g>
+</svg>
