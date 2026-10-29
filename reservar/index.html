@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Reservar espacio por hora | Canvas</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#167E8C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Reservar C90">
+<link rel="icon" type="image/svg+xml" href="../assets/img/reservar-icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/img/reservar-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/reservar-512.png">
+<link rel="shortcut icon" href="../assets/img/reservar-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/img/reservar-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" id="canvas-shared-shell-style" href="../assets/css/shell.css?v=1">
+<style>
+:root{
+  --paper:#fffefb;--ink:#171717;--muted:#77756e;--line:#e7e3da;
+  --canvas:#167E8C;--origen:#E0A51E;--pulso:#E8644F;
+  --canvasSoft:#eaf6f7;--origenSoft:#fff6da;--pulsoSoft:#fde9e5;--ok:#57935A;
+  --errorBg:#fff0ed;--errorText:#8b2118;--errorBorder:#b93728;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+.wrap{width:min(980px,calc(100% - 32px));margin:auto}
+header{border-bottom:1px solid var(--line);padding:20px 0}
+.top{display:flex;justify-content:space-between;align-items:center}
+.brand{font-family:"Cormorant Garamond",serif;font-size:2rem;letter-spacing:.16em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand img{width:auto;height:28px;object-fit:contain}
+.tag{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+.demo-banner{background:#111;color:#fff;padding:8px 14px;font-size:.75rem;letter-spacing:.05em;display:flex;justify-content:space-between;align-items:center}
+.demo-banner strong{background:var(--origen);color:#332000;padding:2px 6px;border-radius:2px;font-size:.7rem;margin-right:8px}
+
+.hero{padding:34px 0 20px}
+.kicker{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:"Cormorant Garamond",serif;font-size:clamp(2.4rem,5vw,3.8rem);line-height:1;margin:8px 0 10px}
+.lead{max-width:680px;color:#4e4d48;line-height:1.6;font-size:1rem}
+
+.booking-grid{display:grid;grid-template-columns:1fr;gap:28px;margin:20px 0 40px}
+.section-title{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{display:inline-block;width:18px;height:18px;border-radius:50%;background:#181818;color:#fff;font-size:.65rem;text-align:center;line-height:18px}
+
+/* Selector de espacios */
+.spaces-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.space-card{border:2px solid var(--line);background:#fff;border-radius:4px;padding:18px;cursor:pointer;transition:border-color .15s,box-shadow .15s,background-color .15s;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+.space-card:hover{border-color:#b4afa5}
+.space-card.selected.pulso{border-color:var(--pulso);background:var(--pulsoSoft)}
+.space-card.selected.origen{border-color:var(--origen);background:var(--origenSoft)}
+.space-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.space-icon{width:36px;height:36px;object-fit:contain}
+.space-name{font-size:1.1rem;font-weight:700;margin:0}
+.space-sub{font-size:.75rem;color:var(--muted);margin-top:2px}
+.space-price{font-size:1.35rem;font-weight:700;color:var(--ink);margin:14px 0 0}
+.space-price small{font-size:.75rem;font-weight:400;color:var(--muted)}
+.space-check{position:absolute;top:14px;right:14px;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;background:#fff}
+.space-card.selected .space-check{background:#181818;color:#fff;border-color:#181818}
+
+/* Bloques del formulario */
+.form-panel{border:1px solid var(--line);background:#fff;border-radius:4px;padding:22px}
+.fields-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.form-group input,.form-group select{border:1px solid var(--line);border-radius:3px;padding:12px 14px;font:inherit;font-size:.92rem;background:#fff;color:var(--ink);outline:none;transition:border-color .15s}
+.form-group input:focus,.form-group select:focus{border-color:#181818}
+.form-group select option:disabled{color:#b0ada6;background:#f5f4f0}
+.form-hint{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+/* Calendario del día (línea de tiempo 07:00–22:00 estilo disponibilidad) */
+.day-calendar{border:1px solid var(--line);background:#faf9f6;border-radius:4px;padding:16px 18px;margin:4px 0 18px}
+.day-cal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.day-cal-title{display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.day-cal-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
+.day-cal-dot.pulso{background:var(--pulso)}
+.day-cal-dot.origen{background:var(--origen)}
+.day-cal-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.72rem;color:var(--muted)}
+.day-cal-legend span{display:flex;align-items:center;gap:6px}
+.day-cal-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.day-cal-legend .leg-free.pulso{background:var(--pulsoSoft);border:1px solid #efb9b0}
+.day-cal-legend .leg-free.origen{background:var(--origenSoft);border:1px solid #ead08a}
+.day-cal-legend .leg-busy.pulso{background:rgba(232,100,79,.88)}
+.day-cal-legend .leg-busy.origen{background:rgba(224,165,30,.9)}
+.day-cal-legend .leg-sel{background:#181818}
+.timelineWrap{padding:4px 0 6px;overflow:hidden}
+.timelineInner{width:100%}
+.hours{display:grid;grid-template-columns:repeat(16,1fr);font-size:.63rem;color:var(--muted);margin-bottom:8px}
+.hours span{text-align:left;white-space:nowrap}
+.track{height:64px;position:relative;border-radius:5px;overflow:hidden;background:repeating-linear-gradient(to right,transparent 0,transparent calc(6.666% - 1px),rgba(255,255,255,.95) calc(6.666% - 1px),rgba(255,255,255,.95) 6.666%)}
+.track.origen{background-color:var(--origenSoft)}
+.track.pulso{background-color:var(--pulsoSoft)}
+.busy{position:absolute;top:0;bottom:0;border-radius:5px;display:flex;align-items:center;justify-content:center;padding:4px 8px;font-size:.66rem;font-weight:700;color:#fff;overflow:hidden;white-space:nowrap;z-index:2;pointer-events:none}
+.busy.origen{background:rgba(224,165,30,.9);color:#594000}
+.busy.pulso{background:rgba(232,100,79,.88)}
+.selected-slot{position:absolute;top:3px;bottom:3px;border-radius:4px;background:rgba(24,24,24,.86);color:#fff;display:flex;align-items:center;justify-content:center;padding:2px 6px;font-size:.66rem;font-weight:700;white-space:nowrap;overflow:hidden;z-index:3;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.slot-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(15,1fr);z-index:1}
+.slot-btn{border:none;background:transparent;padding:0;margin:0;cursor:pointer;transition:background-color .12s}
+.slot-btn:hover:not(:disabled){background:rgba(24,24,24,.08)}
+.slot-btn:disabled{cursor:not-allowed}
+.day-cal-ranges{margin-top:8px;font-size:.76rem;color:#4e4d48;line-height:1.45;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* Resumen y total */
+.summary-box{background:#faf9f6;border:1px solid var(--line);border-radius:4px;padding:18px;margin:20px 0}
+.summary-line{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;padding:6px 0}
+.summary-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);margin-top:10px;padding-top:12px}
+.summary-total .total-label{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.summary-total .total-amount{font-family:"Cormorant Garamond",serif;font-size:2.2rem;font-weight:600;line-height:1}
+.summary-notice{font-size:.75rem;color:var(--muted);margin-top:8px;line-height:1.4}
+
+/* Botón principal */
+.btn-submit{width:100%;background:#181818;color:#fff;border:none;border-radius:3px;padding:16px 20px;font:inherit;font-size:.95rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background-color .15s,opacity .15s;display:flex;justify-content:center;align-items:center;gap:10px}
+.btn-submit:hover:not(:disabled){background:#333}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* Avisos */
+.alert-box{padding:14px 16px;border-radius:4px;font-size:.86rem;margin-top:16px;line-height:1.4}
+.alert-box.error{background:var(--errorBg);color:var(--errorText);border:1px solid var(--errorBorder)}
+.alert-box.info{background:var(--canvasSoft);color:#0f6672;border:1px solid var(--canvas)}
+.hidden{display:none!important}
+
+/* Vista de estado al volver */
+.status-card{background:#fff;border:1px solid var(--line);border-radius:4px;padding:36px 24px;text-align:center;max-width:580px;margin:30px auto}
+.status-badge{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.8rem}
+.status-badge.aprobado{background:#d8eed8;color:#276b29}
+.status-badge.pendiente{background:var(--origenSoft);color:#785600}
+.status-badge.rechazado{background:var(--errorBg);color:var(--errorBorder)}
+.status-card h2{font-family:"Cormorant Garamond",serif;font-size:2.4rem;margin:0 0 10px;line-height:1}
+.status-card p{color:#4e4d48;font-size:.95rem;line-height:1.5;margin:0 0 20px}
+.status-details{background:#faf9f6;border:1px solid var(--line);border-radius:4px;padding:14px;font-size:.82rem;text-align:left;margin-bottom:24px}
+.status-details div{padding:4px 0;display:flex;justify-content:space-between}
+.status-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line);padding:12px 18px;font:inherit;font-size:.85rem;font-weight:600;text-decoration:none;border-radius:3px;cursor:pointer}
+.btn-secondary:hover{border-color:#181818}
+
+@media(max-width:650px){
+  .wrap{width:min(100% - 28px,620px)}
+  header{padding:16px 0}
+  .brand{font-size:1.6rem}
+  .hero{padding:20px 0 10px}
+  .hero h1{font-size:2.3rem}
+  .spaces-grid{grid-template-columns:1fr}
+  .fields-row{grid-template-columns:1fr}
+  .form-panel{padding:16px}
+  .day-calendar{padding:14px 12px}
+  .hours{grid-template-columns:repeat(16,minmax(0,1fr));font-size:.60rem;letter-spacing:0;margin-bottom:8px}
+  .hours span{overflow:visible;transform:none;text-align:center}
+  .track{height:58px;border-radius:6px}
+  .busy{font-size:0;padding:0}
+  .selected-slot{font-size:0;padding:0}
+  .summary-total .total-amount{font-size:1.8rem}
+}
+</style>
+</head>
+<body>
+
+<div id="demoNotice" class="demo-banner hidden">
+  <div><strong>MODO PRUEBA</strong> Simulación activa (?demo=1). Respuestas locales sin conexión backend.</div>
+</div>
+
+<header>
+  <div class="wrap top">
+    <a class="brand" href="../index.html"><img src="../assets/img/canvas-icon-mark.png" alt="">CANVAS</a>
+    <div class="tag">Espacios para lo que te mueve</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- VISTA DE RESULTADO (Cuando viene ?estado=...) -->
+  <section id="resultSection" class="hidden">
+    <div class="status-card" id="statusCard">
+      <div class="status-badge" id="statusBadge">✓</div>
+      <h2 id="statusTitle">¡Reserva confirmada!</h2>
+      <p id="statusDesc">Tu pago ha sido acreditado exitosamente.</p>
+      <div class="status-details" id="statusDetails">
+        <div><span style="color:var(--muted)">Referencia apartado:</span> <strong id="statusApartado">—</strong></div>
+        <div><span style="color:var(--muted)">Confirmación:</span> <span>Enviada por WhatsApp</span></div>
+      </div>
+      <div class="status-actions">
+        <a href="index.html" id="btnNuevaReserva" class="btn-secondary">Hacer otra reserva</a>
+        <a href="../index.html" class="btn-secondary" style="background:#181818;color:#fff;border-color:#181818">Volver a Canvas</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULARIO DE RESERVA -->
+  <section id="formSection">
+    <div class="hero">
+      <div class="kicker">Reservación por hora · Tarifas de contrato</div>
+      <h1>Aparta tu espacio de trabajo.</h1>
+      <p class="lead">Elige Pulso u Origen, selecciona tu fecha y horas de uso. El apartado se asegura en línea y se liquida vía Mercado Pago con confirmación inmediata.</p>
+    </div>
+
+    <form id="reservaForm" novalidate>
+      <div class="booking-grid">
+
+        <!-- 1. Espacio -->
+        <div>
+          <div class="section-title"><span>1</span> Selecciona el espacio</div>
+          <div class="spaces-grid">
+            <div class="space-card pulso selected" data-space="pulso" tabindex="0" role="button" aria-pressed="true">
+              <div class="space-check">✓</div>
+              <div class="space-head">
+                <img src="../assets/img/icon-pulso.png" alt="" class="space-icon">
+                <div>
+                  <h2 class="space-name">Canvas Pulso</h2>
+                  <div class="space-sub">16 m² · Reuniones y trabajo en equipo</div>
+                </div>
+              </div>
+              <div class="space-price">$85 <small>MXN / hora</small></div>
+            </div>
+
+            <div class="space-card origen" data-space="origen" tabindex="0" role="button" aria-pressed="false">
+              <div class="space-check"></div>
+              <div class="space-head">
+                <img src="../assets/img/icon-origen.png" alt="" class="space-icon">
+                <div>
+                  <h2 class="space-name">Canvas Origen</h2>
+                  <div class="space-sub">5 m² · Cabina individual privada</div>
+                </div>
+              </div>
+              <div class="space-price">$65 <small>MXN / hora</small></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Fecha y Horario -->
+        <div>
+          <div class="section-title"><span>2</span> Fecha y horario deseado</div>
+          <div class="form-panel">
+            <!-- Calendario del día (línea de tiempo 07:00–22:00) -->
+            <div id="dayCalendar" class="day-calendar" aria-live="polite">
+              <div class="day-cal-head">
+                <div class="day-cal-title">
+                  <i id="calDot" class="day-cal-dot pulso"></i>
+                  <span id="calTitle">Canvas Pulso · —</span>
+                </div>
+                <div class="day-cal-legend">
+                  <span><i id="legFree" class="leg-free pulso"></i>Disponible</span>
+                  <span><i id="legBusy" class="leg-busy pulso"></i>No disponible</span>
+                  <span><i class="leg-sel"></i>Tu selección</span>
+                </div>
+              </div>
+              <div class="timelineWrap">
+                <div class="timelineInner">
+                  <div class="hours" id="calHours"></div>
+                  <div class="track pulso" id="calTrack"></div>
+                </div>
+              </div>
+              <div class="day-cal-ranges">
+                <span id="calRanges">Consultando disponibilidad…</span>
+                <span style="color:var(--muted)">Haz clic en una hora libre o usa el selector</span>
+              </div>
+            </div>
+
+            <div class="fields-row">
+              <div class="form-group">
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" required>
+                <div class="form-hint" id="fechaHint">Horario de 07:00 a 22:00</div>
+              </div>
+
+              <div class="form-group">
+                <label for="horaInicio">Hora de inicio</label>
+                <select id="horaInicio" required>
+                  <option value="">Consultando disponibilidad…</option>
+                </select>
+                <div class="form-hint" id="horaHint">Las horas ocupadas están deshabilitadas</div>
+              </div>
+
+              <div class="form-group">
+                <label for="horas">Horas de uso</label>
+                <select id="horas" required>
+                  <option value="1">1 hora</option>
+                </select>
+                <div class="form-hint" id="duracionHint">Bloques de 1 hora</div>
+              </div>
+            </div>
+
+            <div id="dispStatus" class="alert-box info hidden"></div>
+          </div>
+        </div>
+
+        <!-- 3. Tus datos -->
+        <div>
+          <div class="section-title"><span>3</span> Datos de contacto</div>
+          <div class="form-panel">
+            <div class="fields-row">
+              <div class="form-group">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Nombre y apellido" required autocomplete="name">
+              </div>
+
+              <div class="form-group">
+                <label for="telefono">Teléfono (WhatsApp)</label>
+                <input type="tel" id="telefono" name="telefono" placeholder="10 dígitos (ej. 722 123 4567)" required autocomplete="tel">
+                <div class="form-hint">Para enviarte acceso y confirmación</div>
+              </div>
+            </div>
+
+            <!-- Resumen y total -->
+            <div class="summary-box">
+              <div class="summary-line">
+                <span style="color:var(--muted)">Espacio seleccionado:</span>
+                <strong id="sumEspacio">Canvas Pulso ($85/h)</strong>
+              </div>
+              <div class="summary-line">
+                <span style="color:var(--muted)">Horario programado:</span>
+                <span id="sumHorario">—</span>
+              </div>
+              <div class="summary-total">
+                <div class="total-label">Total a pagar:</div>
+                <div class="total-amount" id="sumTotal">$85 <span style="font-size:1rem;font-family:Inter;font-weight:400">MXN</span></div>
+              </div>
+              <div class="summary-notice">
+                🔒 Pago seguro vía Mercado Pago. Al apartar, tu espacio queda reservado durante 30 minutos para completar el pago.
+              </div>
+            </div>
+
+            <div id="errorAlert" class="alert-box error hidden"></div>
+
+            <button type="submit" id="btnSubmit" class="btn-submit">
+              Apartar y pagar con Mercado Pago →
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </section>
+
+</main>
+
+<script>
+// Base del API pública del bot Canvas (según CONTRATO-API.md)
+const API_BASE = 'https://webhook.glampingojodeagua.mx/canvas';
+
+const PRECIOS = {
+  pulso: 85,
+  origen: 65
+};
+
+const NOMBRES = {
+  pulso: 'Canvas Pulso',
+  origen: 'Canvas Origen'
+};
+
+const params = new URLSearchParams(window.location.search);
+const isDemo = params.get('demo') === '1' || params.get('demo') === 'true';
+const estadoParam = params.get('estado');
+const apartadoParam = params.get('apartado');
+
+let selectedSpace = 'pulso';
+let freeHours = [];
+let currentPrice = PRECIOS[selectedSpace];
+let calLoaded = false;
+
+const ALL_HOURS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+
+const formSection = document.getElementById('formSection');
+const resultSection = document.getElementById('resultSection');
+const demoNotice = document.getElementById('demoNotice');
+const fechaInput = document.getElementById('fecha');
+const horaInicioSelect = document.getElementById('horaInicio');
+const horasSelect = document.getElementById('horas');
+const duracionHint = document.getElementById('duracionHint');
+const nombreInput = document.getElementById('nombre');
+const telefonoInput = document.getElementById('telefono');
+const sumEspacio = document.getElementById('sumEspacio');
+const sumHorario = document.getElementById('sumHorario');
+const sumTotal = document.getElementById('sumTotal');
+const errorAlert = document.getElementById('errorAlert');
+const dispStatus = document.getElementById('dispStatus');
+const btnSubmit = document.getElementById('btnSubmit');
+const calDot = document.getElementById('calDot');
+const calTitle = document.getElementById('calTitle');
+const legFree = document.getElementById('legFree');
+const legBusy = document.getElementById('legBusy');
+const calHours = document.getElementById('calHours');
+const calTrack = document.getElementById('calTrack');
+const calRanges = document.getElementById('calRanges');
+
+calHours.innerHTML = Array.from({ length: 16 }, (_, i) => `<span>${7 + i}</span>`).join('');
+
+// Inicializar si estamos en demo
+if (isDemo) {
+  demoNotice.classList.remove('hidden');
+  const btnNueva = document.getElementById('btnNuevaReserva');
+  if (btnNueva) btnNueva.href = 'index.html?demo=1';
+}
+
+// Comprobar retorno de Mercado Pago (?estado=aprobado|pendiente|rechazado)
+if (estadoParam) {
+  formSection.classList.add('hidden');
+  resultSection.classList.remove('hidden');
+
+  const badge = document.getElementById('statusBadge');
+  const title = document.getElementById('statusTitle');
+  const desc = document.getElementById('statusDesc');
+  const ref = document.getElementById('statusApartado');
+  ref.textContent = apartadoParam ? `#${apartadoParam}` : '—';
+
+  badge.className = 'status-badge ' + estadoParam;
+  if (estadoParam === 'aprobado') {
+    badge.textContent = '✓';
+    title.textContent = '¡Reserva confirmada!';
+    desc.textContent = 'Tu pago fue aprobado exitosamente. Tu horario en Canvas ha quedado apartado y garantizado.';
+  } else if (estadoParam === 'pendiente') {
+    badge.textContent = '⏳';
+    title.textContent = 'Pago en proceso';
+    desc.textContent = 'Mercado Pago está procesando tu pago. En cuanto se confirme la acreditación, recibirás los accesos a tu WhatsApp.';
+  } else {
+    badge.textContent = '✕';
+    title.textContent = 'Pago no completado';
+    desc.textContent = 'No pudimos verificar el pago o la transacción fue cancelada. Tu espacio no quedó apartado.';
+  }
+}
+
+// Selector de espacio
+document.querySelectorAll('.space-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.space-card').forEach(c => {
+      c.classList.remove('selected');
+      c.setAttribute('aria-pressed', 'false');
+      c.querySelector('.space-check').textContent = '';
+    });
+    card.classList.add('selected');
+    card.setAttribute('aria-pressed', 'true');
+    card.querySelector('.space-check').textContent = '✓';
+    selectedSpace = card.dataset.space;
+    currentPrice = PRECIOS[selectedSpace];
+    consultarDisponibilidad();
+  });
+});
+
+// Configurar fecha mínima hoy
+function pad2(n) { return String(n).padStart(2, '0'); }
+function formatYMD(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+function fmtFechaLarga(ymd) {
+  const [y, m, d] = ymd.split('-').map(Number);
+  if (!y || !m || !d) return ymd;
+  return new Intl.DateTimeFormat('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(y, m - 1, d));
+}
+
+const hoy = new Date();
+// Si son más de las 19:00, sugerir mañana para tener catálogo completo de horarios
+const defaultDate = (hoy.getHours() >= 19) ? new Date(hoy.getTime() + 86400000) : hoy;
+fechaInput.min = formatYMD(hoy);
+fechaInput.value = formatYMD(defaultDate);
+
+fechaInput.addEventListener('change', () => {
+  consultarDisponibilidad();
+});
+
+horaInicioSelect.addEventListener('change', () => {
+  actualizarOpcionesDuracion();
+  actualizarResumen();
+  renderizarCalendarioDia();
+});
+
+horasSelect.addEventListener('change', () => {
+  actualizarResumen();
+  renderizarCalendarioDia();
+});
+
+nombreInput.addEventListener('input', () => errorAlert.classList.add('hidden'));
+telefonoInput.addEventListener('input', () => errorAlert.classList.add('hidden'));
+
+function agruparBloques(horas) {
+  const ordenadas = [...horas].sort((a, b) => a - b);
+  const bloques = [];
+  ordenadas.forEach(h => {
+    const ult = bloques[bloques.length - 1];
+    if (ult && ult[1] === h) ult[1] = h + 1;
+    else bloques.push([h, h + 1]);
+  });
+  return bloques;
+}
+
+function simularHorasLibresDemo(espacio, fecha) {
+  const dia = Number((fecha || '').split('-')[2]) || 28;
+  const par = dia % 2 === 0;
+  let ocupadas;
+  if (espacio === 'pulso') {
+    ocupadas = par ? [10, 11, 16, 17] : [9, 10, 15, 16, 17];
+  } else {
+    ocupadas = par ? [9, 10, 14, 15] : [11, 12, 17, 18];
+  }
+  return ALL_HOURS.filter(h => !ocupadas.includes(h));
+}
+
+function renderizarCalendarioDia() {
+  const fecha = fechaInput.value;
+  calDot.className = `day-cal-dot ${selectedSpace}`;
+  legFree.className = `leg-free ${selectedSpace}`;
+  legBusy.className = `leg-busy ${selectedSpace}`;
+  calTrack.className = `track ${selectedSpace}`;
+  calTitle.textContent = `${NOMBRES[selectedSpace]} · ${fecha ? fmtFechaLarga(fecha) : '—'}`;
+
+  if (!calLoaded) {
+    calTrack.innerHTML = '';
+    calRanges.textContent = 'Consultando disponibilidad…';
+    return;
+  }
+
+  const ocupadas = ALL_HOURS.filter(h => !freeHours.includes(h));
+  const bloquesOcupados = agruparBloques(ocupadas);
+  const bloquesLibres = agruparBloques(freeHours);
+
+  const busyHtml = bloquesOcupados.map(([ini, fin]) => {
+    const left = ((ini - 7) / 15) * 100;
+    const width = ((fin - ini) / 15) * 100;
+    return `<div class="busy ${selectedSpace}" style="left:${left}%;width:${width}%">No disponible</div>`;
+  }).join('');
+
+  const startHour = Number(horaInicioSelect.value);
+  const durHours = Number(horasSelect.value) || 0;
+  let selectedHtml = '';
+  if (startHour && durHours > 0 && freeHours.includes(startHour)) {
+    const left = ((startHour - 7) / 15) * 100;
+    const width = (durHours / 15) * 100;
+    selectedHtml = `<div class="selected-slot" style="left:${left}%;width:${width}%">${pad2(startHour)}:00–${pad2(startHour + durHours)}:00</div>`;
+  }
+
+  const slotsHtml = ALL_HOURS.map(h => {
+    const libre = freeHours.includes(h);
+    const label = `${pad2(h)}:00 a ${pad2(h + 1)}:00 (${libre ? 'Disponible' : 'Ocupado'})`;
+    return `<button type="button" class="slot-btn" data-hour="${h}" ${libre ? '' : 'disabled aria-disabled="true"'} title="${label}" aria-label="${label}"></button>`;
+  }).join('');
+
+  calTrack.innerHTML = `${busyHtml}${selectedHtml}<div class="slot-grid">${slotsHtml}</div>`;
+
+  calTrack.querySelectorAll('.slot-btn:not(:disabled)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const h = Number(btn.dataset.hour);
+      if (freeHours.includes(h)) {
+        horaInicioSelect.value = String(h);
+        actualizarOpcionesDuracion();
+        actualizarResumen();
+        renderizarCalendarioDia();
+      }
+    });
+  });
+
+  if (bloquesLibres.length === 0) {
+    calRanges.textContent = 'Sin horarios libres este día';
+  } else {
+    calRanges.textContent = 'Horarios libres: ' + bloquesLibres.map(([a, b]) => `${pad2(a)}:00 — ${pad2(b)}:00`).join(' · ');
+  }
+}
+
+async function consultarDisponibilidad() {
+  const fecha = fechaInput.value;
+  if (!fecha) return;
+
+  const prevHour = Number(horaInicioSelect.value);
+  calLoaded = false;
+  horaInicioSelect.innerHTML = '<option value="">Consultando disponibilidad…</option>';
+  horaInicioSelect.disabled = true;
+  dispStatus.classList.add('hidden');
+  errorAlert.classList.add('hidden');
+  renderizarCalendarioDia();
+
+  try {
+    let horasLibres = [];
+    let precio = PRECIOS[selectedSpace];
+
+    if (isDemo) {
+      // Simulación en modo demo con bloques ocupados
+      await new Promise(r => setTimeout(r, 80));
+      horasLibres = simularHorasLibresDemo(selectedSpace, fecha);
+    } else {
+      const resp = await fetch(`${API_BASE}/disponibilidad?espacio=${selectedSpace}&fecha=${fecha}`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      horasLibres = Array.isArray(data.horas_libres) ? data.horas_libres.map(Number) : [];
+      if (data.precio_hora) precio = Number(data.precio_hora);
+    }
+
+    currentPrice = precio;
+    freeHours = horasLibres.filter(h => h >= 7 && h <= 21).sort((a, b) => a - b);
+    calLoaded = true;
+
+    if (freeHours.length === 0) {
+      horaInicioSelect.innerHTML = '<option value="">Sin horarios disponibles este día</option>';
+      horaInicioSelect.disabled = true;
+      horasSelect.innerHTML = '<option value="0">0 horas</option>';
+      horasSelect.disabled = true;
+      duracionHint.textContent = 'Sin bloques disponibles';
+      dispStatus.textContent = 'No hay horarios disponibles para la fecha y espacio seleccionados. Por favor elige otro día.';
+      dispStatus.className = 'alert-box error';
+      dispStatus.classList.remove('hidden');
+    } else {
+      const initialHour = freeHours.includes(prevHour) ? prevHour : freeHours[0];
+      horaInicioSelect.innerHTML = ALL_HOURS.map(h => {
+        const hh = `${pad2(h)}:00`;
+        const libre = freeHours.includes(h);
+        if (!libre) {
+          return `<option value="${h}" disabled>${hh} — No disponible</option>`;
+        }
+        return `<option value="${h}"${h === initialHour ? ' selected' : ''}>${hh} — Disponible</option>`;
+      }).join('');
+      horaInicioSelect.disabled = false;
+      actualizarOpcionesDuracion();
+    }
+  } catch (err) {
+    calLoaded = false;
+    freeHours = [];
+    horaInicioSelect.innerHTML = '<option value="">Error al consultar horarios</option>';
+    horaInicioSelect.disabled = true;
+    horasSelect.innerHTML = '<option value="0">0 horas</option>';
+    horasSelect.disabled = true;
+    calRanges.textContent = 'No se pudo cargar el calendario del día.';
+    dispStatus.textContent = isDemo 
+      ? 'Error de prueba.' 
+      : 'No fue posible conectar con el sistema de disponibilidad. Puedes consultar o apartar directamente por WhatsApp al 782 140 2617.';
+    dispStatus.className = 'alert-box error';
+    dispStatus.classList.remove('hidden');
+  }
+
+  actualizarResumen();
+  if (calLoaded) renderizarCalendarioDia();
+}
+
+function actualizarOpcionesDuracion() {
+  const startHour = Number(horaInicioSelect.value);
+  if (!startHour || isNaN(startHour) || !freeHours.includes(startHour)) {
+    horasSelect.innerHTML = '<option value="1">1 hora</option>';
+    horasSelect.disabled = true;
+    duracionHint.textContent = 'Bloques de 1 hora';
+    return;
+  }
+
+  // Contar cuántas horas consecutivas están libres desde startHour (respetando huecos libres hasta 22:00)
+  let maxConsecutivas = 0;
+  let cursor = startHour;
+  while (freeHours.includes(cursor) && cursor < 22) {
+    maxConsecutivas++;
+    cursor++;
+  }
+
+  if (maxConsecutivas < 1) maxConsecutivas = 1;
+
+  const prevVal = Number(horasSelect.value) || 1;
+  const targetVal = Math.min(prevVal, maxConsecutivas);
+  horasSelect.innerHTML = '';
+  for (let i = 1; i <= maxConsecutivas; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${i} ${i === 1 ? 'hora' : 'horas'} (${pad2(startHour)}:00 a ${pad2(startHour + i)}:00)`;
+    if (i === targetVal) opt.selected = true;
+    horasSelect.appendChild(opt);
+  }
+  horasSelect.disabled = false;
+  duracionHint.textContent = `Máximo ${maxConsecutivas} ${maxConsecutivas === 1 ? 'hora libre continua' : 'horas libres continuas'} antes del siguiente ocupado`;
+}
+
+function actualizarResumen() {
+  const horas = Number(horasSelect.value) || 0;
+  const startHour = Number(horaInicioSelect.value);
+  const total = horas * currentPrice;
+
+  sumEspacio.textContent = `${NOMBRES[selectedSpace]} ($${currentPrice}/h)`;
+
+  if (startHour && horas > 0) {
+    const endHour = startHour + horas;
+    sumHorario.textContent = `${pad2(startHour)}:00 a ${pad2(endHour)}:00 (${horas} ${horas === 1 ? 'hora' : 'horas'})`;
+  } else {
+    sumHorario.textContent = 'Por definir';
+  }
+
+  sumTotal.innerHTML = `$${total} <span style="font-size:1rem;font-family:Inter;font-weight:400">MXN</span>`;
+}
+
+// Envío del formulario
+document.getElementById('reservaForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorAlert.classList.add('hidden');
+
+  const fecha = fechaInput.value;
+  const horaInicio = Number(horaInicioSelect.value);
+  const horas = Number(horasSelect.value);
+  const nombre = nombreInput.value.trim();
+  const telefono = telefonoInput.value.trim();
+
+  if (!fecha) {
+    mostrarError('Selecciona una fecha válida.');
+    fechaInput.focus();
+    return;
+  }
+  if (!horaInicio || isNaN(horaInicio)) {
+    mostrarError('Selecciona una hora de inicio disponible.');
+    horaInicioSelect.focus();
+    return;
+  }
+  if (!horas || horas < 1) {
+    mostrarError('Selecciona al menos 1 hora de uso.');
+    horasSelect.focus();
+    return;
+  }
+  if (!nombre) {
+    mostrarError('Ingresa tu nombre completo.');
+    nombreInput.focus();
+    return;
+  }
+  if (!telefono || telefono.replace(/\D/g, '').length < 10) {
+    mostrarError('Ingresa un número de teléfono válido (al menos 10 dígitos).');
+    telefonoInput.focus();
+    return;
+  }
+
+  btnSubmit.disabled = true;
+  btnSubmit.textContent = 'Apartando espacio…';
+
+  const payload = {
+    espacio: selectedSpace,
+    fecha: fecha,
+    hora_inicio: horaInicio,
+    horas: horas,
+    nombre: nombre,
+    telefono: telefono
+  };
+
+  try {
+    if (isDemo) {
+      // Simulación en modo demo: genera id aleatorio y redirige a la misma página
+      await new Promise(r => setTimeout(r, 500));
+      const demoId = Math.floor(Math.random() * 899) + 100;
+      window.location.href = `index.html?demo=1&estado=aprobado&apartado=${demoId}`;
+      return;
+    }
+
+    const res = await fetch(`${API_BASE}/apartar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      if (data.error === 'ocupado') {
+        throw new Error('El horario seleccionado ya no está libre. Por favor elige otro.');
+      } else if (data.error === 'fuera_de_horario') {
+        throw new Error('El horario está fuera del rango de servicio (07:00 a 22:00).');
+      } else if (data.error === 'datos') {
+        throw new Error('Los datos enviados no son válidos. Revisa nombre y teléfono.');
+      } else {
+        throw new Error(data.error || 'No fue posible apartar el espacio. Intenta de nuevo.');
+      }
+    }
+
+    if (data.url_pago) {
+      window.location.href = data.url_pago;
+    } else {
+      throw new Error('El servidor no devolvió el enlace de pago.');
+    }
+  } catch (err) {
+    mostrarError(err.message || 'Error de conexión. Intenta nuevamente.');
+    btnSubmit.disabled = false;
+    btnSubmit.textContent = 'Apartar y pagar con Mercado Pago →';
+  }
+});
+
+function mostrarError(msg) {
+  errorAlert.textContent = msg;
+  errorAlert.classList.remove('hidden');
+}
+
+// Iniciar primera consulta
+consultarDisponibilidad();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+  });
+}
+</script>
+<script src="../assets/js/site-shell.js?v=9" defer></script>
+</body>
+</html>
